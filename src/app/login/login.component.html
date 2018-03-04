@@ -1,0 +1,9 @@
+<div class="container">
+  <div>
+  <input [(ngModel)]="username" placeholder="Username" /><input [(ngModel)]="password" type="password" placeholder="Password" />
+  <button class="btn btn-primary" (click)="login()">Login</button><br>
+  </div>
+  <div *ngIf="user">
+    <div>{{user.fullname}}</div>
+  </div>
+</div>

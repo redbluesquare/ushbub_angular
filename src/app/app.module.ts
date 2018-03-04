@@ -1,18 +1,39 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
+import {HttpClientModule} from '@angular/common/http';
 
 
 import { AppComponent } from './app.component';
+import { LoginComponent } from './login/login.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
+import { AppRoutingModule } from './/app-routing.module';
+import { ApiDataService } from './api-data.service';
+import { CollectionsComponent } from './collections/collections.component';
+import { AuthGuardService } from './auth-guard.service';
+import { AuthService } from './auth.service';
+import { HomeComponent } from './home/home.component';
+import { ResourcesComponent } from './resources/resources.component';
+import { ShopComponent } from './shop/shop.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent,
+    ToolbarComponent,
+    CollectionsComponent,
+    HomeComponent,
+    ResourcesComponent,
+    ShopComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule,
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [ApiDataService, AuthGuardService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
