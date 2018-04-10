@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../user';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-home',
@@ -8,11 +9,17 @@ import { User } from '../user';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
   myuser: User[];
 
+
   ngOnInit() {
-    console.log(this.myuser);
+
+    if (localStorage.getItem('isLoggedIn') == '1'){
+      this.authService.isLoggedIn = true;
+      return true;
+    }
+    
   }
 
 }

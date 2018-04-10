@@ -15,10 +15,10 @@ class ProductsModel extends DefaultModel
   		//$query->select('vp.ddc_vendor_product_id, vp.vendor_id, vp.vendor_product_name, vp.vendor_product_alias, vp.product_description_small, vp.product_description, vp.product_weight, vp.product_weight_uom, vp.product_length, vp.product_width, vp.product_height, vp.product_params, vp.product_base_uom, vp.product_type, vp.distrib_cat_id, vp.category_id')
 		$query->select('vp.ddc_vendor_product_id, vp.vendor_id, vp.vendor_product_name')  
 			//->select('c.id, c.title as product_category')
-  			//->select('i.image_link, i.linked_table, i.link_id, i.details as image_details')
+  			->select('i.image_link, i.details as image_details')
   			//->select('pp.product_price, pp.product_id, pp.product_currency')
   			->from($this->db->quoteName('#__ddc_vendor_products', 'vp'))
-  			//->leftJoin('#__ddc_images as i on (vp.ddc_vendor_product_id = i.link_id) AND (i.linked_table = "ddc_products")')
+  			->leftJoin('#__ddc_images as i on (vp.ddc_vendor_product_id = i.link_id) AND (i.linked_table = "ddc_products")')
   			//->rightJoin('#__ddc_product_prices as pp on (vp.ddc_vendor_product_id = pp.product_id)')
   			//->rightJoin('#__categories as c on vp.category_id = c.id')
   			->group('vp.ddc_vendor_product_id');

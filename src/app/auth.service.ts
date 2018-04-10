@@ -32,7 +32,7 @@ export class AuthService {
       localStorage.setItem('usertoken', user.usertoken);
       localStorage.setItem('fullname', user.fullname);
       localStorage.setItem('isLoggedIn', '1');
-      this.redirectUrl = 'collections';
+      this.redirectUrl = 'shop';
       this.router.navigate([this.redirectUrl]);
     }
     return false;

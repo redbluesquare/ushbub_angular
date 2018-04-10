@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-resources',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ResourcesComponent implements OnInit {
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
+    //this.authGuardService.checkLogin('');
+    if (localStorage.getItem('isLoggedIn') == '1'){
+      this.authService.isLoggedIn = true;
+      return true;
+    }
   }
 
 }

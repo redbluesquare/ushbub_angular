@@ -6,12 +6,14 @@ import { CollectionsComponent } from './collections/collections.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuardService } from './auth-guard.service';
 import { HomeComponent } from './home/home.component';
+import { ProductListComponent } from './product-list/product-list.component';
 
 
 const routes: Routes = [
-  { path: '', component: HomeComponent,canActivate: [AuthGuardService] },
+  { path: '', component: HomeComponent },
   { path: 'shop', component: ShopComponent,canActivate: [AuthGuardService] },
-  { path: 'resources', component: ResourcesComponent,canActivate: [AuthGuardService] },
+  { path: 'resources', component: ResourcesComponent },
+  { path: 'products', component: ProductListComponent },
   { path: 'collections', component: CollectionsComponent,canActivate: [AuthGuardService] },
   { path: 'login', component: LoginComponent }
 ];

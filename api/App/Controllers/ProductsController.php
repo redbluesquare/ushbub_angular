@@ -28,15 +28,15 @@ class ProductsController extends DefaultController
 		else 
 		{
 			$items = $model->listItems();
-			// for($i=0;$i<count($items);$i++)
-			// {
-			// 	$items[$i]->product_price = $model->getProductPrice($items[$i]->ddc_vendor_product_id);
-			// 	$items[$i]->product_params = json_decode($items[$i]->product_params);
-			// 	if($items[$i]->image_link==null)
-			// 	{
-			// 		$items[$i]->image_link = 'images/ddcshopbox/picna_ushbub.png';
-			// 	}
-			// }
+			for($i=0;$i<count($items);$i++)
+			{
+				//$items[$i]->product_price = $model->getProductPrice($items[$i]->ddc_vendor_product_id);
+				//$items[$i]->product_params = json_decode($items[$i]->product_params);
+				if($items[$i]->image_link==null)
+				{
+					$items[$i]->image_link = 'images/ddcshopbox/picna_ushbub.png';
+				}
+			}
 		}
 		return $items;
 	}

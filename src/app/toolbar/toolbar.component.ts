@@ -11,14 +11,14 @@ export class ToolbarComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   isLoggedIn = this.authService.isLoggedIn;
-
+  image_logo:any;
   logout(){
     this.authService.logout();
     this.isLoggedIn = false;
   }
 
   ngOnInit() {
-    
+    this.image_logo = "assets/images/logo_ushbub.png";
   }
 
 }

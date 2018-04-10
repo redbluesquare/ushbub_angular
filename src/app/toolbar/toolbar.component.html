@@ -1,9 +1,6 @@
 <div class="navbar">
   <div class="container">
-      <a routerLink="/"><img class="img-circle" src="assets/images/logo_ushbub.png" style="float:left;width:50px;"></a>
-    <nav>
-      <a routerLink="/">Home</a>
-    </nav>
+      <a routerLink="/"><img class="img-circle" src="{{image_logo}}" style="float:left;width:50px;"></a>
     <nav *ngIf="authService.isLoggedIn">
       <a routerLink="/shop">Shop now</a>
     </nav>

@@ -1,5 +1,12 @@
 <div class="container">
-  <div *ngFor="let product of products">
-    <p>{{product.vendor_product_name}}</p>
+  <div *ngFor="let product of products" class="grid-container">
+    <div class="item1">
+      <img src="assets/{{product.image_link}}">
+    </div>
+    <div class="item2">
+      <p>{{product.vendor_product_name}}</p>
+      <p>{{product.vendor_id}}</p>
+    </div>
   </div>
+  <div class="clearfix"></div>
 </div>
