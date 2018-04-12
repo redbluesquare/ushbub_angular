@@ -11,32 +11,19 @@ class CategoriesModel extends DefaultModel
 	protected function _buildQuery()
   	{
   		$query = $this->db->getQuery(true);
-  		$query->select('p.*')
-  			->select('v.*')
-  			->select('i.*')
-  			->select('pp.*')
-  			->from($this->db->quoteName('#__ddc_products', 'p'))
-  			->rightJoin('#__ddc_vendors as v on (p.vendor_id = v.ddc_vendor_id)')
-  			->leftJoin('#__ddc_images as i on (p.ddc_product_id = i.link_id) AND (i.linked_table = "ddc_products")')
-  			->rightJoin('#__ddc_product_prices as pp on (p.ddc_product_id = pp.product_id)')
-  			->group('p.ddc_product_id');
+		$query->select('c.id,c.title,c.alias, c.description')
+			->select('i.image_link')
+  			->from($this->db->quoteName('#__ddc_categories', 'c'))
+			->leftJoin('#__ddc_categories as pc on pc.id = c.parent_category')
+			->leftJoin('#__ddc_products as p on p.cat_id = c.id')
+			->leftJoin('#__ddc_images as i on p.product_sku = i.product_sku')
+  			->group('c.id');
 		return $query;
 	}	
 	protected function _buildWhere(&$query, $val)
 	{
-		if($val > 0)
-		{
-			$query->where('p.ddc_product_id = '.$val);
-		}
-		elseif(is_string($val))
-		{
-			$query->where('p.product_alias = "'.$val.'"');
-		}
-		if($this->input->get('postcode', null)!=null)
-		{
-			$query->where('v.post_code LIKE "%'.$this->input->get('postcode', null).'%"');
-		}
-		$query->where('v.state = "1"');
+		$query->where('pc.alias = "'.$val.'"');
+		$query->where('c.state = "1"');
 		
 		
 		

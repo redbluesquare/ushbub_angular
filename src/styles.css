@@ -3,7 +3,19 @@ body,app-root,app-toolbar{width:100%;margin-top:60px;font-family: Ubuntu, "Helve
   line-height: 1.42857143;}
 .pull-right{float:right;}
 .pull-left{float:left;}
-img{width:100%;}
+.clearfix{clear: both;}
+.footer{position:absolute;left:0;background: rgb(116, 150, 138);padding:30px;margin-top:10px;width:100%;min-height: 100px;}
+.footer a{color:#eee;}
+.row{margin-top:10px;}
+.two-col{padding:5px;width:48%;border:1px solid #eaeaea;overflow: hidden;}
+[class*="col-md-"]{overflow: hidden;}
+.col-md-2{width:18%;}
+.col-md-3{width:23%;}
+.col-md-9{width:72%;}
+.row>.two-col:first-child, .row [class*="col-md-"]:first-child{float:left;}
+.row>.two-col:last-child, .row [class*="col-md-"]:last-child{float:right;}
+.row [class*="col-md-"]:nth-child(n){float:left;}
+img{max-width:100%;}
 .container{width:80%;margin: 0 auto;height:inherit;}
 a{color: #337ab7;text-decoration: none;}
 .jumbotron {padding-top: 30px;padding-bottom: 30px;margin-bottom: 30px;color: inherit;background-color: #eee;}
@@ -18,3 +30,5 @@ a{color: #337ab7;text-decoration: none;}
     grid-template-areas:'image title title title title title';
     grid-gap: 10px;
     padding: 10px;}
+.table{width:100%;}
+.table tbody tr{width:100%;}

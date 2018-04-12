@@ -16,6 +16,7 @@ import { HomeComponent } from './home/home.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { ShopComponent } from './shop/shop.component';
 import { ProductListComponent } from './product-list/product-list.component';
+import { PowertoolsComponent } from './powertools/powertools.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { ProductListComponent } from './product-list/product-list.component';
     HomeComponent,
     ResourcesComponent,
     ShopComponent,
-    ProductListComponent
+    ProductListComponent,
+    PowertoolsComponent
   ],
   imports: [
     AlertModule.forRoot(),

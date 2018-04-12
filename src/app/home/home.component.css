@@ -22,5 +22,10 @@
     padding: 20px 10px;
     border-radius:5px;
   }
-  .mainframe{width:100%;height:340px;background:url('../../assets/images/local_community.jpg') rgba(255, 255, 255, 0.5);background-position: 50% 80%; background-size: 100%;}
-  .mainframe h1{color:#fff;position: absolute;bottom:30px;}
+.mainframe{width:100%;height:340px;background:url('../../assets/images/local_community.jpg') rgba(255, 255, 255, 0.5);background-position: 50% 80%; background-size: 100%;}
+.mainframe h1{color:#fff;position: relative;top:260px;text-align: center;}
+.two-col{height:200px;}
+.two-col h2{width:110%;position: relative;right:5px;top:157px;text-align: center;background: rgba(5, 5, 5, 0.5)}
+.two-col h2 a{color:#fff;}
+.pt-div{background:url('../../assets/images/power_tools_general.jpg') rgba(255, 255, 255, 0.5);background-position: 50% 80%; background-size: 100%;}
+.fishing-ad{background:url('../../assets/images/anglers_delight.jpg') rgba(255, 255, 255, 0.5);background-position: 50% 80%; background-size: 100%;}

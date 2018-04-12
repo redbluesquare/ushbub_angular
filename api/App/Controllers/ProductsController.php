@@ -72,4 +72,22 @@ class ProductsController extends DefaultController
 		
 		return $item;
 	}
+
+	public function connectors()
+	{
+		$result = false;
+		$category = $this->getInput()->getString('id');
+		$model = new ProductsModel($this->getInput(), $this->getContainer()->get('db'));
+		$result = $model->product_connectors($category);
+		$items = array();
+		foreach($result as $r)
+		{
+			$r = json_decode($r->product_params);
+			if(!in_array(array("title"=>$r->connector),$items))
+			{
+				array_push($items,array("connector" => $r->connector,"image_link" =>""));
+			}
+		}
+		return $items;
+	}
 }

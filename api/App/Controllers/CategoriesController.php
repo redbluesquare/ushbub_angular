@@ -10,11 +10,11 @@ class CategoriesController extends DefaultController
 	
 	public function index()
 	{
-		$pc = $this->getInput()->getString('pc',null);
+		$category = $this->getInput()->getString('task',null);
 		$model = new CategoriesModel($this->getInput(), $this->getContainer()->get('db'));
-		if($pc != null)
+		if($category != null)
 		{
-			$items = $model->listItems($pc);
+			$items = $model->listItems($category);
 		}
 		else 
 		{
@@ -42,4 +42,5 @@ class CategoriesController extends DefaultController
 		
 		return $item;
 	}
+
 }

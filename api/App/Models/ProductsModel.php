@@ -13,32 +13,50 @@ class ProductsModel extends DefaultModel
   	{
   		$query = $this->db->getQuery(true);
   		//$query->select('vp.ddc_vendor_product_id, vp.vendor_id, vp.vendor_product_name, vp.vendor_product_alias, vp.product_description_small, vp.product_description, vp.product_weight, vp.product_weight_uom, vp.product_length, vp.product_width, vp.product_height, vp.product_params, vp.product_base_uom, vp.product_type, vp.distrib_cat_id, vp.category_id')
-		$query->select('vp.ddc_vendor_product_id, vp.vendor_id, vp.vendor_product_name')  
-			//->select('c.id, c.title as product_category')
-  			->select('i.image_link, i.details as image_details')
-  			//->select('pp.product_price, pp.product_id, pp.product_currency')
-  			->from($this->db->quoteName('#__ddc_vendor_products', 'vp'))
-  			->leftJoin('#__ddc_images as i on (vp.ddc_vendor_product_id = i.link_id) AND (i.linked_table = "ddc_products")')
-  			//->rightJoin('#__ddc_product_prices as pp on (vp.ddc_vendor_product_id = pp.product_id)')
-  			//->rightJoin('#__categories as c on vp.category_id = c.id')
-  			->group('vp.ddc_vendor_product_id');
+		$query->select('p.product_sku')  
+			->select('c.id, c.title as product_category')
+  			//->select('i.image_link, i.details as image_details')
+  			->from($this->db->quoteName('#__ddc_products', 'p'))
+  			//->leftJoin('#__ddc_images as i on (p.product_sku = i.link_id) AND (i.linked_table = "ddc_products")')
+			->leftJoin('#__ddc_categories as c on c.id = p.cat_id')
+  			->group('p.product_sku');
 		return $query;
 	}	
 	protected function _buildWhere(&$query, $val)
 	{
 		if($val > 0)
 		{
-			$query->where('vp.ddc_vendor_product_id = '.$val);
+			$query->where('p.ddc_vendor_product_id = '.$val);
 		}
 		elseif(is_string($val))
 		{
-			$query->where('vp.vendor_product_alias = "'.$val.'"');
+			$query->where('p.vendor_product_alias = "'.$val.'"');
 		}
 		if($this->_published!=null)
 		{
-			$query->where('vp.published = "'.(int)$this->_published.'"');
+			$query->where('p.published = "'.(int)$this->_published.'"');
 		}
-		$query->where('vp.product_type <= "'.$this->input->get('product_type',$this->_product_type).'"');
+		$query->where('p.product_type <= "'.$this->input->get('product_type',$this->_product_type).'"');
 		return $query;
-	}	
+	}
+
+	public function product_connectors($category = null)
+	{
+		$query = $this->db->getQuery(true);
+		$query->select('p.product_params')
+		->from($this->db->quoteName('#__ddc_products', 'p'))
+		->leftJoin('#__ddc_categories as c on c.id = p.cat_id')
+		->group('p.product_params')
+		->where('p.product_params != ""');
+		if($this->input->get('product_type', null,'string') != null)
+		{
+			$query->where('p.product_type = '.$this->input->get('product_type', null,'string'));
+		}
+		if($category != null)
+		{
+			$query->where('c.alias = "'.$category.'"');
+		}
+		$result = $this->db->setQuery($query, $this->limitstart, $this->limit)->loadObjectList();
+		return $result;
+	}
 }

@@ -4,8 +4,8 @@
      "host": "localhost",
      "user": "root",
      "password": "root",
-     "name": "local_joomdev",
-     "prefix": "dev_"
+     "name": "framework-app",
+     "prefix": "km01_"
    },
    "theme": {
      "default": "awesome"

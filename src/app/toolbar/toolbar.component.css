@@ -1,4 +1,4 @@
-.navbar{position:fixed;top:0px;left:0px;width:inherit;background:rgb(26, 120, 163);border:none;height:50px;display:block;}
+.navbar{position:fixed;top:0px;left:0px;width:inherit;background:rgb(26, 120, 163);border:none;height:50px;display:block;z-index: 1001;}
 .container{width:80%;margin: 0 auto;height:inherit;}
 nav{padding:12px 7px 12px 7px;color:#fff;font-size: 1.1em;display:inline-block;}
 nav:hover{background:rgb(27, 100, 134);}

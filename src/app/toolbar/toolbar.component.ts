@@ -8,7 +8,7 @@ import { AuthService } from '../auth.service';
 })
 export class ToolbarComponent implements OnInit {
   
-  constructor(private authService: AuthService) {}
+  constructor(public authService: AuthService) {}
 
   isLoggedIn = this.authService.isLoggedIn;
   image_logo:any;

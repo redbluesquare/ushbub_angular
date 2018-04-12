@@ -4,7 +4,6 @@
 	"dashboard/:task":"\\Controllers\\DashboardController",
 	"dashboard/:task/:id":"\\Controllers\\DashboardController",
 	"categories":"\\Controllers\\CategoriesController",
-	"categories/:pc":"\\Controllers\\CategoriesController",
 	"categories/:task":"\\Controllers\\CategoriesController",
 	"categories/:task/:id":"\\Controllers\\CategoriesController",
 	"products":"\\Controllers\\ProductsController",
