@@ -15,7 +15,7 @@ class CategoriesModel extends DefaultModel
 			->select('i.image_link')
   			->from($this->db->quoteName('#__ddc_categories', 'c'))
 			->leftJoin('#__ddc_categories as pc on pc.id = c.parent_category')
-			->leftJoin('#__ddc_products as p on p.cat_id = c.id')
+			->rightJoin('#__ddc_products as p on p.cat_id = c.id')
 			->leftJoin('#__ddc_images as i on p.product_sku = i.product_sku')
   			->group('c.id');
 		return $query;

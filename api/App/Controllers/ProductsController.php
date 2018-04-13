@@ -85,7 +85,7 @@ class ProductsController extends DefaultController
 			$r = json_decode($r->product_params);
 			if(!in_array(array("title"=>$r->connector),$items))
 			{
-				array_push($items,array("connector" => $r->connector,"image_link" =>""));
+				array_push($items,array("connector" => $r->connector,"image_link" =>$r->connector_img));
 			}
 		}
 		return $items;

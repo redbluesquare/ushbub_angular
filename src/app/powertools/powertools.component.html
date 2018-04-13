@@ -25,7 +25,7 @@
             <td>Product Type:</td><td>{{product_type}}</td>
           </tr>
           <tr>
-            <td>Connector:</td><td> </td>
+            <td>Connector:</td><td>{{connector}}</td>
           </tr>
           <tr>
             <td>Material Category:</td><td> </td>
@@ -51,7 +51,7 @@
     </div>
     <div class="col-md-9" *ngIf="progress==1">
         <div *ngFor="let connector of connectors" class="col-md-3">
-          <div (click)="onSelectConnector()" class="pt-item">
+          <div (click)="onSelectConnector(connector.connector)" class="pt-item">
             <img src="{{ checkLink(connector.image_link) }}" height="100px" max-width="100%" /><br>
             <p>{{connector.connector}}</p>
           </div>

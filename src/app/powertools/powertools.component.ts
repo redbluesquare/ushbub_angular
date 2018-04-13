@@ -43,6 +43,9 @@ export class PowertoolsComponent implements OnInit {
       localStorage.setItem('acc_progress',String(1));
     }
   }
+  onSelectConnector(conn){
+    console.log(conn);
+  }
 
   goBack(){
     if(this.progress==1){
