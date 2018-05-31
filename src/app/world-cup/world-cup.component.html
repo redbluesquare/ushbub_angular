@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div *ngIf="introStd==1" class="footyComp">
+        <h2>32 countries, 64 games,<br> there can be only ONE!</h2>
+        <p>Do you have the skills to predict the 2018 Fifa World Cup winner?</p>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div *ngIf="introStd==1" class="col-md-12">
+      <h1>The Ushball World Cup Predictor Game</h1>
+      <p style="text-align: center;">Welcome to Ushball, the 2018 football world cup predictor game! Here, you will compete against your friends for the bragging rights as </p>
+      <p style="text-align: center;"><b>"The 2018 World Cup Football Predictor Champion!"</b></p>
+      <p><a class="btn btn-error btn-lg pull-right" (click)="registerInterest(2)">Register NOW</a></p>
+      <div class="clearfix"></div>
+      <div class="showBox">
+        <h2>Rules of engagement</h2>
+        <p>Put your predictions to the test. Compete against your friends! <a *ngIf="itemState1=='out'" class="btn btn-primary pull-right" (click)="toggleState(1)">Learn more</a> </p>
+        <div [@slideInOut]="itemState1">
+          <ul>
+            <li>Guess the correct score and get 3 points<sup>1</sup></li>
+            <li>30 Points up for grabs</li>
+          </ul>
+          <p><a class="btn btn-error btn-lg pull-right" (click)="registerInterest(2)">Book your place NOW</a></p>
+          <p>Do you have what it takes to out smart your friends?</p>
+          <div class="clearfix"></div>
+          <p style="font-size: 0.8em;"><i>1 Point for a win, draw or lose. 1 Point for the correct home team score and 1 point for the correct away team score.
+          <br>You can get a maximum of 222 points.</i></p>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div *ngIf="introStd==2" class="col-md-12">
+      <h1>The Ushball World Cup Predictor Game <img class="pull-right" width="80px" src="assets/images/2018_FIFA_World_Cup.png" /></h1>
+      <fieldset *ngIf="regStep==1" class="formBox">
+        <h3>Who are you?</h3>
+        <label>Can you tell us by what name should we call you?</label>
+        <input class="form-control" [(ngModel)]="fname" name="fname" type="text" placeholder="Your name / Nickname" required/><br><br>
+        <a class="btn btn-default" (click)="gotoregStep(2)">Next <i class="icon icon icon-chevron-right"></i></a>
+        <p class="txtError" *ngIf="error_msg">{{error_msg}}</p>
+      </fieldset>
+      <fieldset *ngIf="regStep==2" class="formBox">
+        <h3>Can we keep in touch?</h3>
+        <label>Hello {{fname | titlecase }}, in order to keep you up to date on the league table, we need an e-mail address to send you updates.</label>
+        <input class="form-control" [(ngModel)]="email_address" type="email" placeholder="messageme@example.com" />
+        <p style="font-size: 0.8em;"><i>We will only contact you relating to the Ushball game and we never share your information with any third party. Plus, you can unsubscride to any updates at any time.</i></p><br><br>
+        <a class="btn btn-default" (click)="gotoregStep(3)">Next <i class="icon icon icon-chevron-right"></i></a>
+        <p class="txtError" *ngIf="error_msg">{{error_msg}}</p>
+      </fieldset>
+      <fieldset *ngIf="regStep==3" class="formBox">
+        <h3>Your security is our concern.</h3>
+        <label>{{fname | titlecase }}, although we take extreme caution to keep your predictions secure, we sometimes may need to validate who you are. Please create your personalised password</label>
+        <input class="form-control" [(ngModel)]="password1" type="password" placeholder="Your secret password" />
+        <input class="form-control" [(ngModel)]="password2" type="password" placeholder="Confirm your secret password" /><br><br>
+        <a class="btn btn-default" (click)="gotoregStep(4)">Next <i class="icon icon icon-chevron-right"></i></a>
+        <p class="txtError" *ngIf="error_msg">{{error_msg}}</p>
+      </fieldset>
+      <fieldset *ngIf="regStep==4" class="formBox">
+        <div class="pull-right"></div>
+          <h3>The Ushball competition is starting soon...</h3>
+          <div *ngIf="usergroupmap">
+            <p *ngIf="usergroupmap.state==0">You have joined our waitinglist.</p>
+          </div>
+          <div *ngIf="!usergroupmap">
+            <p>To participate, you need to be invited by a current member of the competition. There are some users who are added to the platform on a daily basis. To stand a chance to get your hands on one of the invitations, just click to join the waitinglist.</p>
+            <p class="lg-p"><a *ngIf="!sc_user" class="btn btn-primary link" (click)="addtolist('2018 Football World Cup')">Add me to the waitinglist</a></p>
+          </div>
+          
+          
+        </fieldset>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</div>
+

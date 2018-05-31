@@ -1,88 +1,59 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { ApiDataService } from '../api-data.service';
 import { Category } from '../category';
 import { Connector } from '../connector';
+import { Product } from '../product';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-powertools',
   templateUrl: './powertools.component.html',
-  styleUrls: ['./powertools.component.css']
+  styleUrls: ['./powertools.component.css'],
+  animations: [ trigger('slideInOut', [
+    state('in', style({
+      overflow: 'hidden',
+      height: '*'
+    })),
+    state('out', style({
+      opacity: '0',
+      overflow: 'hidden',
+      height: '0px'
+    })),
+    transition('in => out', animate('400ms ease-out')),
+    transition('out => in', animate('400ms ease-in'))
+  ])
+  ]
 })
 export class PowertoolsComponent implements OnInit {
 
-  categories:Category[];
-  connectors:Connector[];
-  progress:number;
-  product_type:string;
-  product_alias:string;
-  connector:string;
+  itemState1:string;
+  itemState2:string;
+  id:string;
 
-  constructor(private apiDataService: ApiDataService) { }
+  constructor(
+    private apiDataService: ApiDataService,
+    private route: ActivatedRoute,
+    private location: Location
+  ) { }
 
-  getCategories(): void {
-    this.apiDataService.getCategories('power-tools')
-    .subscribe(categories => this.categories = categories);
-  }
-
-  getConnectors(a): void {
-    this.apiDataService.getConnectors(a)
-    .subscribe(connectors => this.connectors = connectors);
-  }
-  onSelectCat(a,b){
-    this.getConnectors(a);
-    if(this.progress==0){
-      this.progress = this.progress+1;
-      localStorage.setItem('acc_progress',String(this.progress));
-      this.product_type = b;
-      this.product_alias = a;
-      localStorage.setItem('acc_product_type', b);
-      localStorage.setItem('acc_product_alias', a);
+  toggleState(a): void {
+    if(a === 1){
+      this.itemState1 = this.itemState1 === 'in' ? 'out' : 'in';
     }
     else{
-      this.progress = 1;
-      localStorage.setItem('acc_progress',String(1));
+      this.itemState2 = this.itemState2 === 'in' ? 'out' : 'in';
     }
-  }
-  onSelectConnector(conn){
-    console.log(conn);
-  }
-
-  goBack(){
-    if(this.progress==1){
-      this.progress = 0;
-      localStorage.removeItem('acc_product_type');
-      localStorage.removeItem('acc_product_alias');
-      localStorage.setItem('acc_progress','0');
-      this.product_type = null;
-    }
-    if(this.progress==2){
-
-    }
+    
   }
 
   ngOnInit() {
-    this.getCategories();
-    if(localStorage.getItem('acc_progress')==null || localStorage.getItem('acc_progress')=='0'){
-      localStorage.setItem('acc_progress','0');
-      this.progress = 0;
-      localStorage.removeItem('acc_product_type');
-      localStorage.removeItem('acc_product_alias');
-    }else{
-      if(localStorage.getItem('acc_progress')=='1'){
-        this.getConnectors(localStorage.getItem('acc_product_type'));
-        this.progress = parseInt(localStorage.getItem('acc_progress'));
-        this.product_type = localStorage.getItem('acc_product_type');
-      }
-      this.progress = parseInt(localStorage.getItem('acc_progress'));
-      this.product_type = localStorage.getItem('acc_product_type');
-    }
+    this.id = this.route.snapshot.paramMap.get('alias');
+    this.itemState1 = 'out';
+    this.itemState2 = 'out';
   }
-  checkLink(s){
-    if(s[0]=='i')
-    {
-      s = 'assets/'+s;
-    }
-    return s;
-  }
+
+  
 
 }

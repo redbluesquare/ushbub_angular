@@ -12,12 +12,7 @@ class VendorsController extends DefaultController
 	{
 		$model = new VendorsModel($this->getInput(), $this->getContainer()->get('db'));
 		$items = $model->listItems();
-		$result = 0;
-		for($i=0;$i<count($items);$i++)
-		{
-			$result++;
-		}
-		return $result;
+		return $items;
 	}
 	public function getCount()
 	{
@@ -60,5 +55,12 @@ class VendorsController extends DefaultController
 		}
 		
 		return $result;
+	}
+
+	public function getTown(){
+		$id = urldecode($this->getInput()->getString('id'));
+		$model = new VendorsModel($this->getInput(), $this->getContainer()->get('db'));
+		$city = $model->setLocation($id);
+		return array($city);
 	}
 }

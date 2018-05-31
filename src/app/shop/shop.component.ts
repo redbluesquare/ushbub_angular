@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiDataService } from '../api-data.service';
 import { HttpClientModule } from '@angular/common/http/src/module';
 import { Product } from '../product';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-shop',
@@ -11,7 +12,7 @@ import { Product } from '../product';
 export class ShopComponent implements OnInit {
   products: Product[];
 
-  constructor(private apiDataService: ApiDataService) { }
+  constructor(private authService: AuthService, private apiDataService: ApiDataService) { }
 
   getProducts(): void {
     this.apiDataService.getProducts()
@@ -20,6 +21,10 @@ export class ShopComponent implements OnInit {
 
   ngOnInit() {
     this.getProducts();
+    if (localStorage.getItem('isLoggedIn') == '1'){
+      this.authService.isLoggedIn = true;
+      return true;
+    }
   }
 
 }

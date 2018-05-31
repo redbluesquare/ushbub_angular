@@ -17,6 +17,7 @@
 	"shoppingcarts/:task/:id":"\\Controllers\\ShoppingcartsController",
 	"vendors":"\\Controllers\\VendorsController",
 	"vendors/:task":"\\Controllers\\VendorsController",
+	"vendors/:task/:id":"\\Controllers\\VendorsController",
 	"subscriptions":"\\Controllers\\SubscriptionsController",
 	"subscriptions/:task":"\\Controllers\\SubscriptionsController",
 	"subscriptions/:task/:id":"\\Controllers\\SubscriptionsController"

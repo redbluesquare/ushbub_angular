@@ -1,27 +1,27 @@
 {
-   "database": {
-     "driver": "mysqli",
-     "host": "localhost",
-     "user": "darryau63_llb01",
-     "password": "llb248743",
-     "name": "darryau63_llb01",
-     "prefix": "llb1_"
-   },
-   "theme": {
-     "default": "awesome"
-   },
-   "system": {
-     "list_limit": "20",
-     "gzip": "0",
-     "offset": "UTC",
-     "display_errors":"true"
-   },
-   "google": {
-   	 "client_secret":"Ni_tdSNE6de3oe8UKht7rm6c",
-   	 "client_id":"821423007087-g9lbsn375ctt62eg30nt6kj4asjv5pi0.apps.googleusercontent.com"
-   },
-   
-   "languages": [
-     "en-GB"
-   ]
- }
+  "database": {
+    "driver": "mysqli",
+    "host": "localhost",
+    "user": "darryau63_kaizer",
+    "password": "kaizer123#4321",
+    "name": "darryau63_kaizer",
+    "prefix": "km01_"
+  },
+  "theme": {
+    "default": "awesome"
+  },
+  "system": {
+    "list_limit": "20",
+    "gzip": "0",
+    "offset": "UTC",
+    "display_errors":"true"
+  },
+  "google": {
+     "client_secret":"Ni_tdSNE6de3oe8UKht7rm6c",
+     "client_id":"821423007087-g9lbsn375ctt62eg30nt6kj4asjv5pi0.apps.googleusercontent.com"
+  },
+  
+  "languages": [
+    "en-GB"
+  ]
+}

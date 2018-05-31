@@ -6,6 +6,9 @@ use Joomla\Model\AbstractDatabaseModel;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Application\Joomla\Application;
 use Joomla\Session\Session;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 use App\Models\ProductsModel;
 use App\Models\ShoppingcartdetailsModel;
 
@@ -72,8 +75,8 @@ class DefaultModel extends AbstractDatabaseModel
 	public function validate_user_email($user_email)
 	{
 		$query = $this->db->getQuery(true)
-			->select('u.id, u.username, u.name, u.email, u.password')
-			->from('#__users as u')
+			->select('u.id, u.last_name, u.first_name, u.email, u.password')
+			->from('#__ddc_users as u')
 			->where('(u.email=' . $this->db->quote($user_email). ') And (activation = 0) And (block = 0)');
 		$this->db->setQuery($query);
 		$result = $this->db->loadObject();
@@ -249,5 +252,170 @@ class DefaultModel extends AbstractDatabaseModel
   		$deldates = array("day"=>$date,"standard"=>$day3_date,"stdprice"=>$stdprice,"nextday"=>$day1_date,"nxdprice"=>$nxdprice,"timed"=>array("days"=>array($day1_date,$day2_date,$day3_date,$day4_date,$day5_date),"times"=>array("08:00 - 10:00","10:00 - 12:00","12:00 - 14:00","14:00 - 16:00","16:00 - 18:00","18:00 - 20:00")),"tmdprice"=>$tmdprice);
   		
   		return $deldates;
-  	}
+	}
+	
+	public function setLocation($postcode)
+	{
+		if($postcode==null){
+			$item = new \stdClass();
+			$item->msg = 'Sorry, the location cannot be found';
+			$item->searchterm = $postcode;
+			return $item;
+		}
+		$query = $this->db->getQuery(TRUE);
+		$query->select('o.town, o.postcode')
+			->from('#__ddc_outcodes as o');
+		if($this->isValidPostCodeFormat($postcode)):
+			$query->where('(o.postcode LIKE "%'.$this->getDistrict($postcode).'%")');
+		else:
+			$query->where('(o.town LIKE "%'.$postcode.'%")');
+		endif;
+		$this->db->setQuery($query);
+		if($item = $this->db->loadObject()){
+			$item->msg = 'Location updated';
+		}
+		else{
+			$item = new \stdClass();
+			$item->msg = 'Sorry, the location cannot be found';
+		}
+		$item->searchterm = $postcode;
+		$ip = $_SERVER['REMOTE_ADDR'];
+		$now = date('Y-m-d H:i:s');
+		//write log file
+		$file = JPATH_ROOT.'/media/com_ddcshopbox/postcodelogger.txt';
+		$txt = (string)$now."; ".$postcode."; ".$ip;
+		$myfile = file_put_contents($file, $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
+		return $item;
+	}
+
+	/**
+   * Calculates the great-circle distance between two points, with
+   * the Haversine formula.
+   * @param float $latitudeFrom Latitude of start point in [deg decimal]
+   * @param float $longitudeFrom Longitude of start point in [deg decimal]
+   * @param float $latitudeTo Latitude of target point in [deg decimal]
+   * @param float $longitudeTo Longitude of target point in [deg decimal]
+   * @param float $earthRadius Mean earth radius in [m]
+   * @return float Distance between points in [m] (same as earthRadius)
+   */
+  public function haversineGreatCircleDistance($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371000)
+  {
+  	// convert from degrees to radians
+  	$latFrom = deg2rad($latitudeFrom);
+  	$lonFrom = deg2rad($longitudeFrom);
+  	$latTo = deg2rad($latitudeTo);
+  	$lonTo = deg2rad($longitudeTo);
+  
+  	$latDelta = $latTo - $latFrom;
+  	$lonDelta = $lonTo - $lonFrom;
+  
+  	$angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+  	return $angle * $earthRadius;
+  }
+  
+  public function isValidPostCodeFormat($postcode){
+  
+  	// return whether the postcode is in a valid format
+  	return preg_match('/^\s*(([A-Z]{1,2})[0-9][0-9A-Z]?)\s*(([0-9])[A-Z]{2})\s*$/', strtoupper($postcode));
+  
+  }
+
+  /* Returns the district for a postcode - for example, SW1A for SW1A 0AA - or
+   * false if the postcode was not in a valid format. The parameter is:
+   *
+   * $postcode - the postcode whose district should be returned
+   */
+  	public function getDistrict($postcode){
+  
+		// parse the postcode and return the district
+		$parts = self::parse($postcode);
+		return (count($parts) > 0 ? $parts[1] : false);
+
+	}
+
+	/* Parses a postcode and returns an array with the following components:
+   *
+   * 1 - the outward code
+   * 2 - the area from the outward code
+   * 3 - the inward code
+   * 4 - the sector from the inward code
+   *
+   * The parameter is:
+   *
+   * $postcode - the postcode to parse
+   */
+  	private static function parse($postcode){
+		// parse the postcode and return the result
+		preg_match('/^\s*(([A-Z]{1,2})[0-9][0-9A-Z]?)\s*(([0-9])[A-Z]{2})\s*$/', strtoupper($postcode), $matches);
+		return $matches;
+	}
+
+  public function savePostcodes(){
+	$file = fopen(JPATH_ROOT."/media/upload/postcodes.csv",'r');
+	$line = fgets($file);
+	$headers = explode(',',trim($line));
+	$table = '#__ddc_outcodes';
+	for($i=0;$i<12000;$i++) {
+		if(!feof($file)){
+			$line = fgetcsv($file);
+			if(count($line)>1){
+				$this->insert($table, $headers, $line);
+			}
+		}
+		else{
+			break;
+		}
+	}
+	fclose($file);
+	return $headers;
+  }
+
+  	public function sendEmail($mailto, $toname='', $subject, $body, $mailfrom='admin@ushbub.co.uk', $fromname='Ushbub')
+	{
+		
+		//Create a new PHPMailer instance
+		$mail = new PHPMailer;
+		//Tell PHPMailer to use SMTP
+		$mail->isSMTP();
+		//Enable SMTP debugging
+		// 0 = off (for production use)
+		// 1 = client messages
+		// 2 = client and server messages
+		$mail->SMTPDebug = 0;
+		//Set the hostname of the mail server
+		$mail->Host = '185.182.58.19';
+		//Set the SMTP port number - likely to be 25, 465 or 587
+		$mail->Port = 25;
+		//Set the encryption system to use - ssl (deprecated) or tls
+		//$mail->SMTPSecure = 'tls';
+		$mail->SMTPAuth = true;
+		//$mail->SMTPSecure = false;
+		//Username to use for SMTP authentication
+		$mail->Username = 'darryau63';
+		//Password to use for SMTP authentication
+		$mail->Password = 'khvex0f8';
+		//Set who the message is to be sent from
+		$mail->setFrom($mailfrom,$fromname);
+		//Set an alternative reply-to address
+		//$mail->addReplyTo('replyto@example.com', 'First Last');
+		//Set who the message is to be sent to
+		$mail->addAddress($mailto, $toname);
+		//Set the subject line
+		$mail->Subject = $subject;
+		//Read an HTML message body from an external file, convert referenced images to embedded,
+		//convert HTML into a basic plain-text alternative body
+		$mail->msgHTML($body);
+		//Replace the plain text body with one created manually
+		//$mail->AltBody = 'This is a plain-text message body';
+		//Attach an image file
+		//$mail->addAttachment('images/phpmailer_mini.png');
+		//send the message, check for errors
+		if (!$mail->send()) {
+			$result = array("success" => false, "msg" => "Mail not sent", "error" => $mail->ErrorInfo);
+		} else {
+			$result = array("success" => true, "msg" => "Mail sent");
+		};
+		return $result;
+	}
+
 }

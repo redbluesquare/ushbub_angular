@@ -1,0 +1,135 @@
+<div class="container">
+  <div class="row" [@itemState]="state">
+    <div class="pt-ws">
+      <div>
+        <h1>Find the right accessory to get the job done!</h1>
+        <p>Have you ever been frustrated when you go to a hardware store and spend so long trawling to try find the right accessory to get the job done?</p>
+        <p>It sometimes resembles the thought of sifting through a workshop for the first time, trying to find that 10mm socket. Even after finding the accessory you think is right, you uncertain whether it will fit in the type of powertool you have at home.</p>
+        <p>After feeling like this many a time, we have decided to solve this problem that has plagued so many people and to make the lives of DIY and tradesmen easier with our accessory finder. Our tool guides you through the process of finding the ideal accessory to give you the results you want.</p>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="row hide">
+      <div class="col-md-12" style="padding-top:20px;">
+        <h2>Your perfect 5 step accessory selector</h2>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <div class="process_item">
+            <img src="{{img_ptselect}}" >
+            <p>First you select the product you using.</p>
+        </div>
+        <div class="process_select">
+            <p>=></p>
+        </div>
+        <div class="process_item">
+            <img src="{{img_connselect}}" >
+            <p>Next, you select the type of connector your product has.</p>
+        </div>
+        <div class="process_select">
+            <p>=></p>
+        </div>
+        <div class="process_item">
+            <img src="{{img_matselect}}" >
+            <p>The third step is to select the material category you cutting.</p>
+        </div>
+        <div class="process_select">
+            <p>=></p>
+        </div>
+        <div class="process_item">
+            <img src="{{img_matsubselect}}" >
+            <p>Next, you can select the sub-category to ensure you get the right accessories.</p>
+        </div>
+        <div class="process_select">
+            <p>=></p>
+        </div>
+        <div class="process_item">
+            <img src="{{img_prodselect}}" >
+            <p>Finally, you get a list of accessories and the ability to buy these from Amazon or popular web stores.</p>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  <div class="row">
+      <div class="col-md-3">
+        <br>
+      </div>
+      <div class="col-md-9"><button *ngIf="progress>0" (click)="goBack()">Go Back</button></div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="row pt_tool">
+    <div class="col-md-3">
+      <table class="table pt-select">
+        <tbody>
+          <tr>
+            <td>Product Type:</td><td>{{product_type}}</td>
+          </tr>
+          <tr>
+            <td>Connector:</td><td>{{connector}}</td>
+          </tr>
+          <tr>
+            <td>Material Category:</td><td>{{material_cat | titlecase}}</td>
+          </tr>
+          <tr>
+            <td>Material Sub-Category:</td><td>{{mat_sub_cat | titlecase}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <progress value="{{progress*19}}" max="100">
+          {{progress}} Complete
+      </progress>
+
+    </div>
+    <div class="col-md-9" *ngIf="progress==0">
+      <div *ngFor="let category of categories" class="col-md-3">
+        <div (click)="onSelectCat(category.alias,category.title)" class="pt-item">
+          <img src="{{ checkLink(category.image_link) }}" height="100px" max-width="100%" /><br>
+          <p>{{category.title}}</p>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="col-md-9" *ngIf="progress==1">
+      <div *ngFor="let connector of connectors" class="col-md-3">
+        <div (click)="onSelectConnector(connector.connector)" class="pt-item">
+          <img src="{{ checkLink(connector.image_link) }}" height="100px" max-width="100%" /><br>
+          <p style="height:48px">{{connector.connector}}</p>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="col-md-9" *ngIf="progress==2">
+      <div *ngFor="let category of categories" class="col-md-3">
+        <div (click)="onSelectMattype(category.id,category.title)" class="pt-item">
+          <div style="height:135px">
+            <img src="{{ checkLink(category.cat_image) }}" max-height="130px" max-width="100%" /><br>
+          </div>
+          <p style="height:48px">{{category.title}}</p>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="col-md-9" *ngIf="progress==3">
+      <div *ngFor="let category of categories" class="col-md-3">
+        <div (click)="onSelectMattype(category.id,category.title)" class="pt-item">
+          <div style="height:135px">
+            <img src="{{ checkLink(category.cat_image) }}" max-height="130px" max-width="100%" /><br>
+          </div>
+          <p style="height:48px">{{category.title}}</p>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="col-md-9" *ngIf="progress==4">
+      <div *ngFor="let product of products" class="col-md-3">
+        <div (click)="onSelectMattype(category.id)" class="pt-item">
+            <img src="{{ checkLink(product.image_link) }}" max-height="200px" max-width="100%" /><br>
+          <p>{{product.product_type | titlecase}} {{product.product_designation | uppercase}}</p>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</div>

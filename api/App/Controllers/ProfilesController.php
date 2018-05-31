@@ -2,9 +2,11 @@
 namespace App\Controllers;
 use App\Controllers\DefaultController;
 use App\Models\ProfilesModel;
+use App\Models\UsergroupsModel;
 use Joomla\Session\Session;
 use Joomla\Event\Dispatcher;
 use App\Models\App\Models;
+use Joomla\Http\Http;
 
 class ProfilesController extends DefaultController
 {
@@ -14,12 +16,12 @@ class ProfilesController extends DefaultController
 		$id = $this->getInput()->getString('usertoken',null);
 		$token = $this->getInput()->getString('apptoken',null);
 		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
-		$items = array("profile"=>"not authorised");
+		$item = array("profile"=>"not authorised");
 		if($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")
 		{
-			$items = array( "profile" => $model->getItemById($id));
+			$item = $model->getItemById($id);
 		}
-		return $items;
+		return $item;
 	}
 	public function login()
 	{
@@ -41,50 +43,148 @@ class ProfilesController extends DefaultController
 				{
 					$item->success = true;
 					$item->user_id = $user['user_id'];
-					$item->fullname = $user['fullname'];
+					$item->first_name = $user['first_name'];
+					$item->last_name = $user['last_name'];
 					$item->usertoken = $user['token'];
 				}
 			}
 		}
 		return $item;
 	}
+	public function usergroup()
+	{
+		$token = $this->getInput()->json->get('apptoken',null);
+		$item = new \StdClass();
+		$item->success = false;
+
+		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
+		$ugmodel = new UsergroupsModel($this->getInput(), $this->getContainer()->get('db'));
+		$usertoken = $this->getInput()->json->get("usertoken", null,'string');
+		$ug = $this->getInput()->json->get("usergroup", null,'string');
+		$usergroup = $ugmodel->getUsergroup(null,$ug);
+		$h = getallheaders();
+		foreach($h as $name => $value){
+			if(ucfirst($name) == 'Bearer'){
+				$usertoken = $value;
+			}
+		}
+		$user = $model->authenticate_token($usertoken);
+		$ugm = $ugmodel->getItemById($user['user_id'],$usergroup->id);
+		$state = 0;
+		//add a new usergroup_map
+		if(($input = $this->getInput()->getMethod()==='POST') && ($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")){
+			if($ugm){
+				$item->msg = 'user group already created';
+				return $item;
+			}
+			$data = array(
+				$user['user_id'],
+				$usergroup->id,
+				null,
+				$state
+			);
+			$columns = array("user_id", "group_id", "token", "state");
+			$item = $model->insert('#__ddc_user_usergroup_map',$columns, $data);
+			$item = $ugmodel->getItemById($user['user_id'],$usergroup->id);
+			return $item;
+		}
+		if($input = $this->getInput()->getMethod()==='PUT'){
+			//get function
+			$item->method = 'PUT';
+			return $item;
+		}
+		if($input = $this->getInput()->getMethod()==='GET'){
+			//get user group map
+			$id = urldecode($this->getInput()->getString('id',null,'string'));
+			$usergroup = $ugmodel->getUsergroup(null,$id);
+			$item = $ugmodel->getItemById($user['user_id'],$usergroup->id);
+			
+			return $item;
+		}
+		
+		return $item;
+	}
 	public function authenticate()
 	{
-		$token = $this->getInput()->getString('apptoken',null);
+		$input = $this->getInput()->json;
+		$token = $this->getInput()->json->get("apptoken",null,'string');
 		$item = new \StdClass();
 		$item->success = false;
 		if($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")
 		{
-			$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
-			$email = $this->getInput()->getString("email", null);
-			$usertoken = $this->getInput()->getString("usertoken", null);
-			
-			if($usertoken!=null){
-				$user = $model->authenticate_token($usertoken);
-				if($user['success']==false){
-					$usertoken = null;
+			$model = new ProfilesModel($input, $this->getContainer()->get('db'));
+			$email = (string)$input->get("email", null,'string');
+			$usertoken = $input->get("usertoken", null);
+			$ref = $input->get('ref',1);
+			$regpoint = $input->get('regpoint',null,'string');
+			if($ref == 1){
+				if($usertoken!=null){
+					$user = $model->authenticate_token($usertoken);
+					if($user['success']==false){
+						$usertoken = null;
+					}
 				}
-			}
-			if($usertoken==null){
-				$user = $model->authenticate_email($email);
-			}
-			if($user['success']==true)
-			{
-				$item->success = true;
-				$item->user_id = $user['user_id'];
-				$item->usertoken = $user['token'];
-			}else{
-				$u = $model->register();
-				$user = $model->authenticate_email($email);
 				if($user['success']==true)
 				{
 					$item->success = true;
 					$item->user_id = $user['user_id'];
+					$item->first_name = $user['first_name'];
+					$item->last_name = $user['last_name'];
 					$item->usertoken = $user['token'];
 				}
 			}
+			elseif($ref == 0){
+				$u = $model->register();
+				if($model->loginuser((string)$email,$input->get("tokenId", null,'string'))){
+					$user = $model->authenticate_email($email);
+					if($user['success']==true)
+					{
+						$item->success = true;
+						$item->user_id = $user['user_id'];
+						$item->first_name = $user['first_name'];
+						$item->last_name = $user['last_name'];
+						$item->usertoken = $user['token'];
+					}
+					$refferal = (string)$model->randStrGen(20);
+					$fname = (string)ucfirst($user['first_name']);
+					$subject = $fname.', you just joined Ushbub';
+					$body = <<<EOT
+					<div style="max-width:800px;">
+						<div style="height:50px;">
+							<img src="http://ushbub.co.uk/assets/images/logo_ushbub.png?uref=$refferal" style="height:50px;border-raduis:25px;">
+						</div>
+						<div>
+							<h1>Hey $fname, you're an Ushbubba now :)</h1>
+							<p>Thank you for joining Ushbub. We hope you find value in our community.</p>
+							<h2></h2>
+EOT;
+					if($regpoint == null):
+					$body .= <<<EOT
+							<h2>Do you own your own business?</h2>
+							<p>Register your business on our <a href="http://ushbub.co.uk/shops?ref=$refferal">free listings section</a> so other Ushbubba's can find and support your business.</p>
+							<p>You can update your preferences at any time, simply go to the preferences section on your profile page.</p>
+						</div>
+					</div>
+EOT;
+					endif;
+					if($regpoint == 'sc'):
+						$body .= <<<EOT
+								<h2>Believe you have what it takes to be the best?</h2>
+								<p>We think you could be a great competitor in our <a href="http://ushbub.co.uk/shops?ref=$refferal">Ushball predictor competition</a>. Be sure to check your scores daily to give you the best chance of getting maximum points.</p>
+								<p>Don't worry about forgetting to check, we will send you a reminder e-mail. If you need to change your e-mail preferences, you can update your preferences at any time, simply go to the preferences section on your profile page.</p>
+							</div>
+						</div>
+EOT;
+					endif;
+					$item->msg = $model->sendEmail($email, $fname, $subject, $body);
+					
+				}
+				else{
+					$item->msg = 'Sorry, the credentials are invalid, it looks like you already have an account.';
+				}
+			}
 		}
-		return array("user"=>$item);
+		return $item;
 	}
 	public function saveaddress()
 	{

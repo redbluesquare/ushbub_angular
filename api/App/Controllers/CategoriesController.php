@@ -15,10 +15,32 @@ class CategoriesController extends DefaultController
 		if($category != null)
 		{
 			$items = $model->listItems($category);
+			for($i=0;$i<count($items);$i++)
+			{
+				if($items[$i]->image_link==null)
+				{
+					$items[$i]->image_link = 'images/ddcshopbox/picna_ushbub.png';
+				}
+				if($items[$i]->cat_image==null)
+				{
+					$items[$i]->cat_image = 'images/ddcshopbox/picna_ushbub.png';
+				}
+			}
 		}
 		else 
 		{
 			$items = $model->listItems();
+			for($i=0;$i<count($items);$i++)
+			{
+				if($items[$i]->image_link==null)
+				{
+					$items[$i]->image_link = 'images/ddcshopbox/picna_ushbub.png';
+				}
+				if($items[$i]->cat_image==null)
+				{
+					$items[$i]->cat_image = 'images/ddcshopbox/picna_ushbub.png';
+				}
+			}
 		}
 		return $items;
 	}

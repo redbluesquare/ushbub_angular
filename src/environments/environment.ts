@@ -4,5 +4,10 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  Url:'http://localhost:8888/ushbub/api/profiles/login',
+  productsUrl: 'http://localhost:8888/ushbub/api/products',
+  categoriesUrl: 'http://localhost:8888/ushbub/api/categories',
+  vendorsUrl: "http://localhost:8888/ushbub/api/vendors",
+  profilesUrl:"http://localhost:8888/ushbub/api/profiles"
 };

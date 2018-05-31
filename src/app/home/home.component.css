@@ -1,5 +1,3 @@
-.header { grid-area: header;
-    background: url('../../assets/images/TRAINING-FOR-ANDROID.jpg') rgba(255, 255, 255, 0.5);background-position: 50% 50%; background-size: 100%;}
 .header h1{
     position: relative;
     text-align: center;
@@ -22,10 +20,22 @@
     padding: 20px 10px;
     border-radius:5px;
   }
-.mainframe{width:100%;height:340px;background:url('../../assets/images/local_community.jpg') rgba(255, 255, 255, 0.5);background-position: 50% 80%; background-size: 100%;}
-.mainframe h1{color:#fff;position: relative;top:260px;text-align: center;}
-.two-col{height:200px;}
-.two-col h2{width:110%;position: relative;right:5px;top:157px;text-align: center;background: rgba(5, 5, 5, 0.5)}
-.two-col h2 a{color:#fff;}
-.pt-div{background:url('../../assets/images/power_tools_general.jpg') rgba(255, 255, 255, 0.5);background-position: 50% 80%; background-size: 100%;}
-.fishing-ad{background:url('../../assets/images/anglers_delight.jpg') rgba(255, 255, 255, 0.5);background-position: 50% 80%; background-size: 100%;}
+.chngTown{color:#666;font-size:0.8em;}
+.mainframe{width:100%;height:250px;position: relative;overflow: hidden;}
+.pt-ws{padding:10px;height:340px;background:rgba(51, 48, 48, 0.1);background-position: 50% 80%; background-size: 100%;overflow: hidden;}
+.mainframe h1{padding:10px;position: absolute;top:300px;color:#16162b; }
+.mainframe>.row>div{position:inherit;border: 1px solid #cfcfcf;height:150px;border-radius: 5px;overflow: hidden;cursor: pointer;}
+.mainframe>.row>div>p{padding:10px;font-size: 1.2em;text-align:center;}
+.mainframe>.row>div>p>b{color:#0535b9;font-size: 1.3em;}
+.mainframe>.row>div>.caption{text-align:center;background:rgba(0,0,0,0.8);padding:10px 0px;position: absolute;top:121px;width:inherit;display:block;color:#efefef;margin: 0 auto;border-radius: 0px 0px 5px 5px;}
+.searchbar{margin: 0px auto;margin-top:150px;width:70%;}
+.searchbar input{width:70%;font-size:1.5em;padding:10px;border: 1px solid #dfdfdf;}
+.searchbar button{font-size: 1.4em;background: #16162b;color: #fff;position: relative;right: 5px;}
+.footyComp{position:relative;min-height:340px;background: teal url('../../assets/images/russia_2018_logo_wc.png');background-size: 100%;background-position: 50% 50%; padding:20px;border-radius: 8px;color: snow}
+.footyComp p{width:30%;background: rgba(158, 20, 20, 0.5);padding:20px;font-size: 1.3em;}
+.footyComp a{position: relative;top:40px;left:70%;cursor: pointer;}
+.pt-div h2,.fishing-ad h2{width:100%;position: relative;top:142px;text-align: center;background: rgba(5, 5, 5, 0.5);padding:5px 0px}
+.pt-div h2 a,.fishing-ad h2 a{color:#fff;}
+.pt-div{height:200px;background:url('../../assets/images/power_tools_general.jpg') rgba(255, 255, 255, 0.5);background-position: 50% 80%; background-size: 100%;}
+.fishing-ad{height:200px;background:url('../../assets/images/anglers_delight.jpg') rgba(255, 255, 255, 0.5);background-position: 50% 80%; background-size: 100%;}
+.showClick{cursor: pointer;}

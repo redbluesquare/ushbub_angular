@@ -1,0 +1,7 @@
+.footyComp{position:relative;min-height:340px;background: teal url('../../assets/images/russia_2018_logo_wc.png');background-size: 100%;background-position: 50% 50%; padding:20px;border-radius: 8px;color: snow}
+.footyComp p{width:30%;background: rgba(158, 20, 20, 0.5);padding:20px;font-size: 1.3em;}
+.footyComp button{position: relative;top:40px;left:70%;cursor: pointer;}
+.showBox{border: 1px #eaeaea solid;padding:10px;margin-top:10px;}
+.formBox{border:none;padding:120px 10px;text-align: center;}
+.formBox input{margin-top:8px;border:0px 0px 1px 0px #aaaaca solid;border-top:none;border-right:none;border-left:none;}
+.formBox input:focus{border-bottom-style:#3e90ee;}

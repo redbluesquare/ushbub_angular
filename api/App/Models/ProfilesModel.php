@@ -21,8 +21,8 @@ class ProfilesModel extends DefaultModel
 	protected function _buildQuery()
   	{
   		$query = $this->db->getQuery(true);
-  		$query->select('u.id, u.username, u.name, u.email, u.password')
-  			->from($this->db->quoteName('#__users', 'u'))
+  		$query->select('u.id, u.username, u.first_name, u.email, u.password')
+  			->from($this->db->quoteName('#__ddc_users', 'u'))
   			->group('u.id');
 		return $query;
 	}	
@@ -69,15 +69,14 @@ class ProfilesModel extends DefaultModel
 			$fname = $this->input->json->get("fname", null,'string');
 			$lname = $this->input->json->get("lname", null,'string');
 			$email = $this->input->json->get("email", null,'string');
-			$username = $this->input->json->get("username", null,'string');
 			$tokenID = $this->input->json->get("tokenId", null,'string');
 			$date = date("Y-m-d H:i:s");
 			$options = [
 					'cost' => 8,
 			];
 			$data = array(
-					$fname." ".$lname,
-					$username,
+					$fname,
+					$lname,
 					$email,
 					password_hash($tokenID, PASSWORD_BCRYPT,$options),
 					$date,
@@ -89,16 +88,14 @@ class ProfilesModel extends DefaultModel
 			}
 			else {
 				//Save user
-				$columns = array("name", "username", "email", "password", "registerDate", "params" );
-				$result = $this->insert("#__users", $columns, $data);
+				$columns = array("first_name", "last_name", "email", "password", "registerDate", "params" );
+				$result = $this->insert("#__ddc_users", $columns, $data);
 				$obj = $result;
 			}
-			
 		}else 
 		{
 			$obj = array("success" => false, "msg" => "request did not authenticate");
 		}
-	
 		return $obj;
 	}
 	public function authenticate_email($user_email)
@@ -108,13 +105,13 @@ class ProfilesModel extends DefaultModel
 			$columns = array("user_id","token", "series", "invalid", "time", "uastring" );
 			$token = $this->randStrGen(25);
 			$data = array($user->id,$token,$this->randStrGen(20),0,strtotime(Date('Y-m-d H:i:s'))+(3600*24),"ddcshopbox" );
-			$this->insert("#__user_keys", $columns, $data);
+			$this->insert("#__ddc_user_keys", $columns, $data);
 			$result['success'] = true;
 			$result['token'] = $token;
 			$result['user_id'] = $user->id;
-			$result['fullname'] = $user->name;
+			$result['first_name'] = $user->first_name;
+			$result['last_name'] = $user->last_name;
 		}
-	
 		return $result;
 	}
 	public function authenticate_token($token)
@@ -123,8 +120,8 @@ class ProfilesModel extends DefaultModel
 		
 		$query = $this->db->getQuery(true)
 		->select('u.id, uk.token')
-		->from('#__users as u')
-		->leftjoin('#__user_keys as uk on u.id = uk.user_id')
+		->from('#__ddc_users as u')
+		->leftjoin('#__ddc_user_keys as uk on u.id = uk.user_id')
 		->where('uk.token = ' . $this->db->quote($token));
 		$this->db->setQuery($query);
 		$response = $this->db->loadObject();
@@ -151,8 +148,8 @@ class ProfilesModel extends DefaultModel
 		$result = array("success" => false);
 		
 		$query = $this->db->getQuery(true)
-		->select('u.id, u.name, u.username, u.email, ui.*')
-		->from('#__users as u')
+		->select('u.id, u.first_name, u.username, u.email, ui.*')
+		->from('#__ddc_users as u')
 		->leftjoin('#__ddc_userinfos as ui on ui.user_id = u.id')
 		->leftjoin('#__user_keys as uk on (uk.user_id = u.id)')
 		->where('uk.token = ' . $this->db->quote($token));

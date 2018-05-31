@@ -1,0 +1,9 @@
+.pt-ws{width:100%;padding:10px;height:340px;background:url('../../assets/images/hardware_workshop.jpg') rgba(51, 48, 48, 0.5);background-position: 50% 80%; background-size: 100%;overflow: hidden;}
+.pt-ws div{background:rgba(51, 48, 48, 0.5);padding:10px;position: relative;top:80px;width: 90%;color:#efefef; }
+.pt-select{font-size: 0.8em;background: #fff;}
+.pt-item{padding:10px;border: rgba(151, 148, 148, 0.5) solid 1px;border-radius: 5px;margin:5px;cursor:pointer;text-align: center;background: #fff;}
+.pt-item p{text-align: center;font-size: 1.2em;font-weight: 300;}
+.process_select{width:30px;margin-right:10px;float:left;text-align:center;padding-top:100px;background: #fff;}
+.process_item{width:160px;height:400px;margin-right:10px;float:left;text-align: center;background: #fff;}
+.process_item img{width:150px;text-align:center;background: #fff;}
+.pt_tool{min-height:500px;}

@@ -1,63 +1,297 @@
-<div class="container">
+<div class="container" *ngIf="id==undefined">
+  <div class="col-md-12 mainframe">
+    <div>
+        <h1>The latest tech for the trade</h1>
+        <p>What makes these batteries pack a punch...</p>
+    </div>
+    <p class="pull-right"><a class="btn btn-primary" routerLink="/powertools/pro-core">Learn more about the COOLPACKS</a></p>
+  </div>
+  <div class="clearfix"></div>
+  <div class="col-md-6">
+      <p class="pull-right"><a class="btn btn-primary" routerLink="/powertools/best-18v-combi-drills-2018">The Best 18V combi drills</a></p>
+  </div>
+</div>
+<div class="container" *ngIf="id=='pro-core'">
+  <div class="col-md-12 mainframe">
+      <div>
+        <h1>The NEW ProCORE battery COOLPACK range</h1>
+      </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="col-md-12">
+    <div class="pt_tool_kit col-md-4 pull-right">
+      <img width="100%" src="../../assets/images/0615990G8K.jpg" title="Bosch 18V professional power tool kit" alt="Bosch 18V cordless professional 6 piece DYNAMIC range powertool kit that is made for the trade." />
+      <p class="tag boschblue">Fully compatible with<br>the existing 18 volt range</p>
+    </div>
+    
+    <p style="text-align: center;"><img src="../../assets/images/procore/gba_18v_procore_7ah_dyn_shadow_v2.jpg" width="350px"></p>
+    <div class="txtBold"><p>87</p>
+      <div class="txtCaption">87% more power than the previous 18 volt 6.0 Ah battery.</div>
+    </div>
+    <p>more power than the previous 18 volt 6.0 Ah battery
+        Approximately 30 percent smaller than comparable high-performance batteries
+        Optimised performance and long battery life thanks to CoolPack techology
+        More power than ever before, in an especially compact size: Bosch Professional is bringing a new dimension to the use of cordless tools with the ProCore 18V 7.0 Ah high-performance battery. The ProCore 18V 7.0 Ah offers approximately 90 percent more power than the previous 18 volt 6.0 Ah battery, improving efficiency.
+        
+        Two examples are
+        
+        When drilling with a 32 millimetre-diameter spade bit in softwood, the GSB 18V-85 C Professional cordless combi drill produces 50 percent more holes per battery charge when fitted with the ProCore 18V 7.0 Ah instead of the previous 18 volt 6.0 Ah battery.
+        On the GBH 18V-26 F Professional cordless rotary hammer, the high-performance battery even achieves a 75 percent increase in drilling depth at a diameter of 25 millimetres in C30/37 concrete.
+        This significant power increase is thanks to an improved cell design and measures taken to minimise internal resistances. At the same time, the ProCore 18V 7.0 Ah is impressively compact, with approximately 30 percent smaller dimensions than comparable high-performance batteries. These qualities mean it offers the highest energy density in its class.
+        
+        Optimised performance and battery life thanks to CoolPack technology
+        
+        Bosch has optimised its proven CoolPack technology even further, meaning that this high-performance battery can handle higher power demand over a longer period. This quality places the ProCore 18V 7.0 Ah miles ahead of comparable rival models.
+        
+        Overall, the CoolPack technology also helps to substantially prolong the battery's lifetime compared to a conventional battery. Heat dissipation from the inside out is maximised in this technology by the synergy between several components; the housing and the heat sinks in the interior, which completely encases each individual cell, are manufactured from high-density polyethylene. Both the material and the special design, aimed at maximising the surface area, facilitate better heat dissipation.
+        
+        In addition, the battery is designed without any internal spacing, which ensures the heat it produces is not caught in the interior. Improved cell connectors made from copper provides lower resistances and more power as a result. The battery pack has special openings for heat dissipation during the charging process as well. This cooling feature means that the battery can be charged very quickly. The five-level LED display allows tradespeople to keep the charge level of the ProCore 18V 7.0 Ah under control at all times.
+        
+        Fully compatible with the existing 18 volt range
+        
+        The ProCore 18V 7.0 Ah battery is part of the "Flexible Power System" from Bosch. The advantage of this system? Tradespeople who buy a battery from Bosch can use it immediately without having to worry about whether it is compatible. The "Flexible Power System" guarantees compatibility with all new and existing professional power tools and chargers within the same voltage class. That means greater productivity for professionals in everyday working situations.
+        
+        The ProCore 18V 7.0 Ah high-performance battery is now available at the recommended retail price of £181.54 from specialist retailers. This is the recommended retail price excluding VAT and is subject to change.</p>
+  </div>
+</div>
+<div class="container" *ngIf="id=='best-18v-impact-drivers-2018'">
+
+</div>
+<div class="container" *ngIf="id=='best-18v-combi-drills-2018'">
   <div class="row">
     <div class="pt-ws">
       <div>
-        <h1>Find the right accessory to get the job done!</h1>
-        <p>Have you ever been frustrated when you go to a hardware store and spend so long trawling to try find the right accessory to get the job done?</p>
-        <p>It sometimes resembles the thought of sifting through a workshop for the first time, trying to find that 5 pound mallet. Even after finding the accessory you think is right, you uncertain whether it will fit in the type of powertool you have at home.</p>
-        <p>After feeling like this many a time, we have decided to solve this problem that has plagued so many people and to make the lives of DIY and tradesmen easier with our accessory finder. Our tool guides you through the process of finding the ideal accessory to give you the results you want.</p>
+        <h1>The best 18 volt combo drills for the UK trade 2018</h1>
+        <p>Here are some of the best 18 volt combi drills we have found available to the trade in the UK market.</p>
+        <div class="itemQ" (click)="toggleState(1)">What is a combi drill?</div>
+        <div [@slideInOut]="itemState1"><p>A combi drill is an all purpose drill that can perform a variety of tasks and can also be referred to as a hammer drill driver or an impact drill and is usually the most expensive of these 3 options. The majority of combi drills will have a hammer setting which this gives the drill a similar impact force as well as a rotational force. This allows you to drill into concrete and masonry. If the combi drill is being used on masonry work, ensure you use specific masonry drill bits with a diamond or carbide tip and use a slower speed setting. The slower speed settings should also be used on materials that require high high torque. Higher drill speeds should be used when drilling into wood or metal.</p></div>
+        <div class="itemQ" (click)="toggleState(2)">The verdict:</div>
+        <div [@slideInOut]="itemState2">
+          <p>These 18 Volt combo drills all pack a decent punch and we believe each have their own unique place in the market. If your main factor is cost, then the Erbauer ERI691COM would be a good choice. It is just larger than the DeWalt DCD778L2T, has the quickest charge time at 48 minutes and has a brushless motor. It does however, offer the joint lowest torque at 45Nm, it has only a 2.0Ah battery and the 2 year Guarantee falls short compared to the other combis.</p>
+          <p>Our best 18 Volt combo drill currently for 2018 is the <a target="_blank" href="https://www.amazon.co.uk/gp/product/B0161PUKCK/ref=as_li_tl?ie=UTF8&camp=1634&creative=6738&creativeASIN=B0161PUKCK&linkCode=as2&tag=redblusqu0f-21&linkId=ac85e889e78f7ed38c464ec7b8e52841">Bosch Professional GSB 18-2-LI Plus</a><img src="//ir-uk.amazon-adsystem.com/e/ir?t=redblusqu0f-21&l=am2&o=2&a=B0161PUKCK" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />. It is the lightest of the drills and comes a close second in torque, just 2 Nm behind the <a target="_blank" href="https://www.amazon.co.uk/gp/product/B00OQP4FVU/ref=as_li_tl?ie=UTF8&tag=redblusqu0f-21&camp=1634&creative=6738&linkCode=as2&creativeASIN=B00OQP4FVU&linkId=2eb5daef237c21e80c7cf506716e6d8c">DeWalt</a> at 65Nm. Plus, the great price point on Amazon at just over &pound;40 cheaper, it will be sure to handle all the versatile tasks you require.</p>
+        </div>
       </div>
     </div>
   </div>
   <div class="clearfix"></div>
   <div class="row">
-      <div class="col-md-3">
-        <br>
-      </div>
-      <div class="col-md-9"><button *ngIf="progress>0" (click)="goBack()">Go Back</button></div>
+    <table class="table table-striped" style="text-align: center;">
+      <tbody>
+          <tr>
+            <th style="width:20%;"> </th>
+            <td><img src="../../assets/images/dewalt_18v_combi_360.jpg" /></td>
+            <td><img src="../../assets/images/makita_18v_combi_360.jpg" /></td>
+            <td><img src="../../assets/images/erbauer_18v_combi_360.jpg" /></td>
+            <td><img src="../../assets/images/Bosch_gsb_18-2_360.jpg" /></td>
+          </tr>
+        <tr>
+          <th>Battery Chemistry</th>
+          <td>Li-Ion</td>
+          <td>Li-Ion</td>
+          <td>Li-Ion</td>
+          <td>Li-Ion</td>
+        </tr>
+        <tr>
+          <th>Battery Power</th>
+          <td class="hlG">3.0 Ah</td>
+          <td class="hlG">3.0 Ah</td>
+          <td>2.0 Ah</td>
+          <td>2.0 Ah</td>
+        </tr>
+        <tr>
+          <th>Battery Technology</th>
+          <td>XR</td>
+          <td>LXT</td>
+          <td></td>
+          <td>Coolpack</td>
+        </tr>
+        <tr>
+          <th>Brand</th>
+          <td>DeWalt</td>
+          <td>Makita</td>
+          <td>Erbauer</td>
+          <td>Bosch</td>
+        </tr>
+        <tr>
+          <th>Brushless</th>
+          <td>Brushless</td>
+          <td>Brushless</td>
+          <td>Brushless</td>
+          <td>Brushed</td>
+        </tr>
+        <tr>
+          <th>Capacity Masonry</th>
+          <td>13 mm</td>
+          <td>13 mm</td>
+          <td>13 mm</td>
+          <td>13 mm</td>
+        </tr>
+        <tr>
+          <th>Capacity Steel</th>
+          <td>13 mm</td>
+          <td>13 mm</td>
+          <td>10 mm</td>
+          <td>13 mm</td>
+        </tr>
+        <tr>
+          <th>Capacity Wood</th>
+          <td>30 mm</td>
+          <td class="hlG">38 mm</td>
+          <td>35 mm</td>
+          <td class="hlG">38 mm</td>
+        </tr>
+        <tr>
+          <th>Carry Case/Bag Included</th>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <th>Carrying Facility</th>
+          <td>TSTAK Kit Box</td>
+          <td>Carry Case</td>
+          <td>Carry Case</td>
+          <td>L-BOXX</td>
+        </tr>
+        <tr>
+          <th>Charge Time</th>
+          <td>70 min</td>
+          <td>60 min</td>
+          <td class="hlG">48 min</td>
+          <td>60 min</td>
+        </tr>
+        <tr>
+          <th>Chuck Capacity</th>
+          <td>13mm</td>
+          <td>13mm</td>
+          <td>13mm</td>
+          <td>13mm</td>
+        </tr>
+        <tr>
+          <th>Chuck Type</th>
+          <td>Keyless Chuck</td>
+          <td>Keyless Chuck</td>
+          <td>Keyless Chuck</td>
+          <td>Keyless Chuck</td>
+        </tr>
+        <tr>
+          <th>Corded or Cordless</th>
+          <td>Cordless</td>
+          <td>Cordless</td>
+          <td>Cordless</td>
+          <td>Cordless</td>
+        </tr>
+        <tr>
+          <th>Manufacturer Guarantee</th>
+          <td>3 Year Manufacturer’s Guarantee (T&amp;Cs Apply)</td>
+          <td>3 Year Manufacturer’s Guarantee (T&amp;Cs Apply)</td>
+          <td>2 Year Manufacturer’s Guarantee (T&amp;Cs Apply)</td>
+          <td>3 Year Manufacturer’s Guarantee (T&amp;Cs Apply)</td>
+        </tr>
+        <tr>
+          <th>Max Torque</th>
+          <td class="hlG">65 Nm</td>
+          <td>45 Nm</td>
+          <td>45 Nm</td>
+          <td class="hlG">63 Nm</td>
+        </tr>
+        <tr>
+          <th>Model No</th>
+          <td>DCD778L2T-SFGB</td>
+          <td>DHP459SFE</td>
+          <td>ERI691COM</td>
+          <td>GSB 18-2-Li Plus</td>
+        </tr>
+        <tr>
+          <th>Speed with no Load</th>
+          <td class="hlG">0-500 / 1750 rpm</td>
+          <td>0-400/0-1500 rpm</td>
+          <td>0-400/0-1500 rpm</td>
+          <td class="hlG">0-500 / 0-1900 rpm</td>
+        </tr>
+        <tr>
+          <th>No. Torque Setting</th>
+          <td>15</td>
+          <td>16</td>
+          <td>21</td>
+          <td>20</td>
+        </tr>
+        <tr>
+          <th>No. of Batteries Per Pack</th>
+          <td>2</td>
+          <td>2</td>
+          <td>2</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <th>Pack Size</th>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <th>Pieces in Pack/Case</th>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <th>Power Voltage Supply</th>
+          <td>18 V</td>
+          <td>18 V</td>
+          <td>18 V</td>
+          <td>18 V</td>
+        </tr>
+        <tr>
+          <th>Product Height</th>
+          <td class="hlG">203 mm</td>
+          <td>256 mm</td>
+          <td>210 mm</td>
+          <td>230 mm</td>
+        </tr>
+        <tr>
+          <th>Product Length</th>
+          <td>204 mm</td>
+          <td class="hlG">192 mm</td>
+          <td>205 mm</td>
+          <td>202 mm</td>
+        </tr>
+        <tr>
+          <th>Product Type</th>
+          <td>Combi Drill</td>
+          <td>Combi Drill</td>
+          <td>Combi Drill</td>
+          <td>Combi Drill</td>
+        </tr>
+        <tr>
+          <th>Product Width</th>
+          <td>-</td>
+          <td>78 mm</td>
+          <td>85 mm</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <th>Tool Weight with Battery</th>
+          <td>3.8 kg</td>
+          <td>2.7 kg</td>
+          <td>2.7 kg</td>
+          <td class="hlG">1.7 kg</td>
+        </tr>
+        <tr class="bgClear">
+          <th>Amazon Affiliate Links</th>
+          <td><iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=GB&source=ac&ref=tf_til&ad_type=product_link&tracking_id=redblusqu0f-21&marketplace=amazon&region=GB&placement=B00OQP4FVU&asins=B00OQP4FVU&linkId=ddc9533aec56a004211076e67a0f8f81&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
+          </iframe></td>
+          <td><iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=GB&source=ac&ref=tf_til&ad_type=product_link&tracking_id=redblusqu0f-21&marketplace=amazon&region=GB&placement=B074XD9RBS&asins=B074XD9RBS&linkId=39686fe31db00ed0cc64cf45bb64c422&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
+          </iframe></td>
+          <td><iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=GB&source=ac&ref=tf_til&ad_type=product_link&tracking_id=redblusqu0f-21&marketplace=amazon&region=GB&placement=B0758F9XMD&asins=B0758F9XMD&linkId=6f65bed8ad92acb2edc834816adcb6b3&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
+          </iframe></td>
+          <td><iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=GB&source=ac&ref=tf_til&ad_type=product_link&tracking_id=redblusqu0f-21&marketplace=amazon&region=GB&placement=B0161PUKCK&asins=B0161PUKCK&linkId=d8b79b6d88e49d73ca4c11bc5c02a10a&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff">
+          </iframe></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <div class="clearfix"></div>
-  <div class="row">
-    <div class="col-md-3">
-      <table class="table pt-select">
-        <tbody>
-          <tr>
-            <td>Product Type:</td><td>{{product_type}}</td>
-          </tr>
-          <tr>
-            <td>Connector:</td><td>{{connector}}</td>
-          </tr>
-          <tr>
-            <td>Material Category:</td><td> </td>
-          </tr>
-          <tr>
-            <td>Material Sub-Category:</td><td> </td>
-          </tr>
-        </tbody>
-      </table>
-      <progress value="{{progress*19}}" max="100">
-          {{progress}} Complete
-      </progress>
-
-    </div>
-    <div class="col-md-9" *ngIf="progress==0">
-      <div *ngFor="let category of categories" class="col-md-3">
-        <div (click)="onSelectCat(category.alias,category.title)" class="pt-item">
-          <img src="{{ checkLink(category.image_link) }}" height="100px" max-width="100%" /><br>
-          <p>{{category.title}}</p>
-        </div>
-      </div>
-      <div class="clearfix"></div>
-    </div>
-    <div class="col-md-9" *ngIf="progress==1">
-        <div *ngFor="let connector of connectors" class="col-md-3">
-          <div (click)="onSelectConnector(connector.connector)" class="pt-item">
-            <img src="{{ checkLink(connector.image_link) }}" height="100px" max-width="100%" /><br>
-            <p>{{connector.connector}}</p>
-          </div>
-        </div>
-        <div class="clearfix"></div>
-      </div>
-  </div>
-  <div class="clearfix"></div>
 </div>

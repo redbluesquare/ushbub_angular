@@ -1,6 +1,9 @@
 export class User {
-  success: boolean;
+  success:boolean;
   user_id:number;
-  fullname: string;
-  userToken:string;
+  usertoken:string;
+  first_name:string;
+  last_name:string;
+  msg:string;
+  profiles:any;
 }

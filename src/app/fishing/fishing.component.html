@@ -1,0 +1,88 @@
+<div class="container" *ngIf="id==undefined">
+  <div class="row">
+    <div class="col-md-12">
+      <h1><a routerLink="/fishing/anglers-delight"><img src="../../assets/images/ad_logo.png" title="Anglers Delight" alt="A fishing community that is dedicated to helping every fisherman find success at their fishing." /></a></h1>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="container" *ngIf="page=='cotm'">
+  <div class="row">
+    <div class="col-md-12">
+      <h1><a routerLink="/fishing/anglers-delight"><img src="../../assets/images/ad_logo.png" title="Anglers Delight" alt="A fishing community that is dedicated to helping every fisherman find success at their fishing." /></a></h1>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Catch Of The Month</h2>
+      <p>The winners of Catch Of The Month are displayed here. If you want to be part of the action, be sure to join the <a href="https://www.facebook.com/groups/349592042175672/" target="_BLANK">Facebook group</a> and post your catch with the weight.</p>
+      <table class="table">
+        <thead>
+          <tr style="text-align: left;">
+            <th>Name</th>
+            <th>Weight (lb)</th>
+            <th>Month</th>
+            <th>Year</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td (click)="COTMpic('Phil','april18')"><a>Phil Bain</a></td>
+            <td>17.2</td>
+            <td>April</td>
+            <td>2018</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</div>
+<div class="clearfix"></div>
+<div class="container" *ngIf="(id=='anglers-delight') && (page==undefined)">
+  <div class="row">
+    <div class="col-md-12">
+      <h1><img src="../../assets/images/ad_logo.png" title="Anglers Delight" alt="A fishing community that is dedicated to helping every fisherman find success at their fishing." /></h1>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-md-4">
+      <div class="mainBox">
+        <h1>Connect with us on Facebook</h1>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mainBox">
+        <p>Check out the latest Anglers Delight Offers</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <a routerLink="/fishing/anglers-delight/cotm">
+      <div class="mainBox">
+        <h1>#COTM</h1>
+        <p>Our monthly <br>
+        <b>C</b>atch <b>O</b>f <b>T</b>he <b>M</b>onth achievers</p>
+      </div>
+      </a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="clearfix"></div>
+</div>
+<!-- The Modal -->
+<div [ngClass]="modalClass">
+
+  <div class="modal-header">
+    <span (click)="COTMpic()" class="close">&times;</span>
+    <h2>{{picname}}'s Catch Of The Month</h2>
+    
+  </div>
+  <!-- Modal content -->
+  <div class="modal-content">
+    <p style="text-align: center;"><img src="{{picimg}}" title="{{picname}}'s Catch Of The Month" height="340px" /></p>
+  </div>
+  <div class="modal-footer">
+      
+    </div>
+  
+  </div>

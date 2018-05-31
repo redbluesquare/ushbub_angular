@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="row">
+    <a href="https://www.youtube.com/watch?v=cubwduHbam0&list=PLWbIvgEXhyFK7mAtmcFsXkB2-55dN6taD" target="_BLANK">
+      <div class="col-md-12 shopadvert">
+        <p>Create a REST API with the <b>Joomla! Framework</b></p>
+      </div>
+    </a>
+    <div class="clearfix"></div>
+  </div>
+  <div class="row">
+      <div class="col-md-12">
+        <button class="btn btn-primary pull-right"><i class="icon icon-white icon-plus"></i> Add a listing</button>
+        <div class="col-md-12 addshop" style="margin-bottom:5px;">
+          <input class="form-control" [(ngModel)]="title" type="text"placeholder="Shop Name" />
+        </div>
+        <div class="col-md-12" style="margin-bottom:5px;">
+          <input class="form-control" [(ngModel)]="shop_type" type="text" placeholder="Type of Shop" />
+        </div>
+        <div class="col-md-12" style="margin-bottom:5px;">
+          <textarea class="form-control" [(ngModel)]="description" placeholder="Describe the shop in your words. Please tell customers what they can find by visiting."></textarea>
+        </div>
+        <div class="col-md-6" style="margin-bottom:5px;">
+          <input class="form-control" [(ngModel)]="full_name" type="text" placeholder="Full Name" />
+        </div>
+        <div class="col-md-6" style="margin-bottom:5px;">
+          <input class="form-control" [(ngModel)]="email" type="email" placeholder="E-mail" />
+        </div>
+
+      </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="row" *ngFor="let vendor of vendors">
+    <p>{{vendor.ddc_vendor_id}}</p>
+  </div>
+</div>

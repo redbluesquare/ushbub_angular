@@ -1,9 +1,13 @@
 <div class="container">
-  <div>
-  <input [(ngModel)]="username" placeholder="Username" /><input [(ngModel)]="password" type="password" placeholder="Password" />
-  <button class="btn btn-primary" (click)="login()">Login</button><br>
+  <div class="row login-form" *ngIf="!user">
+      <div class="col-md-12">
+        <input [(ngModel)]="email" placeholder="E-mail" /><input [(ngModel)]="password" type="password" placeholder="Password" />
+        <button class="btn btn-primary" (click)="login()">Login</button><br>
+        </div>
   </div>
-  <div *ngIf="user">
-    <div>{{user.fullname}}</div>
+  <div class="row" *ngIf="user">
+    <div class="col-md-12">
+      <p>{{user.first_name}}</p>
+    </div>
   </div>
 </div>

@@ -73,6 +73,37 @@ class ProductsController extends DefaultController
 		return $item;
 	}
 
+	public function subcat()
+	{
+		$cat = $this->getInput()->getString('id',null);
+		$model = new ProductsModel($this->getInput(), $this->getContainer()->get('db'));
+		if($cat != null)
+		{
+			$items = $model->listItems($cat);
+			for($i=0;$i<count($items);$i++)
+			{
+				if($items[$i]->image_link==null)
+				{
+					$items[$i]->image_link = 'images/ddcshopbox/picna_ushbub.png';
+				}
+			}
+		}
+		else 
+		{
+			$items = $model->listItems();
+			for($i=0;$i<count($items);$i++)
+			{
+				//$items[$i]->product_price = $model->getProductPrice($items[$i]->ddc_vendor_product_id);
+				//$items[$i]->product_params = json_decode($items[$i]->product_params);
+				if($items[$i]->image_link==null)
+				{
+					$items[$i]->image_link = 'images/ddcshopbox/picna_ushbub.png';
+				}
+			}
+		}
+		return $items;
+	}
+
 	public function connectors()
 	{
 		$result = false;

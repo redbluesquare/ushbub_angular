@@ -1,5 +1,24 @@
-.pt-ws{width:100%;padding:10px;height:340px;background:url('../../assets/images/hardware_workshop.jpg') rgba(51, 48, 48, 0.5);background-position: 50% 80%; background-size: 100%;}
-.pt-ws div{background:rgba(51, 48, 48, 0.5);padding:10px;position: relative;top:110px;width: 90%;color:#efefef; }
-.pt-select{font-size: 0.8em;}
-.pt-item{padding:10px;border: rgba(151, 148, 148, 0.5) solid 1px;border-radius: 5px;margin:5px;cursor:pointer;}
+.pt-ws{width:100%;position:relative;background:rgba(154, 193, 230, 0.1);overflow: hidden;}
+.pt-ws h1{background:rgba(49, 48, 51, 0.5);padding:10px;position: inherit;left:0px;top:20px;color:#efefef; }
+.pt-select{font-size: 0.8em;background: #fff;}
+.pt-item{padding:10px;border: rgba(151, 148, 148, 0.5) solid 1px;border-radius: 5px;cursor:pointer;text-align: center;background: #fff;}
 .pt-item p{text-align: center;font-size: 1.2em;font-weight: 300;}
+.process_select{width:30px;margin-right:10px;float:left;text-align:center;padding-top:100px;background: #fff;}
+.process_item{width:160px;height:400px;margin-right:10px;float:left;text-align: center;background: #fff;}
+.process_item img{width:150px;text-align:center;background: #fff;}
+.pt_tool{min-height:500px;}
+.itemQ{padding:10px 5px 10px 0px;font-size: 1.1em;color:#1e0a68;cursor: pointer;}
+.hlG{font-weight:500;color:green;}
+.mainframe{width:100%;height:340px;background:url('../../assets/images/procore/s050_bosch_range_1075_w3_f_ohne_text.jpg') rgba(51, 48, 48, 0.1);background-position: 50% 80%; background-size: 100%;}
+.mainframe>div{background:rgba(51, 48, 48, 0.7);padding:10px 30px 30px 30px;position: relative;top:200px;color:#efefef;float: left;}
+.mainframe>div>h1{margin:5px;}
+.mainframe>div>p{font-size:1.4em;margin:5px;}
+.mainframe>p{position: absolute;top:320px;right:150px; }
+.pt_tool_kit{margin:5px;padding:10px;}
+.tag{position:relative;bottom:30px;padding:10px;background: rgba(245, 245, 220, 0.705);-ms-transform: rotate(-10deg);-webkit-transform: rotate(-10deg);transform: rotate(-10deg);}
+.boschblue{color:#180657;font-size: 1.5em;text-align: center;}
+.txtBold{border: rgba(151, 148, 148, 0.5) 1px solid;padding:10px 10px 10px 10px;width: 110px;height:110px;text-align: center;overflow: hidden;border-radius: 10px;}
+.txtBold>p{font-size:5em;display: block;margin: 0px;}
+.txtBold:hover>p{display: none;}
+.txtCaption{float:left;display:none;text-align: center;font-size: 1.15em;}
+.txtBold:hover>.txtCaption{display: block;}

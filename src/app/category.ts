@@ -4,4 +4,5 @@ export class Category {
   'description':string;
   'image_link':string;
   'alias':string;
+  'cat_image':string;
 }

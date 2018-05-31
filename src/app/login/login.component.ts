@@ -10,23 +10,34 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent implements OnInit {
   isLoggedIn = false;
-  username = null;
+  email = null;
   password = null;
-  user : User[];
+  user : User;
 
 
   constructor(private authService: AuthService) {}
    
   
   login(): any{
-    if((this.username) || (this.password)){
-      if(this.authService.login(this.username,this.password).subscribe(user => this.authService.saveData(user))){
+    if((this.email) || (this.password)){
+      if(this.authService.login(this.email,this.password)
+        .subscribe(user => this.authService.saveData(user,''))){
       }
     }
 
   }
 
   ngOnInit() {
+    if (localStorage.getItem('isLoggedIn') == '1'){
+      this.authService.isLoggedIn = true;
+      if(localStorage.getItem('last_name')==undefined){
+        this.user.last_name = localStorage.getItem('last_name');
+      }else{
+        this.user.last_name = '';
+      }
+      this.user.first_name = localStorage.getItem('first_name');
+      return true;
+    }
     
   }
 

@@ -11,7 +11,7 @@
       <a routerLink="/login">Login</a>
     </nav>
     <nav class="pull-right" *ngIf="authService.isLoggedIn">
-      <span (click)="logout()">Logout</span>
+      <span class="link" (click)="logout()">Logout</span>
     </nav>
   </div>
 </div>
