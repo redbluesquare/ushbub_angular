@@ -5,9 +5,11 @@
 
 export const environment = {
   production: false,
-  Url:'http://localhost:8888/ushbub/api/profiles/login',
-  productsUrl: 'http://localhost:8888/ushbub/api/products',
   categoriesUrl: 'http://localhost:8888/ushbub/api/categories',
-  vendorsUrl: "http://localhost:8888/ushbub/api/vendors",
-  profilesUrl:"http://localhost:8888/ushbub/api/profiles"
+  Url:'http://localhost:8888/ushbub/api/profiles/login',
+  messagesUrl: 'http://localhost:8888/ushbub/api/messages',
+  productsUrl: 'http://localhost:8888/ushbub/api/products',
+  profilesUrl:"http://localhost:8888/ushbub/api/profiles",
+  sportscompUrl:"http://localhost:8888/ushbub/api/sports-comp",
+  vendorsUrl: "http://localhost:8888/ushbub/api/vendors"
 };

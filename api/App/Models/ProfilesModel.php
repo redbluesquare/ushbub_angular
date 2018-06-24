@@ -21,14 +21,14 @@ class ProfilesModel extends DefaultModel
 	protected function _buildQuery()
   	{
   		$query = $this->db->getQuery(true);
-  		$query->select('u.id, u.username, u.first_name, u.email, u.password')
+  		$query->select('u.id, u.username, u.first_name, u.last_name, u.email, u.password')
   			->from($this->db->quoteName('#__ddc_users', 'u'))
   			->group('u.id');
 		return $query;
 	}	
 	protected function _buildWhere(&$query, $val)
 	{
-		if(is_int($val) > 0)
+		if((int)$val > 0)
 		{
 			$query->where('u.id = '.(int)$val);
 		}
@@ -374,5 +374,10 @@ class ProfilesModel extends DefaultModel
 		
 		    				return true;
 		}
+	}
+
+	public function emailTemplate($names = array(), $values=array(), $body = ''){
+		$body = str_replace($names, $values, $body);
+		return $body;
 	}
 }

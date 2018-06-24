@@ -85,12 +85,12 @@ class DefaultModel extends AbstractDatabaseModel
 		 
 	}
 	
-	public function getItemById($id1 = null, $id2 = null, $id3 = null)
+	public function getItemById($id1 = null, $id2 = null, $id3 = null, $id4 = null)
 	{
 		$query = $this->db->getQuery(true);
 			
 		$query = $this->_buildQuery();
-		$this->_buildWhere($query, $id1, $id2, $id3);
+		$this->_buildWhere($query, $id1, $id2, $id3, $id4);
 		$this->db->setQuery($query);
 		return $this->db->setQuery($query)->loadObject();
 	}
@@ -106,11 +106,11 @@ class DefaultModel extends AbstractDatabaseModel
 		return $this->db->setQuery($query)->loadObject();
 	}
 	
-	public function listItems($id1 = null, $id2 = null, $id3 = null)
+	public function listItems($id1 = null, $id2 = null, $id3 = null, $id4 = null)
   	{
   		$query = $this->db->getQuery(true);
   		$query = $this->_buildQuery();
-  		$this->_buildWhere($query, $id1, $id2, $id3);
+  		$this->_buildWhere($query, $id1, $id2, $id3, $id4);
   
   		return $this->db->setQuery($query, $this->limitstart, $this->limit)->loadObjectList();
  	}

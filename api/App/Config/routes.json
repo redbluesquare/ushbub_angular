@@ -6,6 +6,9 @@
 	"categories":"\\Controllers\\CategoriesController",
 	"categories/:task":"\\Controllers\\CategoriesController",
 	"categories/:task/:id":"\\Controllers\\CategoriesController",
+	"messages":"\\Controllers\\MessagesController",
+	"messages/:task":"\\Controllers\\MessagesController",
+	"messages/:task/:id":"\\Controllers\\MessagesController",
 	"products":"\\Controllers\\ProductsController",
 	"products/:task":"\\Controllers\\ProductsController",
 	"products/:task/:id":"\\Controllers\\ProductsController",
@@ -15,10 +18,13 @@
 	"shoppingcarts":"\\Controllers\\ShoppingcartsController",
 	"shoppingcarts/:task":"\\Controllers\\ShoppingcartsController",
 	"shoppingcarts/:task/:id":"\\Controllers\\ShoppingcartsController",
-	"vendors":"\\Controllers\\VendorsController",
-	"vendors/:task":"\\Controllers\\VendorsController",
-	"vendors/:task/:id":"\\Controllers\\VendorsController",
+	"sports-comp":"\\Controllers\\SportscompsController",
+	"sports-comp/:task":"\\Controllers\\SportscompsController",
+	"sports-comp/:task/:id":"\\Controllers\\SportscompsController",
 	"subscriptions":"\\Controllers\\SubscriptionsController",
 	"subscriptions/:task":"\\Controllers\\SubscriptionsController",
-	"subscriptions/:task/:id":"\\Controllers\\SubscriptionsController"
+	"subscriptions/:task/:id":"\\Controllers\\SubscriptionsController",
+	"vendors":"\\Controllers\\VendorsController",
+	"vendors/:task":"\\Controllers\\VendorsController",
+	"vendors/:task/:id":"\\Controllers\\VendorsController"
 }

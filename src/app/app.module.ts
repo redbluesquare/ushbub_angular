@@ -23,6 +23,8 @@ import { ShopListComponent } from './shop-list/shop-list.component';
 import { EventListComponent } from './event-list/event-list.component';
 import { ActivityListComponent } from './activity-list/activity-list.component';
 import { WorldCupComponent } from './world-cup/world-cup.component';
+import { ProfileComponent } from './profile/profile.component';
+import { ScoreBoardComponent } from './score-board/score-board.component';
 
 
 @NgModule({
@@ -41,7 +43,9 @@ import { WorldCupComponent } from './world-cup/world-cup.component';
     ShopListComponent,
     EventListComponent,
     ActivityListComponent,
-    WorldCupComponent
+    WorldCupComponent,
+    ProfileComponent,
+    ScoreBoardComponent
   ],
   imports: [
     BrowserModule,

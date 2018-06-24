@@ -1,0 +1,11 @@
+table[class*="checkbox"]{height:0px;overflow:hidden;}
+.gameClass{padding-top:10px;margin-bottom:5px;min-height: fit-content;margin:0px auto;min-height:80px;border-bottom:1px solid #eaeaea;}
+.gameStats{width:80px;height:30px;padding-top:5px;float:left;color:#535357}
+.gameStats p{font-size:0.6em;line-height:6px;}
+.gameClass a{position: relative;top:20px;}
+.teamclass{width:140px;height:30px;padding:20px 10px;float:left;text-align: center;font-size:1em;}
+.teamflag{position: relative;top:4px;left:-5px;width:18px;height:18px;text-align:center;overflow: hidden;border-radius:8px;box-shadow:1px 1px 5px #aaaaca;}
+.teamflag img{height:inherit;}
+.vsclass{width:15px;padding:23px 5px;height:30px;float:left;text-align: center;font-style: italic;font-size: 0.8em;}
+.gameUGscore{width:20px;padding:20px 3px;height:30px;float:left;text-align: center;font-size:1.1em;}
+.gameinput{padding:10px;height:30px;float:left;text-align: center;width:20px;font-size:1.1em;}

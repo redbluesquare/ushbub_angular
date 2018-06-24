@@ -11,20 +11,20 @@
       <h1>The Ushball World Cup Predictor Game</h1>
       <p style="text-align: center;">Welcome to Ushball, the 2018 football world cup predictor game! Here, you will compete against your friends for the bragging rights as </p>
       <p style="text-align: center;"><b>"The 2018 World Cup Football Predictor Champion!"</b></p>
-      <p><a class="btn btn-error btn-lg pull-right" (click)="registerInterest(2)">Register NOW</a></p>
+      <p><a *ngIf="itemState1=='out'" class="btn btn-error btn-lg pull-right" (click)="registerInterest(2)">Register NOW</a></p>
       <div class="clearfix"></div>
       <div class="showBox">
         <h2>Rules of engagement</h2>
         <p>Put your predictions to the test. Compete against your friends! <a *ngIf="itemState1=='out'" class="btn btn-primary pull-right" (click)="toggleState(1)">Learn more</a> </p>
         <div [@slideInOut]="itemState1">
           <ul>
-            <li>Guess the correct score and get 3 points<sup>1</sup></li>
-            <li>30 Points up for grabs</li>
+            <li>Guess the correct score and get 3 points<i><sup>1</sup></i></li>
+            <li>30 Bonus points up for grabs</li>
           </ul>
           <p><a class="btn btn-error btn-lg pull-right" (click)="registerInterest(2)">Book your place NOW</a></p>
           <p>Do you have what it takes to out smart your friends?</p>
           <div class="clearfix"></div>
-          <p style="font-size: 0.8em;"><i>1 Point for a win, draw or lose. 1 Point for the correct home team score and 1 point for the correct away team score.
+          <p style="font-size: 0.8em;"><i><i><sup>1</sup></i>1 Point for a win, draw or lose. 1 Point for the correct home team score and 1 point for the correct away team score.
           <br>You can get a maximum of 222 points.</i></p>
         </div>
         <div class="clearfix"></div>
@@ -44,33 +44,180 @@
         <h3>Can we keep in touch?</h3>
         <label>Hello {{fname | titlecase }}, in order to keep you up to date on the league table, we need an e-mail address to send you updates.</label>
         <input class="form-control" [(ngModel)]="email_address" type="email" placeholder="messageme@example.com" />
-        <p style="font-size: 0.8em;"><i>We will only contact you relating to the Ushball game and we never share your information with any third party. Plus, you can unsubscride to any updates at any time.</i></p><br><br>
+        <p style="font-size: 0.8em;"><i>We will only contact you relating to the Ushball game and we never share your information with any third party. Plus, you can unsubscribe to any updates at any time.</i></p><br><br>
         <a class="btn btn-default" (click)="gotoregStep(3)">Next <i class="icon icon icon-chevron-right"></i></a>
         <p class="txtError" *ngIf="error_msg">{{error_msg}}</p>
       </fieldset>
       <fieldset *ngIf="regStep==3" class="formBox">
         <h3>Your security is our concern.</h3>
-        <label>{{fname | titlecase }}, although we take extreme caution to keep your predictions secure, we sometimes may need to validate who you are. Please create your personalised password</label>
+        <label>Please create your personalised password to access your account.</label>
         <input class="form-control" [(ngModel)]="password1" type="password" placeholder="Your secret password" />
         <input class="form-control" [(ngModel)]="password2" type="password" placeholder="Confirm your secret password" /><br><br>
+        <p style="font-size: 0.8em;"><i>{{fname | titlecase }}, although we take extreme caution to keep your predictions secure, we sometimes may need to validate who you are.</i></p>
         <a class="btn btn-default" (click)="gotoregStep(4)">Next <i class="icon icon icon-chevron-right"></i></a>
         <p class="txtError" *ngIf="error_msg">{{error_msg}}</p>
       </fieldset>
-      <fieldset *ngIf="regStep==4" class="formBox">
-        <div class="pull-right"></div>
-          <h3>The Ushball competition is starting soon...</h3>
-          <div *ngIf="usergroupmap">
-            <p *ngIf="usergroupmap.state==0">You have joined our waitinglist.</p>
+      <div class="clearfix" *ngIf="regStep==4">
+          <div class="col-md-12" *ngIf="sc_user">
+            <h3 class="formBox" *ngIf="usergroupmap[0]?.state==0">The Ushball competition is starting soon...</h3>
+            <p class="formBox" *ngIf="usergroupmap?.state==0">You have joined our waitinglist.</p>
+            <div class="col-md-4 pull-right" *ngIf="usergroupmap[0]?.state==1">
+              <select [(ngModel)]="group_id" name="group_id" (change)="getParticipants(group_id)">
+                <option *ngFor="let ugm of usergroupmap" [value]="ugm.group_id">{{ugm.title}}</option>
+              </select>
+              <h3>Leaderboard</h3>
+              <table class="table table-striped">
+                <thead>
+                  <tr style="text-align:left;">
+                    <th width="20%">Pos.</th>
+                    <th width="60%">Name</th>
+                    <th width="20%">Points</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let parti of participants">
+                    <td>{{ parti.position }}</td>
+                    <td>{{parti.first_name}}</td>
+                    <td *ngIf="parti.state==1" style="text-align:center;">{{parti.points || 0}}</td>
+                    <td *ngIf="parti.state==0" style="text-align:center;">pending...</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="col-md-12">
+                <h3>League Message Board</h3>
+                <textarea [(ngModel)]="message_post" rows="4" cols="20" class="col-md-12"></textarea>
+                <button (click)="saveMessage()" class="btn btn-primary">Submit</button>
+                <div class="col-md-12">
+                  <div class="messageBox" *ngFor="let userpost of userposts">
+                    <p><sup style="font-size:0.7em;text-align:right;display:block;"><i>{{userpost.user_from}} - {{userpost.created_on.split(' ')[0] | date:'d MMM'}}</i></sup><br>
+                      {{userpost.message}}
+                      </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-8" *ngIf="usergroupmap[0]?.state==1">
+              <a class="click btn btn-primary pull-left" (click)="toggleState(3)" *ngIf="itemState3=='out'">Update your score predictions</a>
+              <a class="click btn btn-primary pull-left" (click)="toggleState(3)" *ngIf="itemState3=='in'">Hide your score predictions</a>
+              <a class="link btn btn-default pull-right" routerLink="/score-board">Scoreboard</a>
+              <div class="clearfix"></div>
+              <div [@slideInOut]="itemState4">
+                <div class="gameClass" *ngIf="bonusquestions[0]?.question">
+                  <div class="alert alert-success" *ngIf="update_success!=''">
+                    <p>{{update_success}}</p>
+                  </div>
+                  <div class="control-group">
+                    <label>{{bonusquestions[0].question}}</label>
+                    <select class="form-control" [(ngModel)]="winner_wc" name="winner_wc" (change)="updateBonusQ(bonusquestions[0].id,bonusquestions[0].ubg_id,winner_wc)">
+                      <option *ngFor="let team of teams" [value]="team.id">{{team.country}}</option>
+                    </select>
+                  </div>
+                  <div class="control-group">
+                      <label>{{bonusquestions[1].question}}</label>
+                    <select class="form-control" [(ngModel)]="golden_boot" name="golden_boot" (change)="updateBonusQ(bonusquestions[1].id,bonusquestions[1].ubg_id,golden_boot)">
+                      <option *ngFor="let player of players" [value]="player.id">{{player.player_name}}, {{player.country}}</option>
+                    </select>
+                  </div>
+                  <div class="control-group">
+                      <label>{{bonusquestions[2].question}}</label>
+                    <select class="form-control" [(ngModel)]="golden_game" name="golden_game" (change)="updateBonusQ(bonusquestions[2].id,bonusquestions[2].ubg_id,golden_game)">
+                      <option *ngFor="let game of games" [value]="game.game_no">{{game.game_no}}: {{game.country1}} vs {{game.country2}}</option>
+                    </select>
+                  </div>
+                  <div class="control-group">
+                      <label>{{bonusquestions[3].question}}</label>
+                    <select class="form-control" [(ngModel)]="best_team_game" name="best_team_game" (change)="updateBonusQ(bonusquestions[3].id,bonusquestions[3].ubg_id,best_team_game)">
+                      <option *ngFor="let team of teams" [value]="team.id">{{team.country}}</option>
+                    </select>
+                  </div>
+                  <div class="control-group">
+                      <label>{{bonusquestions[4].question}}</label>
+                    <select class="form-control" [(ngModel)]="worst_team" name="worst_team" (change)="updateBonusQ(bonusquestions[4].id,bonusquestions[4].ubg_id,worst_team)">
+                      <option *ngFor="let team of teams" [value]="team.id">{{team.country}}</option>
+                    </select>
+                  </div>
+                  <div class="control-group">
+                      <label>{{bonusquestions[5].question}}</label>
+                    <select class="form-control" [(ngModel)]="golden_team" name="golden_team" (change)="updateBonusQ(bonusquestions[5].id,bonusquestions[5].ubg_id,golden_team)">
+                      <option *ngFor="let team of teams" [value]="team.id">{{team.country}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div [@slideInOut]="itemState3">
+                <div class="gameClass" *ngFor="let game of games">
+                  <div class="gameStats">
+                    <p>{{game.game_date.split(' ')[0] | date:'d MMM y'}}</p>
+                    <p>Group: {{game.group}}</p>
+                    <p>Game #: {{game.game_no}}</p>
+                  </div>
+                  <div class="teamclass">
+                    <img class="teamflag-left" src="{{game.flag1}}" />
+                    <div class="teamname-left">{{game.country1}}</div>
+                    <div class="gameUGscore">{{game.scoreA || "0"}}</div>
+                  </div>
+                  <div class="vsclass">vs</div>
+                  <div class="teamclass">
+                    <img class="teamflag-right" src="{{game.flag2}}" />
+                    <div class="teamname-right">{{game.country2}}</div>
+                    <div class="gameUGscore">{{game.scoreB || "0"}}</div>
+                  </div>
+                  <a *ngIf="!game.guess_id" class="btn btn-success" (click)="predictModal(game)"><i class="icon icon-white icon-plus"></i></a>
+                  <a *ngIf="game.guess_id" class="btn btn-default" (click)="predictModal(game)"><i class="icon icon-pencil"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-8 pull-left" *ngIf="usergroupmap[0]?.state==1">
+              <h2>League Rules</h2>
+              <ul>
+                <li>There are 6 bonus predictions that must be completed before the competition begins.</li>
+                <li>For every game, you need to update your scores by the day before the game.</li>
+                <li>You get 1 point for the correct result.</li>
+                <li>You get 1 point if you get the correct home team score.</li>
+                <li>You get 1 point if you get the away team score correct.</li>
+                <li>Every game has a maximum of 3 points.</li>
+                <li>Each correct bonus prediction is worth 5 points.</li>
+                <li>A maximum total of 222 points can be achieved.</li>
+              </ul>
+            </div>
           </div>
-          <div *ngIf="!usergroupmap">
+          <div *ngIf="!sc_user" style="padding-bottom:300px;">
+            <h3>The Ushball Predictor competition is starting soon...</h3>
             <p>To participate, you need to be invited by a current member of the competition. There are some users who are added to the platform on a daily basis. To stand a chance to get your hands on one of the invitations, just click to join the waitinglist.</p>
-            <p class="lg-p"><a *ngIf="!sc_user" class="btn btn-primary link" (click)="addtolist('2018 Football World Cup')">Add me to the waitinglist</a></p>
+            <p class="lg-p"><a class="btn btn-primary link" (click)="addtolist()">Add me to the waitinglist</a></p>
           </div>
-          
-          
-        </fieldset>
+        </div>
     </div>
   </div>
   <div class="clearfix"></div>
+</div>
+
+<!-- The Modal -->
+<div [ngClass]="modalClass">
+
+  <div class="modal-header">
+    <span (click)="predictModal()" class="close">&times;</span>
+    <h2>Make your prediction</h2>
+    
+  </div>
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="clearfix gameClass">
+      <div class="teamclass">
+        <img class="teamflag-left" src="{{flag1}}" /> 
+        <div class="teamname-left">{{country1}}</div>
+      </div>
+      <input [(ngModel)]="ugscore1" min="0" max="99" class="gameinput" />
+      <div class="vsclass">vs</div>
+      <input [(ngModel)]="ugscore2" min="0" max="99" class="gameinput" />
+      <div class="teamclass">
+        <div class="teamname-right">{{country2}}</div> 
+        <img class="teamflag-right" src="{{flag2}}" /></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a class="btn btn-success pull-right click" (click)="saveUserguess(game_id,guess_id)">Update Score</a>
+  </div>
+  
 </div>
 

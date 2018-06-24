@@ -20,7 +20,10 @@
    	 "client_secret":"Ni_tdSNE6de3oe8UKht7rm6c",
    	 "client_id":"821423007087-g9lbsn375ctt62eg30nt6kj4asjv5pi0.apps.googleusercontent.com"
    },
-   
+   "ushbub": {
+      "sports_comp":"4",
+      "sports_comp_default":"5"
+   },
    "languages": [
      "en-GB"
    ]

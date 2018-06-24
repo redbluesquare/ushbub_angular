@@ -55,10 +55,6 @@ final class App extends AbstractWebApplication implements ContainerAwareInterfac
 		$controller = $router->getController($this->get('uri.route'));
 		$content = $controller->execute();
 		
-		//$defaultController = "Default";
-		//$controller_class = 'App\\Controllers\\' . $defaultController . 'Controller';
-		//$controller = new $controller_class ();
-		//$content = $controller->execute ();
 		$this->setBody ( json_encode($content,JSON_HEX_QUOT ) );
 	}
 	public function setContainer(Container $container) {

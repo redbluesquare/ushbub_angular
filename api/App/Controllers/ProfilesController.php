@@ -3,6 +3,7 @@ namespace App\Controllers;
 use App\Controllers\DefaultController;
 use App\Models\ProfilesModel;
 use App\Models\UsergroupsModel;
+use App\Models\EmailmessagesModel;
 use Joomla\Session\Session;
 use Joomla\Event\Dispatcher;
 use App\Models\App\Models;
@@ -13,13 +14,27 @@ class ProfilesController extends DefaultController
 	
 	public function index()
 	{
-		$id = $this->getInput()->getString('usertoken',null);
-		$token = $this->getInput()->getString('apptoken',null);
+		$h = getallheaders();
+		$usertoken = null;
+		foreach($h as $name => $value){
+			if(ucfirst($name) == 'Bearer'){
+				$usertoken = $value;
+			}
+		}
+		$item = new \StdClass();
+		$item->success = false;
 		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
-		$item = array("profile"=>"not authorised");
-		if($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")
+		$user = $model->authenticate_token($usertoken);
+		if($user['success']==true)
 		{
-			$item = $model->getItemById($id);
+			$user = $model->getItemById($user['user_id']);
+			$item->success = true;
+			$item->user_id = $user->id;
+			$item->first_name = $user->first_name;
+			$item->last_name = $user->last_name;
+			$item->username = $user->username;
+			$item->msg = '';
+			$item->profiles = '';
 		}
 		return $item;
 	}
@@ -51,26 +66,73 @@ class ProfilesController extends DefaultController
 		}
 		return $item;
 	}
-	public function usergroup()
-	{
-		$token = $this->getInput()->json->get('apptoken',null);
-		$item = new \StdClass();
-		$item->success = false;
 
+	public function participants(){
+		$token = $this->getInput()->json->get('apptoken',null);
+		$items = array();
 		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
 		$ugmodel = new UsergroupsModel($this->getInput(), $this->getContainer()->get('db'));
-		$usertoken = $this->getInput()->json->get("usertoken", null,'string');
-		$ug = $this->getInput()->json->get("usergroup", null,'string');
-		$usergroup = $ugmodel->getUsergroup(null,$ug);
+		$id = $this->getInput()->getString("id", null);
 		$h = getallheaders();
+		$usertoken = null;
 		foreach($h as $name => $value){
 			if(ucfirst($name) == 'Bearer'){
 				$usertoken = $value;
 			}
 		}
 		$user = $model->authenticate_token($usertoken);
-		$ugm = $ugmodel->getItemById($user['user_id'],$usergroup->id);
-		$state = 0;
+		if($user['success'] == false){
+			return $items;
+		}
+		if($input = $this->getInput()->getMethod()==='POST'){
+			if(!$token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t"){
+			
+			}
+		}
+		if($input = $this->getInput()->getMethod()==='PUT'){
+			//update a participant
+
+		}
+		if($input = $this->getInput()->getMethod()==='GET'){
+			//get a participant or many
+			$items = $ugmodel->getParticipants($id);
+			$position = 1;
+			for($i=0;$i<count($items);$i++){
+				if($i==0){
+					$items[0]->position = $position;
+				}else{
+					if($items[$i]->points == $items[$i-1]->points){
+						$items[$i]->position = $position;
+					}
+					else{
+						$position = $i+1;
+						$items[$i]->position = $position;
+					}
+				}
+			}
+		}
+		return $items;
+	}
+
+	public function usergroup()
+	{
+		$token = $this->getInput()->json->get('apptoken',null);
+		$item = array();
+		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
+		$ugmodel = new UsergroupsModel($this->getInput(), $this->getContainer()->get('db'));
+		$usertoken = $this->getInput()->json->get("usertoken", null,'string');
+		$h = getallheaders();
+		foreach($h as $name => $value){
+			if(ucfirst($name) == 'Bearer'){
+				$usertoken = $value;
+			}
+		}
+		$config = json_decode($this->container->get('config'));
+		$sc = $config->ushbub->sports_comp;
+		$sc_default = $config->ushbub->sports_comp_default;
+		$user = $model->authenticate_token($usertoken);
+		$ugm = $ugmodel->getItemById($user['user_id'],null,$sc);
+		$state = 1;
 		//add a new usergroup_map
 		if(($input = $this->getInput()->getMethod()==='POST') && ($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")){
 			if($ugm){
@@ -79,30 +141,26 @@ class ProfilesController extends DefaultController
 			}
 			$data = array(
 				$user['user_id'],
-				$usergroup->id,
+				$sc_default,
 				null,
 				$state
 			);
 			$columns = array("user_id", "group_id", "token", "state");
 			$item = $model->insert('#__ddc_user_usergroup_map',$columns, $data);
-			$item = $ugmodel->getItemById($user['user_id'],$usergroup->id);
-			return $item;
+			$items= $ugmodel->listItems($user['user_id'],null,$sc);
 		}
 		if($input = $this->getInput()->getMethod()==='PUT'){
 			//get function
-			$item->method = 'PUT';
-			return $item;
+			$items->method = 'PUT';
+			return $items;
 		}
 		if($input = $this->getInput()->getMethod()==='GET'){
 			//get user group map
-			$id = urldecode($this->getInput()->getString('id',null,'string'));
-			$usergroup = $ugmodel->getUsergroup(null,$id);
-			$item = $ugmodel->getItemById($user['user_id'],$usergroup->id);
-			
-			return $item;
+			$id = $this->getInput()->getString('id',null);
+			$items = $ugmodel->listItems($user['user_id'],null,$sc);
 		}
 		
-		return $item;
+		return $items;
 	}
 	public function authenticate()
 	{
@@ -280,5 +338,45 @@ EOT;
 			}
 			return array("payment"=>$return);
 		}
+	}
+
+	public function email(){
+		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
+		$emodel = new EmailmessagesModel($this->getInput(), $this->getContainer()->get('db'));
+		$result = array();
+		$names = array("{{name}}");
+		$values = array(
+			array('Chris','chris.hickman@uk.bosch.com'),
+			array('Darryl','usher_darryl@hotmail.com'),
+			array('Nigel','nigelpstapleton@gmail.com'),
+			array('Sean Mcsweeney','mcsweense@aol.com'),
+			array('Joe','external.joseph.raftery@uk.bosch.com'),
+			array('AidanKehoe','Aidan.Kehoe@uk.bosch.com'),
+			array('James Gamble','james.gamble@uk.bosch.com'),
+			array('Harry','coxboys21@gmail.com'),
+			array('Toms a pedo','ollie@brownbolwell.co.uk'),
+			array('Keith','keith.winfield@icloud.com'),
+			array('Dan Lilley','daniel.lilley@challoners.org'),
+			array('If I win this I will shave Dan Lilley hair','tchamberlain674@gmail.com'),
+			array('Mike B','michael6@live.co.uk'),
+			array('Cremo','james_cremin@hotmail.com'),
+			array('Lazarus ','lazarus.usher@gmail.com'),
+			array('Jayden','seanyblfc@aol.com'),
+			array('Lynn Smart','lynn.smart@uk.bosch.com'),
+			array('Graham','graham.slade@uk.bosch.com'),
+			array('RT','robin.tahiri@uk.bosch.com'),
+			array('Gaz','gaz_70@hotmail.com'),
+			array('Roberto Bastow','fixed-term.robert.bastow@uk.bosch.com'),
+			array('Panama ftw','hungryjuggler@gmail.com'),
+			array('Vik','vikesh.navsaria@hotmail.co.uk'),
+			array('Blondie','leannehenke@hotmail.co.uk')
+		);
+		$body = $emodel->getItemById(2);
+		for($i=0;$i<count($values);$i++){
+			$b = $model->emailTemplate($names, $values[$i], $body->message);
+			$res = $model->sendEmail($values[$i][1], $values[$i][0], $body->subject, $b);
+		}
+		
+		return $res;
 	}
 }

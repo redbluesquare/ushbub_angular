@@ -1,9 +1,9 @@
 <div class="container">
-  <div *ngFor="let product of products" class="grid-container">
-    <div class="item1">
+  <div *ngFor="let product of products" class="row">
+    <div class="col-md-3">
       <img src="assets/{{product.image_link}}">
     </div>
-    <div class="item2">
+    <div class="col-md-9">
       <p>{{product.vendor_product_name}}</p>
       <p>{{product.vendor_id}}</p>
     </div>

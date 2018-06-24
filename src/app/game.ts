@@ -1,0 +1,20 @@
+export class Game {
+  id:number;
+  game_no:number;
+  group:string;
+  game_date:string;
+  team1:number;
+  country1:string;
+  flag1:string;
+  rank1:number;
+  score1:number;
+  scoreA:number;
+  team2:number;
+  country2:string;
+  flag2:string;
+  rank2:number;
+  score2:number;
+  scoreB:number;
+  guess_id:number;
+  guesses:any;
+}
