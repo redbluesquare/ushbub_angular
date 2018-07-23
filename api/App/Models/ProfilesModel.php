@@ -22,28 +22,31 @@ class ProfilesModel extends DefaultModel
   	{
   		$query = $this->db->getQuery(true);
   		$query->select('u.id, u.username, u.first_name, u.last_name, u.email, u.password')
-  			->from($this->db->quoteName('#__ddc_users', 'u'))
+			  ->from($this->db->quoteName('#__ddc_users', 'u'))
+			->leftJoin('#__ddc_access_tokens as at on at.user_id = u.id')
   			->group('u.id');
 		return $query;
 	}	
-	protected function _buildWhere(&$query, $val)
+	protected function _buildWhere(&$query, $val, $token = null)
 	{
 		if((int)$val > 0)
 		{
 			$query->where('u.id = '.(int)$val);
+		}
+		if($token != null)
+		{
+			$query->where('at.token = "'.$token.'"');
 		}
 		if($this->input->get('myId', null)!=null)
 		{
 			$query->where('u.id = '.(int)$this->input->json->get('myId', null));
 		}
 		//$query->where('u.block = "0"');
-		
-		
-		
+
 		return $query;
 	}
 
-	public function getUser($id = null, $email = null, $username = null){
+	public function getUser($id = null, $email = null, $username = null, $token = null){
 		
 		$user = false;
 		if($id!=null)
@@ -54,11 +57,14 @@ class ProfilesModel extends DefaultModel
 		{
 			$user = $this->validate_user_email($email);
 		}
-		if(($username!=null) && ($email == false))
+		if(($username!=null) && ($user == false))
 		{
 			$user = $this->getItemByAlias($username);
 		}
-		
+		if(($token!=null) && ($user == false))
+		{
+			$user = $this->getItemByAlias(null,$token);
+		}
 		return $user;
 	}
 	
@@ -143,6 +149,20 @@ class ProfilesModel extends DefaultModel
 		}
 		return false;
 	}
+
+	public function update_password($user_id,$password)
+	{
+		$date = date("Y-m-d H:i:s");
+		$options = [
+				'cost' => 8,
+		];
+		$fields = array($this->db->qn('password'). " = ". $this->db->q(password_hash($password, PASSWORD_BCRYPT,$options)),$this->db->qn('modified_on'). " = ".$this->db->q($date),$this->db->qn('modified_by'). " = ".$this->db->q($user_id));
+		$conditions = array($this->db->qn('id'). ' = '. $this->db->q($user_id) );
+		$table = '#__ddc_users';
+		$result = $this->update($table, $fields, $conditions);
+		return $result;
+	}
+
 	public function getShipAddress($token)
 	{
 		$result = array("success" => false);

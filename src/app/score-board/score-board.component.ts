@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Usergroupmap } from '../usergroupmap';
 import { ApiDataService } from '../api-data.service';
+import { Bonusquestions } from '../bonusquestions';
 import { Participant } from '../participant';
+import { Usergroupmap } from '../usergroupmap';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
@@ -27,6 +28,7 @@ export class ScoreBoardComponent implements OnInit {
 
   constructor(private apiService:ApiDataService) { }
 
+  bonusquestions:Bonusquestions[];
   classbox:any;
   country1:string;
   country2:string;
@@ -52,6 +54,11 @@ export class ScoreBoardComponent implements OnInit {
     //get the leaderboard
     this.apiService.getAllGames(id)
     .subscribe(games => this.games = games);
+  }
+
+  getBonusQuestions(){
+    this.apiService.getBonusQuestions()
+    .subscribe(bonusquestions => this.bonusquestions = bonusquestions);
   }
 
   getParticipants(id){
@@ -103,6 +110,7 @@ export class ScoreBoardComponent implements OnInit {
     this. secret= '';
     this.apiService.getAllGames('')
     .subscribe(games => this.games2 = games);
+    this.getBonusQuestions();
   }
 
 }

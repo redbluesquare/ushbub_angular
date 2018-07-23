@@ -116,8 +116,8 @@ class SportscompsModel extends DefaultModel
 			->leftJoin('#__ddc_teams as t2 on t2.id = g.team2')
 			->group('g.id')
 			->order('g.game_date');
-		if((int)$id > 0){
-			$query->where('g.id = "'.(int)$id.'"');
+		if($id > 0){
+			$query->where('g.id IN ('.$id.')');
 		}
 		if((int)$comp_id > 0){
 			$query->where('g.comp_id = "'.(int)$comp_id.'"');
@@ -132,9 +132,7 @@ class SportscompsModel extends DefaultModel
 		//Get the competition users
 		$query = $this->db->getQuery(true);
 		$query->select('bq.*')
-			->select('ubg.id as ubg_id,ubg.answer as user_guess')
 			->from($this->db->quoteName('#__ddc_bonus_questions', 'bq'))
-			->leftJoin('#__ddc_user_bonus_guesses as ubg on (ubg.question_id = bq.id) AND (ubg.user_id = '.$this->input->get('user_id',0,'string').')')
 			->group('bq.id');
 		if((int)$id > 0){
 			$query->where('bq.id = "'.(int)$id.'"');
@@ -145,6 +143,66 @@ class SportscompsModel extends DefaultModel
 		$this->db->setQuery($query);
 		$response = $this->db->loadObjectList();
 
+		return $response;
+	}
+
+	public function getBonusGuesses($id=null, $user_id=null, $comp_id=1){
+		//Get the competition users
+		$query = $this->db->getQuery(true);
+		$query->select('bg.*')
+			->select('u.first_name,bq.question_no')
+			->from($this->db->quoteName('#__ddc_user_bonus_guesses', 'bg'))
+			->leftJoin('#__ddc_users as u on u.id = bg.user_id')
+			->leftJoin('#__ddc_bonus_questions as bq on bq.id = bg.question_id')
+			->group('bg.id')
+			->order('u.first_name ASC, bg.id ASC');
+
+		if((int)$id > 0){
+			$query->where('bg.question_id = "'.(int)$id.'"');
+		}
+		if((int)$user_id > 0){
+			$query->where('bg.user_id = "'.(int)$user_id.'"');
+		}
+		if((int)$comp_id > 0){
+			$query->where('bg.comp_id = "'.(int)$comp_id.'"');
+		}
+		$this->db->setQuery($query);
+		$response = $this->db->loadObjectList();
+
+		return $response;
+	}
+
+	public function getAnswer($object){
+		$response = null;
+		if($object->question_no==1){
+			$result = $this->getTeams($object->answer);
+			$response = $result[0]->country;
+		}
+		if($object->question_no==2){
+			$result = $this->getPlayers($object->answer);
+			$response = $result[0]->player_name;
+		}
+		if($object->question_no==3){
+			$result = $this->getGames($object->answer);
+			for($i=0;$i<count($result);$i++){
+				$response = $response . $result[$i]->country1." vs ".$result[$i]->country2."; ";
+			}
+			
+		}
+		if($object->question_no==4){
+			$result = $this->getTeams($object->answer);
+			$response = $result[0]->country;
+		}
+		if($object->question_no==5){
+			$result = $this->getTeams($object->answer);
+			for($i=0;$i<count($result);$i++){
+				$response = $response . $result[$i]->country."; ";
+			}
+		}
+		if($object->question_no==6){
+			$result = $this->getTeams($object->answer);
+			$response = $result[0]->country;
+		}
 		return $response;
 	}
 
@@ -170,13 +228,11 @@ class SportscompsModel extends DefaultModel
 		//Get the competition users
 		$query = $this->db->getQuery(true);
 		$query->select('t.*')
-			//->select('t1.country as country1,t1.rank as rank1')
 			->from($this->db->quoteName('#__ddc_teams', 't'))
-			//->leftJoin('#__ddc_teams as t1 on t1.id = g.team1')
 			->group('t.id')
 			->where('t.rank < 999');
-		if((int)$id > 0){
-			$query->where('t.id = "'.(int)$id.'"');
+		if($id > 0){
+			$query->where('t.id IN ('.$id.')');
 		}
 		$this->db->setQuery($query);
 		$response = $this->db->loadObjectList();

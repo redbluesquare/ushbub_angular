@@ -1,4 +1,4 @@
-.login-form{padding:20px;margin-top:30px;margin-bottom:300px;}
+.login-form{padding:20px;margin-top:30px;margin-bottom:30px;min-height:450px;}
 input{padding:10px;width:inherit;margin:3px;}
 button{padding:10px;margin:3px;}
 .btn{border:1px solid #acacac;border-radius: 3px;}

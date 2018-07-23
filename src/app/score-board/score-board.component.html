@@ -23,16 +23,46 @@
             <tr *ngFor="let parti of participants">
               <td>{{ parti.position }}</td>
               <td>{{parti.first_name}}</td>
-              <td *ngIf="parti.state==1" style="text-align:center;">{{parti.points || 0}}</td>
+              <td *ngIf="parti.state==1" style="text-align:center;">{{parti.points+parti.points1 || 0}}</td>
               <td *ngIf="parti.state==0" style="text-align:center;">pending...</td>
             </tr>
           </tbody>
         </table>
       </div>
     <div class="col-md-8">
+      <h3>Bonus Guesses</h3>
+      <div class="col-md-12" *ngFor="let bonusquest of bonusquestions">
+        <table class="table">
+          <tbody>
+            <tr>
+              <th>Question:</th><td>{{bonusquest.question}}</td>
+            </tr>
+            <tr>
+              <th>Answer:</th><td>{{bonusquest.answer_value}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table">
+          <tbody>
+            <tr>
+              <th style="text-align:left;">Participant:</th>
+              <th style="text-align:left;">Guess:</th>
+              <th>Points</th>
+            </tr>
+            <tr *ngFor="let userguess of bonusquest.userguesses">
+              <td>{{userguess.first_name}}</td>
+              <td>{{userguess.answer_value}}</td>
+              <td style="text-align:center;">{{userguess.points}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="clearfix"></div>
+      <h3>Match Guesses</h3>
       <select [(ngModel)]="game_id" name="game_id" (change)="getAllGames(game_id)">
         <option *ngFor="let game of games2" [value]="game.id">Game #: {{game.game_no}} {{game.country1}} vs {{game.country2}}</option>
       </select>
+      <div class="clearfix"></div>
       <div class="col-md-12" *ngFor="let game of games">
         <p>{{game.game_date.split(' ')[0] | date:'d MMMM y'}}</p>
         <table class="table">
@@ -59,6 +89,7 @@
           </tbody>
         </table>
       </div>
+      <div class="clearfix"></div>
     </div>
     <div class="clearfix"></div>
   </div>

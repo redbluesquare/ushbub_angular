@@ -4,15 +4,13 @@ import { Category } from './category';
 import { Connector } from './connector';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../environments/environment';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable } from 'rxjs';
 import { Vendor } from './vendor';
 import { Usergroup } from './usergroup';
 import { Usergroupmap } from './usergroupmap';
 import { User } from './user';
 import { Game } from './game';
 import { Town } from './town';
-import { AuthService } from './auth.service';
 import { Participant } from './participant';
 import { Bonusquestions } from './bonusquestions';
 import { Team } from './team';
@@ -75,6 +73,13 @@ export class ApiDataService {
       return this.httpClient.get<Product[]>(this.productsUrl+'/subcat/'+category);
     }
     return this.httpClient.get<Product[]>(this.productsUrl);
+  }
+
+  getProductTypes(id, pt_id, pc):Observable<Town[]> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
+    };
+    return this.httpClient.get<Town[]>(this.vendorsUrl+'/producttypes?pc='+pc,httpOptions);
   }
 
   getProfiles(): Observable<User> {
@@ -153,6 +158,21 @@ export class ApiDataService {
       secret:secret,
       apptoken:'ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t'};
     return this.httpClient.post<Game[]>(this.sportsCompUrl+'/matchday/'+game_id,this.userData,httpOptions);
+  }
+
+  saveShop(data): Observable<Vendor[]>{
+    const httpOptions = {
+      headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
+    };
+    this.userData = {
+      title:data.title,
+      shop_type:data.shop_type,
+      description:data.description,
+      first_name:data.first_name,
+      last_name:data.last_name,
+      state:0,
+      apptoken:'ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t'};
+    return this.httpClient.post<Vendor[]>(this.vendorsUrl,this.userData,httpOptions);
   }
 
   saveMessage(data): Observable<Bonusquestions[]>{

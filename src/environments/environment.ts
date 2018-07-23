@@ -6,7 +6,6 @@
 export const environment = {
   production: false,
   categoriesUrl: 'http://localhost:8888/ushbub/api/categories',
-  Url:'http://localhost:8888/ushbub/api/profiles/login',
   messagesUrl: 'http://localhost:8888/ushbub/api/messages',
   productsUrl: 'http://localhost:8888/ushbub/api/products',
   profilesUrl:"http://localhost:8888/ushbub/api/profiles",

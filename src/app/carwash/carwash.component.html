@@ -1,0 +1,119 @@
+<div class="container" *ngIf="state==0">
+  <div class="row">
+    <div class="col-md-8">
+      <h1 style="display:block;">The Professional Car Valet Service <br> <span class="pull-right">@ your place of work</span></h1>
+      <div class="clearfix"></div>
+      <h2>How it works</h2>
+      <ul>
+        <li>Your business is registered for our professional mobile valet service</li>
+        <li>You book your car to be cleaned on you preferred day using our easy-to-use online app</li>
+        <li>You park your car in a designated place on the day of the clean</li>
+        <li>We attend your place of work and clean<sup>1</sup> your car</li>
+        <li>You get notified once your car is cleaned</li>
+        <li>Payment is taken from your card of choice once the service has been completed</li>
+      </ul>
+
+      <p><i>Our cleaning service entails a exterior car wash, cleaning of your tyres and alloys, interior hoover and dash shine.</i></p>
+    </div>
+    <div class="col-md-4">
+        <img src="../../assets/images/car_wash_classic_blue_car.jpg" width="100%" hspace="7" class="pull-right">
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-md-12">
+      <a class="btn btn-default" routerLink="/login">Login</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>
+<div class="container" *ngIf="state==1">
+  <div class="row">
+    <div class="col-md-12 link" (click)="updateState(1)">
+      <div class="sub-box sub-box-blue">
+        <h2>+ Book a clean</h2>
+      </div>
+    </div>
+    <div class="col-md-6 link" (click)="updateState(2)">
+      <div class="sub-box">
+        <h3>Register your company</h3>
+      </div>
+    </div>
+    <div class="col-md-6 link" (click)="updateState(3)">
+      <div class="sub-box">
+        <h3>Become an Auto Valet Attendant</h3>
+        <p>Recruiting now</p>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+        <h1>Book a Car Wash</h1>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-md-12">
+      <h3>Location: <b>Bosch - UB9</b></h3>
+      <div class="col-md-12" style="margin-bottom:5px;">
+        <input class="form-control" [(ngModel)]="car_reg" type="text"placeholder="Car Registration" />
+      </div>
+      <div class="col-md-3" style="margin-bottom:5px;">
+        <input class="form-control" [(ngModel)]="first_name" type="text" placeholder="First Name" />
+      </div>
+      <div class="col-md-3" style="margin-bottom:5px;">
+          <input class="form-control" [(ngModel)]="last_name" type="text" placeholder="Last Name" />
+        </div>
+      <div class="col-md-6" style="margin-bottom:5px;">
+        <input class="form-control" [(ngModel)]="email" type="email" placeholder="E-mail" />
+      </div>
+      <p><b>July</b></p>
+      <div class="col-md-2 bookDate" style="margin-bottom:5px;" [ngClass]="modalClass" (click)="selectDate('2018-07-17')">
+        <p>17th<br>
+        Tuesday<br>
+        (8 spots)</p>
+      </div>
+      <div class="col-md-2 bookDate" style="margin-bottom:5px;">
+        <p>19th<br>
+        Thursday<br>
+        (10 spots)</p>
+      </div>
+      <div class="col-md-2 bookDate" style="margin-bottom:5px;">
+        <p>24th<br>
+        Tuesday<br>
+        (9 spots)</p>
+      </div>
+      <div class="col-md-2 bookDate" style="margin-bottom:5px;">
+        <p>26th<br>
+        Thursday<br>
+        (10 spots)</p>
+      </div>
+
+    </div>
+    <div class="clearfix"></div>
+  </div>
+<div class="container" *ngIf="state==3">
+  <div class="row">
+    <div class="col-md-12">
+        <h1>How to become a valet attendant</h1>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-md-6">
+      <h3>Requirements:</h3>
+      <ul>
+        <li>A driver's licence</li>
+        <li>Public Liability Insurance</li>
+        <li>Cleaning detergents &amp; safety datasheets</li>
+        <li>Pressure washer and vacuum cleaner provided</li>
+        <li>All other items to be supplied by the attendant</li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <h3>Payment structure</h3>
+      <ul>
+        <li>The valet contrator will earn 50% of the revenue for every vehicle cleaned</li>
+        <li>A bonus of 25% will be paid on a monthly basis if targets are met</li>
+      </ul>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <h3>Current Openings:</h3>
+  <p>A contractor valet attendant is required for a location close to Uxbridge.</p>
+</div>

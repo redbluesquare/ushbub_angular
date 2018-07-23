@@ -66,8 +66,6 @@ class DefaultModel extends AbstractDatabaseModel
 			$result = $this->db->execute();
 			return $result;
 		}else{
-			$result = new \stdClass();
-			$result->success = false;
 			return false;
 		}
 	}
@@ -80,9 +78,23 @@ class DefaultModel extends AbstractDatabaseModel
 			->where('(u.email=' . $this->db->quote($user_email). ') And (activation = 0) And (block = 0)');
 		$this->db->setQuery($query);
 		$result = $this->db->loadObject();
-		
 		return $result;
-		 
+	}
+
+	public function validate_access_token($token){
+		if($token!=null){
+			$query = $this->db->getQuery(true)
+				->select('at.token')
+				->from('#__ddc_access_tokens as at')
+				->where('(at.token='.$this->db->quote($token).') AND (at.created_on BETWEEN NOW() - INTERVAL 1 DAY AND NOW())');
+			$this->db->setQuery($query);
+			$result = $this->db->loadObject();
+			if($result!=null)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public function getItemById($id1 = null, $id2 = null, $id3 = null, $id4 = null)
@@ -95,12 +107,12 @@ class DefaultModel extends AbstractDatabaseModel
 		return $this->db->setQuery($query)->loadObject();
 	}
 	
-	public function getItemByAlias($alias)
+	public function getItemByAlias($alias = null, $id2 = null)
 	{
 		$query = $this->db->getQuery(true);
 			
 		$query = $this->_buildQuery();
-		$this->_buildWhere($query, $alias);
+		$this->_buildWhere($query, $alias, $id2);
 		$this->db->setQuery($query);
 
 		return $this->db->setQuery($query)->loadObject();

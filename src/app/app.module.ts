@@ -25,6 +25,7 @@ import { ActivityListComponent } from './activity-list/activity-list.component';
 import { WorldCupComponent } from './world-cup/world-cup.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ScoreBoardComponent } from './score-board/score-board.component';
+import { CarwashComponent } from './carwash/carwash.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { ScoreBoardComponent } from './score-board/score-board.component';
     ActivityListComponent,
     WorldCupComponent,
     ProfileComponent,
-    ScoreBoardComponent
+    ScoreBoardComponent,
+    CarwashComponent
   ],
   imports: [
     BrowserModule,

@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
   myuser: User[];
   searchtown:string;
   location: Town[];
+  postcode:string;
   town:string;
   message:string;
 
@@ -46,6 +47,9 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     if(localStorage.getItem('town')!="undefined"){
       this.town = localStorage.getItem('town');
+      this.postcode = localStorage.getItem('postcode');
+      this.apiDataService.getProductTypes('','',this.postcode)
+      .subscribe(town => this.location = town);
     }else{
       this.town = undefined;
       localStorage.removeItem("town");

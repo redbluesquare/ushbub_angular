@@ -24,10 +24,14 @@
 .mainframe{width:100%;height:500px;position: relative;overflow: hidden;}
 .pt-ws{padding:10px;height:340px;background:rgba(51, 48, 48, 0.1);background-position: 50% 80%; background-size: 100%;overflow: hidden;}
 .mainframe h1{padding:10px;position: relative;top:100px;color:#16162b;text-align:center;display:block;}
-.mainframe>.row>div{position:inherit;border: 1px solid #cfcfcf;height:150px;border-radius: 5px;overflow: hidden;cursor: pointer;}
-.mainframe>.row>div>p{padding:10px;font-size: 1.2em;text-align:center;}
-.mainframe>.row>div>p>b{color:#0535b9;font-size: 1.3em;}
-.mainframe>.row>div>.caption{text-align:center;background:rgba(0,0,0,0.8);padding:10px 0px;position: absolute;top:121px;width:inherit;display:block;color:#efefef;margin: 0 auto;border-radius: 0px 0px 5px 5px;}
+.mainframe>.row>.leadService{overflow: hidden;height:300px;}
+.leadService>div.caption{position: absolute;color:#efefef;z-index: 100;padding:30px;width:90%;height:50%;}
+.leadService>div.caption>a{position: inherit;bottom: 20px;right:20px;}
+.leadService>img{position: relative;bottom:120px;z-index:5;}
+.mainframe>.row>.sub-box{position:inherit;border: 1px solid #cfcfcf;height:150px;border-radius: 5px;overflow: hidden;cursor: pointer;}
+.mainframe>.row>.sub-box>p{padding:10px;font-size: 1.2em;text-align:center;}
+.mainframe>.row>.sub-box>p>b{color:#0535b9;font-size: 1.3em;}
+.mainframe>.row>.sub-box>.caption{text-align:center;background:rgba(0,0,0,0.8);padding:10px 0px;position: relative;top:-11px;width:100%;display:block;color:#efefef;margin: 0 auto;border-radius: 0px 0px 5px 5px;}
 .searchbar{margin: 0px auto;margin-top:150px;width:70%;}
 .searchbar input{width:70%;font-size:1.5em;padding:10px;border: 1px solid #dfdfdf;}
 .searchbar button{font-size: 1.4em;background: #16162b;color: #fff;position: relative;right: 5px;}

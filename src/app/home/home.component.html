@@ -2,37 +2,40 @@
     <p *ngIf="town!=undefined"><i class="icon icon-map-marker"></i> {{town}} <span class="chngTown" (click)="changeTown()"><i>change</i></span></p>
   <div class="mainframe">
     <div class="row" *ngIf="town">
-        <div class="col-md-4" routerLink="/shops">
+      <div class="col-md-12 leadService" *ngIf="location?.length > 0">
+        <div class="caption">
+          <h2>The mobile car valet - Company Services</h2>
+          <p>Get your car washed and valeted at your place of work</p>
+          <a class="btn btn-primary pull-right" routerLink="/carwash">How it works</a>
+        </div>
+        <img src="{{location[0].image_link}}" width="100%">
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row" *ngIf="town">
+        <div class="col-md-4 sub-box" routerLink="/shops">
           <p>Find a business in <b>your</b> <br>local community</p>
           <p class="caption">Business Listings</p>
         </div>
-        <div class="col-md-4" routerLink="/events">
+        <div class="col-md-4 sub-box" routerLink="/events">
           <p>See what is <b>happening</b> in <br>{{town}}</p>
           <p class="caption">Local Events</p>
         </div>
-        <div class="col-md-4" routerLink="/activities">
+        <div class="col-md-4 sub-box" routerLink="/activities">
             <p>Find out what's <b>going on</b> in <br>{{town}}</p>
           <p class="caption">Regular Activities</p>
         </div>
     </div>
+    <div class="clearfix" style="padding:10px;display: block;"></div>
     <div *ngIf="!town" class="searchbar">
       <input type="text" placeholder="Enter city / Postcode" [(ngModel)]="searchtown" >
       <button class="showClick btn btn-default" (click)="getTown()">Search</button>
-      
     </div>
-    <h1>Ushbub, local is lekker!</h1>
+    <div class="col-md-12" *ngIf="location?.length == 0">
+      <h1>Ushbub, local is lekker!</h1>
+    </div>
   </div>
   <div class="clearfix"></div>
-  <div class="row">
-      <div class="col-md-12">
-        <div class="footyComp">
-          <h2>32 countries, 64 games, 1 Winner!</h2>
-          <p>Do you have the skills to predict the 2018 Fifa World Cup winner?</p>
-          <a routerLink="/world-cup" class="btn btn-lg btn-primary">Enter NOW</a>
-        </div>
-      </div>
-      <div class="clearfix"></div>
-  </div>
   <div class="row">
     <div class="col-md-6 pt-div">
       <h2><a routerLink="/powertools/best-18v-combi-drills-2018">Get the right tool for any job</a></h2>

@@ -4,6 +4,7 @@ use App\Controllers\DefaultController;
 use App\Models\ProfilesModel;
 use App\Models\UsergroupsModel;
 use App\Models\EmailmessagesModel;
+use App\Models\SportscompsModel;
 use Joomla\Session\Session;
 use Joomla\Event\Dispatcher;
 use App\Models\App\Models;
@@ -33,11 +34,97 @@ class ProfilesController extends DefaultController
 			$item->first_name = $user->first_name;
 			$item->last_name = $user->last_name;
 			$item->username = $user->username;
+			$item->email = $user->email;
 			$item->msg = '';
 			$item->profiles = '';
 		}
 		return $item;
 	}
+
+	public function authenticate()
+	{
+		$input = $this->getInput()->json;
+		$token = $this->getInput()->json->get("apptoken",null,'string');
+		$item = new \StdClass();
+		$item->success = false;
+		if($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")
+		{
+			$model = new ProfilesModel($input, $this->getContainer()->get('db'));
+			$email = (string)$input->get("email", null,'string');
+			$usertoken = $input->get("usertoken", null);
+			$ref = $input->get('ref',1);
+			$regpoint = $input->get('regpoint',null,'string');
+			if($ref == 1){
+				if($usertoken!=null){
+					$user = $model->authenticate_token($usertoken);
+					if($user['success']==false){
+						$usertoken = null;
+					}
+				}
+				if($user['success']==true)
+				{
+					$item->success = true;
+					$item->user_id = $user['user_id'];
+					$item->first_name = $user['first_name'];
+					$item->last_name = $user['last_name'];
+					$item->usertoken = $user['token'];
+				}
+			}
+			elseif($ref == 0){
+				$u = $model->register();
+				if($model->loginuser((string)$email,$input->get("tokenId", null,'string'))){
+					$user = $model->authenticate_email($email);
+					if($user['success']==true)
+					{
+						$item->success = true;
+						$item->user_id = $user['user_id'];
+						$item->first_name = $user['first_name'];
+						$item->last_name = $user['last_name'];
+						$item->usertoken = $user['token'];
+					}
+					$refferal = (string)$model->randStrGen(20);
+					$fname = (string)ucfirst($user['first_name']);
+					$subject = $fname.', you just joined Ushbub';
+					$body = <<<EOT
+					<div style="max-width:800px;">
+						<div style="height:50px;">
+							<img src="http://ushbub.co.uk/api/email/getstats?uref=$refferal" style="height:1px;float:right;">
+							<img src="http://ushbub.co.uk/assets/images/logo_ushbub.png" style="height:50px;border-raduis:25px;">
+						</div>
+						<div>
+							<h1>Hey $fname, you're an Ushbubba now :)</h1>
+							<p>Thank you for joining Ushbub. We hope you find value in our community.</p>
+							<h2></h2>
+EOT;
+					if($regpoint == '' || $regpoint == null):
+					$body .= <<<EOT
+							<h2>Do you own your own business?</h2>
+							<p>Register your business on our <a href="http://ushbub.co.uk/shops?ref=$refferal">free listings section</a> so other Ushbubba's can find and support your business.</p>
+							<p>You can update your preferences at any time, simply go to the preferences section on your profile page.</p>
+						</div>
+					</div>
+EOT;
+					endif;
+					if($regpoint == 'sc'):
+						$body .= <<<EOT
+								<h2>Believe you have what it takes to be the best?</h2>
+								<p>We think you could be a great competitor in our <a href="http://ushbub.co.uk/world-cup?ref=$refferal">Ushball predictor competition</a>. Be sure to check your scores daily to give you the best chance of getting maximum points.</p>
+								<p>Don't worry about forgetting to check, we will send you a reminder e-mail. If you need to change your e-mail preferences, you can update your preferences at any time, simply go to the preferences section on your profile page.</p>
+							</div>
+						</div>
+EOT;
+					endif;
+					$item->msg = $model->sendEmail($email, $fname, $subject, $body);
+					
+				}
+				else{
+					$item->msg = 'Sorry, the credentials are invalid, it looks like you already have an account.';
+				}
+			}
+		}
+		return $item;
+	}
+
 	public function login()
 	{
 		$token = $this->getInput()->json->get('apptoken',null);
@@ -72,6 +159,7 @@ class ProfilesController extends DefaultController
 		$items = array();
 		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
 		$ugmodel = new UsergroupsModel($this->getInput(), $this->getContainer()->get('db'));
+		$sc_model = new SportscompsModel($this->getInput(), $this->getContainer()->get('db'));
 		$id = $this->getInput()->getString("id", null);
 		$h = getallheaders();
 		$usertoken = null;
@@ -96,12 +184,21 @@ class ProfilesController extends DefaultController
 		if($input = $this->getInput()->getMethod()==='GET'){
 			//get a participant or many
 			$items = $ugmodel->getParticipants($id);
+			for($i=0;$i<count($items);$i++){
+				$items[$i]->points1 = intval($items[$i]->points1);
+				$items[$i]->points = intval($items[$i]->points);
+				$items[$i]->t_points = $items[$i]->points+$items[$i]->points1;
+			}
+			usort($items, function($a, $b)
+			{
+				return -1*strcmp($a->t_points, $b->t_points);
+			});
 			$position = 1;
 			for($i=0;$i<count($items);$i++){
 				if($i==0){
 					$items[0]->position = $position;
 				}else{
-					if($items[$i]->points == $items[$i-1]->points){
+					if($items[$i]->t_points == $items[$i-1]->t_points){
 						$items[$i]->position = $position;
 					}
 					else{
@@ -112,6 +209,93 @@ class ProfilesController extends DefaultController
 			}
 		}
 		return $items;
+	}
+
+	public function reset()
+	{
+		$token = $this->getInput()->json->get('apptoken',null);
+		$email = $this->getInput()->json->get('email',null,'string');
+		$reset_token = $this->getInput()->json->get('reset_token',null,'string');
+		$item = array('success' => false);
+		$date = date('Y-m-d H:i:s');
+		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
+		if(($input = $this->getInput()->getMethod()==='POST') && ($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")){
+			//check if reset token exists
+			if($reset_token == null){
+				//check if e-mail exists
+				$user = $model->validate_user_email($email);
+				if($user!=null){
+					//Create a token and store it for a password reset
+					$reset_token = $model->randStrGen(30);
+					$user_id = $user->id;
+				}
+				else{
+					$item['msg'] = 'Check your e-mail address is spelt correctly. It is not on our records. Otherwise, create a new account.';
+					return $item;
+				}
+				$data = array(
+					$user_id,
+					$reset_token,
+					$date,
+					$user_id
+				);
+				$columns = array("user_id", "token", "created_on", "created_by");
+				if($model->insert('#__ddc_access_tokens',$columns, $data)){
+					$item['success'] = true;
+					//TODO send reset e-mail
+					$ref_token = $model->randStrGen(25);
+					$emodel = new EmailmessagesModel($this->getInput(), $this->getContainer()->get('db'));
+					$body = $emodel->getItemById(4);
+					$names = array("{{name}}","{{token}}","{{ref_token}}");
+					$values = array($user->first_name,$reset_token,$ref_token);
+					$b = $model->emailTemplate($names, $values, $body->message);
+					$model->sendEmail($email, $user->first_name, $body->subject, $b);
+				}
+			}
+			else{
+				//validate the token and save the new password
+				if($check = $model->validate_access_token($reset_token)){
+					$user = $model->getUser(null,null,null,$reset_token);
+					//update the user password
+					$model->update_password($user->id,$this->getInput()->json->get('password',null,'string'));
+					if($model->loginuser($user->email,$this->getInput()->json->get('password',null,'string')))
+					{
+						$user = $model->authenticate_email($user->email);
+						if($user['success']==true)
+						{
+							$item['success'] = true;
+							$item['user_id'] = $user['user_id'];
+							$item['first_name'] = $user['first_name'];
+							$item['last_name'] = $user['last_name'];
+							$item['usertoken'] = $user['token'];
+						}
+					}
+				}
+				else{
+					$item['msg'] = 'Sorry, the token is invalid. You need to request a new password reset.';
+				}
+			}
+			return $item;
+			
+		}
+		if($input = $this->getInput()->getMethod()==='PUT'){
+			//get function
+			$items->method = 'PUT';
+			return $items;
+		}
+		if($input = $this->getInput()->getMethod()==='GET'){
+			//check if reset token exists
+			if($reset_token!=null){
+				if($model->validate_access_token($reset_token)){
+					$item['state'] = 4;
+					$item['success'] = true;
+				}
+				else{
+					$item['msg'] = 'Sorry, the token is invalid. You need to request a new password reset.';
+				}
+			}
+			return $item;
+		}
 	}
 
 	public function usergroup()
@@ -162,88 +346,7 @@ class ProfilesController extends DefaultController
 		
 		return $items;
 	}
-	public function authenticate()
-	{
-		$input = $this->getInput()->json;
-		$token = $this->getInput()->json->get("apptoken",null,'string');
-		$item = new \StdClass();
-		$item->success = false;
-		if($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")
-		{
-			$model = new ProfilesModel($input, $this->getContainer()->get('db'));
-			$email = (string)$input->get("email", null,'string');
-			$usertoken = $input->get("usertoken", null);
-			$ref = $input->get('ref',1);
-			$regpoint = $input->get('regpoint',null,'string');
-			if($ref == 1){
-				if($usertoken!=null){
-					$user = $model->authenticate_token($usertoken);
-					if($user['success']==false){
-						$usertoken = null;
-					}
-				}
-				if($user['success']==true)
-				{
-					$item->success = true;
-					$item->user_id = $user['user_id'];
-					$item->first_name = $user['first_name'];
-					$item->last_name = $user['last_name'];
-					$item->usertoken = $user['token'];
-				}
-			}
-			elseif($ref == 0){
-				$u = $model->register();
-				if($model->loginuser((string)$email,$input->get("tokenId", null,'string'))){
-					$user = $model->authenticate_email($email);
-					if($user['success']==true)
-					{
-						$item->success = true;
-						$item->user_id = $user['user_id'];
-						$item->first_name = $user['first_name'];
-						$item->last_name = $user['last_name'];
-						$item->usertoken = $user['token'];
-					}
-					$refferal = (string)$model->randStrGen(20);
-					$fname = (string)ucfirst($user['first_name']);
-					$subject = $fname.', you just joined Ushbub';
-					$body = <<<EOT
-					<div style="max-width:800px;">
-						<div style="height:50px;">
-							<img src="http://ushbub.co.uk/assets/images/logo_ushbub.png?uref=$refferal" style="height:50px;border-raduis:25px;">
-						</div>
-						<div>
-							<h1>Hey $fname, you're an Ushbubba now :)</h1>
-							<p>Thank you for joining Ushbub. We hope you find value in our community.</p>
-							<h2></h2>
-EOT;
-					if($regpoint == null):
-					$body .= <<<EOT
-							<h2>Do you own your own business?</h2>
-							<p>Register your business on our <a href="http://ushbub.co.uk/shops?ref=$refferal">free listings section</a> so other Ushbubba's can find and support your business.</p>
-							<p>You can update your preferences at any time, simply go to the preferences section on your profile page.</p>
-						</div>
-					</div>
-EOT;
-					endif;
-					if($regpoint == 'sc'):
-						$body .= <<<EOT
-								<h2>Believe you have what it takes to be the best?</h2>
-								<p>We think you could be a great competitor in our <a href="http://ushbub.co.uk/shops?ref=$refferal">Ushball predictor competition</a>. Be sure to check your scores daily to give you the best chance of getting maximum points.</p>
-								<p>Don't worry about forgetting to check, we will send you a reminder e-mail. If you need to change your e-mail preferences, you can update your preferences at any time, simply go to the preferences section on your profile page.</p>
-							</div>
-						</div>
-EOT;
-					endif;
-					$item->msg = $model->sendEmail($email, $fname, $subject, $body);
-					
-				}
-				else{
-					$item->msg = 'Sorry, the credentials are invalid, it looks like you already have an account.';
-				}
-			}
-		}
-		return $item;
-	}
+
 	public function saveaddress()
 	{
 		$token = $this->getInput()->getString('apptoken',null);
@@ -371,7 +474,7 @@ EOT;
 			array('Vik','vikesh.navsaria@hotmail.co.uk'),
 			array('Blondie','leannehenke@hotmail.co.uk')
 		);
-		$body = $emodel->getItemById(2);
+		$body = $emodel->getItemById(3);
 		for($i=0;$i<count($values);$i++){
 			$b = $model->emailTemplate($names, $values[$i], $body->message);
 			$res = $model->sendEmail($values[$i][1], $values[$i][0], $body->subject, $b);

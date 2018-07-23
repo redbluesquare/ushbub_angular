@@ -16,12 +16,37 @@ export class ShopListComponent implements OnInit {
   addshop:number;
   title:string;
   description:string;
-  full_name:string;
+  first_name:string;
+  last_name:string;
   email:string;
   shop_type:string;
+  data:{};
 
   showShopForm(){
     this.addshop = 1;
+    this.title = '';
+    this.shop_type = '';
+    this.description = '';
+    this.first_name = '';
+    this.last_name = '';
+    this.email = '';
+  }
+
+  saveShopForm(){
+    this.data = {
+      title:this.title,
+      shop_type:this.shop_type,
+      description:this.description,
+      first_name:this.first_name,
+      last_name:this.last_name,
+      email:this.email
+    }
+    this.apiDataService.saveShop(this.data)
+    .subscribe(vendors => this.closeShopForm());
+    
+  }
+  closeShopForm(){
+    this.addshop = 0;
   }
 
   ngOnInit() {

@@ -1,13 +1,52 @@
 <div class="container">
-  <div class="row login-form" *ngIf="!user">
-      <div class="col-md-12">
-        <input [(ngModel)]="email" placeholder="E-mail" /><input [(ngModel)]="password" type="password" placeholder="Password" />
-        <button class="btn btn-primary" (click)="login()">Login</button><br>
-        </div>
-  </div>
-  <div class="row" *ngIf="user">
+  <div class="row login-form" *ngIf="state==0">
     <div class="col-md-12">
-      <p>{{user.first_name}}</p>
+      <h1>{{title}}</h1>
+      <input [(ngModel)]="email" placeholder="E-mail" /><input [(ngModel)]="password" type="password" placeholder="Password" />
+      <button class="btn btn-primary" (click)="login()">Login</button>
+      <a class="link" (click)="forgotpassword()">forgot my password</a>
+      <button class="btn btn-primary pull-right" (click)="getRegister()">Register</button><br>
+    </div>
+  </div>
+  <div class="row login-form" *ngIf="state==1">
+    <div class="col-md-12">
+      <h1>{{title}}</h1>
+      <p>Complete all fields then click register.</p>
+      <input [(ngModel)]="first_name" placeholder="First Name" />
+      <input [(ngModel)]="last_name" placeholder="Last Name" />  
+      <input [(ngModel)]="email" placeholder="E-mail" />
+      <input [(ngModel)]="password" type="password" placeholder="Password" />
+      <input [(ngModel)]="password2" type="password" placeholder="Confirm your password" />
+      <button class="btn btn-primary" (click)="register()">Register</button>
+      <a class="link pull-right" (click)="getLogin()">Back to login</a><br>
+    </div>
+  </div>
+  <div class="row login-form" *ngIf="state==2">
+    <div class="col-md-12">
+      <h1>{{title}}</h1>
+      <p class="error">{{msg}}</p>
+      <p>Please enter your email address that you registered with and we will send you an e-mail to reset your password.</p>
+      <input [(ngModel)]="email" placeholder="E-mail" />
+      <button class="btn btn-primary" (click)="resetPassword()">Reset</button>
+      <a class="link pull-right" (click)="getLogin()">Back to login</a><br>
+    </div>
+  </div>
+  <div class="row login-form" *ngIf="state==3">
+    <div class="col-md-12">
+      <h1>{{title}}</h1>
+      <p>Instructions to reset your password have been sent to the registered e-mail. Please check your e-mail in order to reset your password. </p>
+      <a class="link pull-right" (click)="getLogin(1)">Back to login</a><br>
+    </div>
+  </div>
+  <div class="row login-form" *ngIf="state==4">
+    <div class="col-md-12">
+      <h1>{{title}}</h1>
+      <p>Please enter your new password and repeat it in the second box below.</p>
+      <input [(ngModel)]="password" type="password" placeholder="Password" />
+      <input [(ngModel)]="password2" type="password" placeholder="Confirm your password" /><br>
+      <p class="error">{{msg}}</p>
+      <button class="btn btn-primary" (click)="savePassword()">Save</button>
+      <a class="link pull-right" (click)="getLogin(1)">Back to login</a><br>
     </div>
   </div>
 </div>

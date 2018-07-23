@@ -4,4 +4,6 @@ export class Participant {
   title:string;
   group_id:number;
   state:number;
+  points:number;
+  points1:number;
 }

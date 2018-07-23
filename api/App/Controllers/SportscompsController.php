@@ -178,6 +178,13 @@ class SportscompsController extends DefaultController
 			//get user group map
 			$model = new SportscompsModel($this->getInput(), $this->getContainer()->get('db'));
 			$items = $model->getBonusQuestions();
+			for($i=0;$i<count($items);$i++){
+				$items[$i]->answer_value = $model->getAnswer($items[$i]);
+				$items[$i]->userguesses = $model->getBonusGuesses($items[$i]->id);
+				for($j=0;$j<count($items[$i]->userguesses);$j++){
+					$items[$i]->userguesses[$j]->answer_value = $model->getAnswer($items[$i]->userguesses[$j]);
+				}
+			}
 			return $items;
 		}
 	}

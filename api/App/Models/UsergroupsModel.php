@@ -67,7 +67,8 @@ class UsergroupsModel extends DefaultModel
 
 	public function getParticipants($id){
 		$query = $this->db->getQuery(true)
-			->select('u.first_name, u.username,ug.title,ug.id as group_id,ugm.state,sum(uguess.points) as points,u.id as user_id')
+			->select('(SELECT sum(bg.points) FROM #__ddc_user_bonus_guesses as bg WHERE u.id = bg.user_id) as points1')
+			->select('u.first_name, u.username,ug.title,ug.id as group_id,ugm.state,sum(uguess.points) as points,u.id as user_id,0 as t_points')
 			->from('#__ddc_user_usergroup_map as ugm')
 			->rightJoin('#__ddc_usergroups as ug on ug.id = ugm.group_id')
 			->rightJoin('#__ddc_users as u on u.id = ugm.user_id')

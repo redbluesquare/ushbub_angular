@@ -2,6 +2,7 @@
 namespace App\Controllers;
 use App\Controllers\DefaultController;
 use App\Models\VendorsModel;
+use App\Models\ProfilesModel;
 use Joomla\Session\Session;
 use Joomla\Event\Dispatcher;
 
@@ -62,5 +63,44 @@ class VendorsController extends DefaultController
 		$model = new VendorsModel($this->getInput(), $this->getContainer()->get('db'));
 		$city = $model->setLocation($id);
 		return array($city);
+	}
+
+	public function producttypes(){
+		$date = date('Y-m-d H:i:s');
+		$h = getallheaders();
+		$usertoken = '';
+		foreach($h as $name => $value){
+			if(ucfirst($name) == 'Bearer'){
+				$usertoken = $value;
+			}
+		}
+		$item = new \StdClass();
+		$item->success = false;
+		$model = new VendorsModel($this->getInput(), $this->getContainer()->get('db'));
+		$promodel = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
+		if($usertoken!=''){
+			$user = $promodel->authenticate_token($usertoken);
+			$this->getInput()->set('user_id',$user['user_id']);
+		}
+		$id = $this->getInput()->getString('id');
+		$input = $this->getInput()->json;
+		$token = $this->getInput()->json->get('apptoken',null);
+		$pc = $this->getInput()->getString('pc',null,'string');
+		if(($this->getInput()->getMethod()==='POST') && ($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")){
+			
+			
+			return $item;
+		}
+		if($input = $this->getInput()->getMethod()==='PUT'){
+			//get function
+			$item->method = 'PUT';
+			return $item;
+		}
+		if($input = $this->getInput()->getMethod()==='GET'){
+			//get user group map
+			$item = $model->getProductTypes($id, null, $pc);
+			return $item;
+		}
+
 	}
 }
