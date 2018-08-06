@@ -15,7 +15,7 @@ class ProfilesModel extends DefaultModel
 	protected $_published 	= 1;
 	protected $_location	= null;
 	protected $_token = 'ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t';
-	protected $_secretKey = 'sk_live_SyweUzmJZphKqKkaDeT1RtUq';
+	protected $_secretKey = '###';
 	
 	
 	protected function _buildQuery()
