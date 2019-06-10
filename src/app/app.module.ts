@@ -1,13 +1,19 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
+import { FormsModule,ReactiveFormsModule } from '@angular/forms'; // <-- NgModel lives here
+import { MatNativeDateModule } from '@angular/material';
+import {MatDatepickerModule} from '@angular/material';
+import {MatFormFieldModule} from '@angular/material';
 import {HttpClientModule} from '@angular/common/http';
+import { environment } from '../environments/environment';
+// Import your library
+import { NgxStripeModule } from 'ngx-stripe';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
-import { AppRoutingModule } from './/app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { ApiDataService } from './api-data.service';
 import { CollectionsComponent } from './collections/collections.component';
 import { AuthGuardService } from './auth-guard.service';
@@ -26,6 +32,13 @@ import { WorldCupComponent } from './world-cup/world-cup.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ScoreBoardComponent } from './score-board/score-board.component';
 import { CarwashComponent } from './carwash/carwash.component';
+import { BlogListComponent } from './blog-list/blog-list.component';
+import { BlogComponent } from './blog/blog.component';
+import { ServiceListComponent } from './service-list/service-list.component';
+import { BtDashboardComponent } from './bt-dashboard/bt-dashboard.component';
+import { BtTransactionsComponent } from './bt-transactions/bt-transactions.component';
+import { BtAccountComponent } from './bt-account/bt-account.component';
+import { BtAccountsComponent } from './bt-accounts/bt-accounts.component';
 
 
 @NgModule({
@@ -47,14 +60,31 @@ import { CarwashComponent } from './carwash/carwash.component';
     WorldCupComponent,
     ProfileComponent,
     ScoreBoardComponent,
-    CarwashComponent
+    CarwashComponent,
+    BlogListComponent,
+    BlogComponent,
+    ServiceListComponent,
+    BtDashboardComponent,
+    BtTransactionsComponent,
+    BtAccountComponent,
+    BtAccountsComponent
   ],
   imports: [
+    AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
-    AppRoutingModule,
-    HttpClientModule
+    ReactiveFormsModule,
+    HttpClientModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    NgxStripeModule.forRoot(environment.stripePublicKey)
+  ],
+  exports: [
+    MatNativeDateModule,
+    MatDatepickerModule,
+    MatFormFieldModule
   ],
   providers: [ApiDataService, AuthGuardService, AuthService],
   bootstrap: [AppComponent]

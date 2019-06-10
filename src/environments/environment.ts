@@ -5,10 +5,18 @@
 
 export const environment = {
   production: false,
+  accountsUrl: 'http://localhost:8888/ushbub/api/accounts',
   categoriesUrl: 'http://localhost:8888/ushbub/api/categories',
+  currenciesUrl: 'http://localhost:8888/ushbub/api/currencies',
   messagesUrl: 'http://localhost:8888/ushbub/api/messages',
   productsUrl: 'http://localhost:8888/ushbub/api/products',
   profilesUrl:"http://localhost:8888/ushbub/api/profiles",
   sportscompUrl:"http://localhost:8888/ushbub/api/sports-comp",
-  vendorsUrl: "http://localhost:8888/ushbub/api/vendors"
+  targetsUrl:"http://localhost:8888/ushbub/api/targets",
+  transactionsUrl:"http://localhost:8888/ushbub/api/transactions",
+  vendorsUrl: "http://localhost:8888/ushbub/api/vendors",
+  vendorproductsUrl: "http://localhost:8888/ushbub/api/vendorproducts",
+  vehiclesUrl: "http://localhost:8888/ushbub/api/vehicles",
+  vendorservicesUrl: "http://localhost:8888/ushbub/api/vendorservices",
+  stripePublicKey:'pk_test_M4uEmEa8yJulBaiYVUhZRobV'
 };

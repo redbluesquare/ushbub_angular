@@ -1,12 +1,191 @@
-<div class="container">
-  <div *ngFor="let product of products" class="row">
-    <div class="col-md-3">
-      <img src="assets/{{product.image_link}}">
+<div *ngIf="!shopEdit">
+<div class="shopDetail">
+  <div>
+    <img *ngIf="vendors[0].image!=null" class="shop-image" src="{{vendors[0].image}}" style="max-height:100%;width:100%;">
+    <img *ngIf="vendors[0].image==null" class="shop-image" src="../../assets/images/logo_ushbub.png" style="max-height:100%;width:100%;">
+  </div>
+  <div>
+    <h1>{{vendors[0].title}}</h1>
+    <p class="shopContent">{{vendors[0].introduction}}</p>
+    <div class="shopDays">
+      <div class="vendor-available pull-left">Mon</div>
+      <div class="vendor-available pull-left">Tue</div>
+      <div class="vendor-available pull-left">Wed</div>
+      <div class="vendor-available pull-left">Thu</div>
+      <div class="vendor-available pull-left">Fri</div>
+      <div class="vendor-available pull-left">Sat</div>
+      <div class="vendor-unavailable pull-left">Sun</div>
     </div>
-    <div class="col-md-9">
-      <p>{{product.vendor_product_name}}</p>
-      <p>{{product.vendor_id}}</p>
+    <p class="address"><span *ngIf="vendors[0].address1!=''">{{vendors[0].address1}}, </span> <span *ngIf="vendors[0].address2!=''">{{vendors[0].address2}}, </span> <span *ngIf="vendors[0].city!=''">{{vendors[0].city}}, </span> <span *ngIf="vendors[0].post_code!=''">{{vendors[0].post_code}}</span></p>
+  </div>
+  <div>
+    <p>
+      <button class="btn btn-default link pull-right" *ngIf="vendors[0].admin==true" (click)="edit(true)"><i class="icon icon-pencil"></i></button>
+      
+    </p>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+  <p>Filters:</p>
+  <div class="col-md-3">
+    <label>Categories</label>
+    <select [(ngModel)]="category">
+      <option value="{{product.product_category}}" *ngFor="let product of products">{{product.product_category}}</option>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label>Product Types</label>
+    <select [(ngModel)]="product_type">
+      <option value="{{product.product_type}}" *ngFor="let product of products">{{product.product_type}}</option>
+    </select>
+  </div>
+  <button class="btn btn-default link pull-right" *ngIf="(vendors[0].admin==true) && (!productEdit)" (click)="editProduct(true,'')"><i class="icon icon-plus"></i> Add Products</button>
+</div>
+<div class="clearfix"></div>
+<div *ngIf="productEdit">
+  <h2>Product Details</h2>
+  <div class="productForm">
+    <div>
+        <div>Product ID</div>
+        <div><input type="text" [(ngModel)]="ddc_vendor_product_id" /></div>
+        <div>Product Name</div>
+        <div><input type="text" [(ngModel)]="vendor_product_name" /></div>
+        <div>Product Alias</div>
+        <div><input type="text" [(ngModel)]="vendor_product_alias" /></div>
+        <div>Product SKU</div>
+        <div><input type="text" [(ngModel)]="vendor_product_sku" /></div>
+        <div>Product URL</div>
+        <div><input type="text" [(ngModel)]="product_url" /></div>
+      </div>
+      <div> 
+        <div>Base Product</div>
+        <div><input type="text" [(ngModel)]="product_id" /></div>
+        <div>Category</div>
+        <div><input type="text" [(ngModel)]="category_id" /></div>
+        <div>Product Type</div>
+        <div><input type="text" [(ngModel)]="product_type" /></div>
+        <div>Distribution Category</div>
+        <div><input type="text" [(ngModel)]="distrib_cat_id" /></div>
+        <div>Product GTIN</div>
+        <div><input type="text" [(ngModel)]="product_gtin" /></div>
+        <div>Product MPN</div>
+        <div><input type="text" [(ngModel)]="product_mpn" /></div>
+      </div>
+      <div>
+        <div>Product length</div>
+        <div><input type="text" [(ngModel)]="product_length" /></div>
+        <div>Product width</div>
+        <div><input type="text" [(ngModel)]="product_width" /></div>
+        <div>Product height</div>
+        <div><input type="text" [(ngModel)]="product_height" /></div>
+        <div>Product LWH UoM</div>
+        <div><input type="text" [(ngModel)]="product_lwh_uom" /></div>
+        <div>Product Base UoM</div>
+        <div><input type="text" [(ngModel)]="product_base_uom" /></div>
+      </div>
+  </div>
+  <h2>Product Pricing</h2>
+  <div class="productForm">
+    <div>
+      <div>Product Price</div>
+      <div>
+        <input type="text" [(ngModel)]="product_price" />
+        <input type="hidden" [(ngModel)]="ddc_product_price_id" />
+      </div>
     </div>
+    <div>
+      <div>Currency</div>
+      <div>
+        <select [(ngModel)]="product_currency">
+          <option *ngFor="let currency of currencies" value="{{currency.ddc_currency_id}}">{{currency.currency_symbol}}</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <div>Price Estimate</div>
+      <div>
+        <select [(ngModel)]="product_price_estimate">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+        </div>
+    </div>
+  </div>
+  <h2>Product Images</h2>
+  <div class="productForm">
+    <div> </div>
+    <div> </div>
+    <div><button class="btn btn-default link" (click)="editProduct(false,'')">Cancel</button><button class="btn btn-success link pull-right" (click)="saveProduct()">Save</button></div>
+  </div>
+  <br>
+</div>
+<div class="productItem" *ngFor="let product of products">
+  <div>
+    <img src="assets/{{product.image_link}}">
+  </div>
+  <div>
+    <h3>{{product.vendor_product_name}}</h3>
+    <p>{{product.product_description_small}}</p>
+  </div>
+  <div>
+    <button class="btn btn-default link pull-right" *ngIf="(vendors[0].admin==true) && (!productEdit)" (click)="editProduct(true,product)"><i class="icon icon-pencil"></i></button>
+    <p><span class="price">&pound; {{product.product_price | number:'1.2-2'}}</span></p>
+  </div>
+</div>
+<div class="clearfix"></div>
+</div>
+<div *ngIf="shopEdit">
+  <div class="col-md-8">
+      <div class="control-group">
+        <div class="control-label">
+          <label for="title">Shop Title</label>
+        </div>
+        <div class="controls">
+          <input class="form-control" type="text" [(ngModel)]="title" placeholder="Name of the Shop">
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="control-label">
+          <label for="introduction">Introduction</label>
+        </div>
+        <div class="controls">
+          <input class="form-control" type="text" [(ngModel)]="introduction" placeholder="Introduction">
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="control-label">
+          <label for="description">Shop Description</label>
+        </div>
+        <div class="controls">
+          <textarea class="form-control" type="text" [(ngModel)]="description" placeholder="Shop description"></textarea>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="control-label">
+          <label for="address1">Address</label>
+        </div>
+        <div class="controls">
+          <input class="form-control" type="text" [(ngModel)]="address1" placeholder="Address Line 1">
+        </div>
+        <div class="controls">
+          <input class="form-control" type="text" [(ngModel)]="address2" placeholder="Address Line 2">
+        </div>
+        <div class="controls">
+          <input class="form-control" type="text" [(ngModel)]="city" placeholder="City">
+        </div>
+        <div class="controls">
+          <input class="form-control" type="text" [(ngModel)]="post_code" placeholder="Post Code">
+        </div>
+        <div class="controls">
+          <select [(ngModel)]="country">
+            <option *ngFor="let c of countries" value="{{c.ddc_country_id}}">{{c.country_name}}</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <button class="btn btn-success pull-right" (click)="saveShop()">Save</button>
+      </div>
   </div>
   <div class="clearfix"></div>
 </div>

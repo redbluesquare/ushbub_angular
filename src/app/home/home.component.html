@@ -2,19 +2,8 @@
     <p *ngIf="town!=undefined"><i class="icon icon-map-marker"></i> {{town}} <span class="chngTown" (click)="changeTown()"><i>change</i></span></p>
   <div class="mainframe">
     <div class="row" *ngIf="town">
-      <div class="col-md-12 leadService" *ngIf="location?.length > 0">
-        <div class="caption">
-          <h2>The mobile car valet - Company Services</h2>
-          <p>Get your car washed and valeted at your place of work</p>
-          <a class="btn btn-primary pull-right" routerLink="/carwash">How it works</a>
-        </div>
-        <img src="{{location[0].image_link}}" width="100%">
-      </div>
-    </div>
-    <div class="clearfix"></div>
-    <div class="row" *ngIf="town">
         <div class="col-md-4 sub-box" routerLink="/shops">
-          <p>Find a business in <b>your</b> <br>local community</p>
+          <p>Find a <b>local</b> shop <br>in Chalfont St. Peter</p>
           <p class="caption">Business Listings</p>
         </div>
         <div class="col-md-4 sub-box" routerLink="/events">
@@ -28,8 +17,13 @@
     </div>
     <div class="clearfix" style="padding:10px;display: block;"></div>
     <div *ngIf="!town" class="searchbar">
-      <input type="text" placeholder="Enter city / Postcode" [(ngModel)]="searchtown" >
+      <input type="text" placeholder="Enter city / Postcode" [(ngModel)]="searchtown" (ngModelChange)="getTowns()">
       <button class="showClick btn btn-default" (click)="getTown()">Search</button>
+      <div class="">
+        <div class="col-xs-12" *ngFor="let loc of locations">
+          <div class="item">loc.town</div>
+        </div>
+      </div>
     </div>
     <div class="col-md-12" *ngIf="location?.length == 0">
       <h1>Ushbub, local is lekker!</h1>
@@ -37,10 +31,7 @@
   </div>
   <div class="clearfix"></div>
   <div class="row">
-    <div class="col-md-6 pt-div">
-      <h2><a routerLink="/powertools/best-18v-combi-drills-2018">Get the right tool for any job</a></h2>
-    </div>
-    <div class="col-md-6 fishing-ad">
+    <div class="col-md-6 fishing-ad hide">
       <h2><a routerLink="/fishing/anglers-delight">Anglers Delight</a></h2>
     </div>
   </div>

@@ -1,0 +1,110 @@
+<div *ngIf="state == 0">
+    <button class="btn btn-default" [routerLink]="['/dashboard']" routerLinkActive="router-link-active" >Dashboard</button>
+  <button class="btn btn-success" (click)="updateTrans(1,'')"><i class="icon-plus icon-white"></i> Transaction</button>
+</div>
+<div *ngIf="state != 0">
+    <button class="btn btn-default" [routerLink]="['/dashboard']" routerLinkActive="router-link-active" >Dashboard</button>
+  </div>
+<div *ngIf="state == 0">
+  <h1>Recent Transactions</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th (click)="updateFilter(5,transactions)">Record Date</th><th style="text-align:left" (click)="updateFilter(5,transactions)">Acc. To</th><th style="text-align:left" (click)="updateFilter(5,transactions)">Acc. From</th><th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let transaction of trans_filter">
+        <td style="text-align:center" (click)="updateFilter(0,transaction.record_date)">{{transaction.record_date.split(" ")[0] | date: 'dd MMM yyyy'}}</td><td (click)="updateFilter(4,transaction.account_to_name)">{{transaction.account_to_name}}</td><td (click)="updateFilter(2,transaction.account_from_name)">{{transaction.account_from_name}}</td><td style="text-align:right" >{{transaction.transaction_value | currency:'GBP'}}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td></td><td></td><td></td><td style="text-align:right;font-weight:bold;">{{getTransTotals('transaction_value') | currency:'GBP'}}</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+<div *ngIf="state == 1" style="min-height:400px">
+  <p> </p>
+  <h2>Hi {{user?.first_name}},</h2>
+  <h2>How can I help you?</h2>
+  <br>
+  <button class="btn btn-lg btn-default" (click)="updateTrans(2,3)">I spent money</button>
+  <button class="btn btn-lg btn-default" (click)="updateTrans(2,2)">I paid someone</button>
+  <button class="btn btn-lg btn-default" (click)="updateTrans(2,4)">I received money</button>
+  <button class="btn btn-lg btn-default" (click)="updateTrans(2,1)">I moved money</button>
+</div>
+<div *ngIf="state == 2" style="min-height:500px">
+  <p> <button class="btn btn-default pull-right" (click)="updateTrans(1,0)">Back</button></p>
+  <br>
+  <h2 *ngIf="category == 3">When did you spend the money?</h2>
+  <h2 *ngIf="category == 2">When did you pay someone?</h2>
+  <h2 *ngIf="category == 4">When did you receive money?</h2>
+  <h2 *ngIf="category == 1">When did you move your money?</h2>
+  <br>
+  <input class="input" [matDatepicker]="recorddate" date="true" [(ngModel)]="record_date" (selectedChanged)="onChange($event)">
+  <mat-datepicker-toggle [for]="recorddate"></mat-datepicker-toggle>
+  <mat-datepicker #recorddate [(ngModel)]="record_date" (selectedChanged)="onChange($event)"></mat-datepicker>
+  <br>
+  <button class="btn btn-lg btn-default" (click)="updateTrans(3,-1)">Continue</button>
+</div>
+<div *ngIf="state == 3" style="min-height:500px">
+  <p> <button class="btn btn-default pull-right" (click)="updateTrans(2,-1)">Back</button></p>
+  <br>
+  <h2 *ngIf="category == 3">How much money did you spend?</h2>
+  <h2 *ngIf="category == 2">How much money did you pay someone?</h2>
+  <h2 *ngIf="category == 4">How much money did you receive?</h2>
+  <h2 *ngIf="category == 1">How much money did you move?</h2>
+  <br>
+  <span class="input">&pound;</span> <input class="input currencyInput" type="text" [(ngModel)]="transaction_value" default="5.00"  step="0.01" />
+  <br>
+  <p><button class="btn btn-lg btn-default" (click)="updateTrans(4,-1)">Continue</button></p>
+</div>
+<div *ngIf="state == 4" style="min-height:500px">
+  <p> <button class="btn btn-default pull-right" (click)="updateTrans(3,-1)">Back</button></p>
+  <br>
+  <h2 *ngIf="category == 3">What did you pay for?</h2>
+  <h2 *ngIf="category == 2">Who did you pay?</h2>
+  <h2 *ngIf="category == 4">Who gave you the money?</h2>
+  <h2 *ngIf="category == 1">Where did you move your money to?</h2>
+  <br>
+  <input class="input" type="text" [(ngModel)]="transaction_description" />
+  <h2 *ngIf="category == 3">What type of expense was it?</h2>
+  <h2 *ngIf="category == 2">What was the account?</h2>
+  <h2 *ngIf="category == 4">What account did you puy the money into?</h2>
+  <h2 *ngIf="category == 1">Where did the money go?</h2>
+  <select  [(ngModel)]="account_to" (change)="updateAcc(0,account_to)">
+    <option checked="checked" value="0"> - Please select - </option>
+    <option *ngFor="let account of accounts" value="{{account.ddc_account_id}}">{{account.account_name}}</option>
+  </select>
+  <br>
+  <p><button class="btn btn-lg btn-default" (click)="updateTrans(5,-1)">Continue</button></p>
+</div>
+<div *ngIf="state == 5" style="min-height:500px">
+    <p> <button class="btn btn-default pull-right" (click)="updateTrans(4,-1)">Back</button></p>
+    <br>
+    <h2 *ngIf="category == 3">How did you pay for the {{transaction_description}}?</h2>
+    <h2 *ngIf="category == 4">What account did you the money?</h2>
+    <h2 *ngIf="category == 1">Where did you move your money from?</h2>
+    <br>
+    <select  [(ngModel)]="account_from" (change)="updateAcc(1,account_from)">
+      <option checked="checked" value="0"> - Please select - </option>
+      <option *ngFor="let account of accounts" value="{{account.ddc_account_id}}">{{account.account_name}}</option>
+    </select>
+    <br>
+    <p><button class="btn btn-lg btn-default" (click)="updateTrans(6,-1)">Continue</button></p>
+  </div>
+  <div *ngIf="state == 6" style="min-height:500px">
+      <p><button class="btn btn-default pull-right" (click)="updateTrans(5,-1)">Back</button></p>
+      <br>
+      <h2>Transaction Summary</h2>
+      <p>Date: {{record_date | date:'dd MMM yyyy'}}</p>
+      <p>Amount: &pound; {{transaction_value}}</p>
+      <div *ngIf="category == 3">
+        <p>Bought/paid: {{transaction_description}} - {{account_to_name}}</p>
+        <p>From: {{account_from_name}}</p>
+      </div>
+      <br>
+      <p><button class="btn btn-lg btn-success" (click)="saveTrans()">Save</button></p>
+    </div>

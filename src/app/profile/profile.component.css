@@ -1,0 +1,13 @@
+.profileBox{display: grid;grid-template: 'main main main sidebar';grid-template-columns: 2fr 2fr 2fr 1fr;grid-gap:5px;}
+.main{grid-area:main;background:#fff;display:grid;grid-template: 'image contxt' 'msgwall msgwall';grid-template-columns: 1fr 5fr;grid-gap:15px;}
+.sidebar{grid-area:sidebar;font-size: 0.8em;border-left:#ccc 1px solid;border-right:#ccc 1px solid;}
+.sidebar .item{display:block;padding:8px;border-top:#ccc 1px solid;border-bottom:#ccc 1px solid;}
+.sidebar .item:hover{background:rgba(236, 241, 253, 0.534)}
+.profImg{position:relative;grid-area:image;}
+.plusImg{z-index:2001;}
+.profDetails{grid-area:contxt;}
+.profileImg{position: absolute; width:inherit;z-index:500;}
+.profDetails p,.profDetails h3{margin:5px 0px;}
+.wall{grid-area:msgwall;}
+.profImg img{border-radius:10px;}
+.aboutme{font-style: italic;font-size:0.9em;}

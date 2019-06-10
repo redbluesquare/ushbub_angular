@@ -7,6 +7,7 @@ use Stripe\Charge;
 use Stripe\Order;
 use Stripe\Stripe;
 use Stripe\Customer;
+use Stripe\Error\Api;
 use Joomla\Crypt\Crypt;
 use Joomla\Crypt\Password\Simple;
 
@@ -15,7 +16,6 @@ class ProfilesModel extends DefaultModel
 	protected $_published 	= 1;
 	protected $_location	= null;
 	protected $_token = 'ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t';
-	protected $_secretKey = 'sk_live_SyweUzmJZphKqKkaDeT1RtUq';
 	
 	
 	protected function _buildQuery()
@@ -44,6 +44,32 @@ class ProfilesModel extends DefaultModel
 		//$query->where('u.block = "0"');
 
 		return $query;
+	}
+
+	public function getCarwashLocation($user_id)
+	{
+		//get customer stripe account number
+
+		$query = $this->db->getQuery(TRUE)
+			->select('up.profile_value as carwash_location')
+			->from('#__ddc_user_profiles as up')
+			->where('(up.profile_key = "carwash.location")')
+			->where('(up.user_id = "'.$user_id.'")');
+		$this->db->setQuery($query);
+		$result = $this->db->loadObject();
+		return $result;
+	
+	}
+
+	public function getUserProfile($id,$key){
+		$query = $this->db->getQuery(TRUE)
+			->select('up.profile_value as value')
+			->from('#__ddc_user_profiles as up')
+			->where('(up.profile_key = "'.$key.'")')
+			->where('(up.user_id = "'.$id.'")');
+		$this->db->setQuery($query);
+		$result = $this->db->loadObject();
+		return $result;
 	}
 
 	public function getUser($id = null, $email = null, $username = null, $token = null){
@@ -125,7 +151,7 @@ class ProfilesModel extends DefaultModel
 		$result = array("success" => false);
 		
 		$query = $this->db->getQuery(true)
-		->select('u.id, uk.token')
+		->select('u.id, uk.token, u.first_name, u.last_name, u.email')
 		->from('#__ddc_users as u')
 		->leftjoin('#__ddc_user_keys as uk on u.id = uk.user_id')
 		->where('uk.token = ' . $this->db->quote($token));
@@ -135,6 +161,9 @@ class ProfilesModel extends DefaultModel
 			$result['success'] = true;
 			$result['token'] = $response->token;
 			$result['user_id'] = $response->id;
+			$result['first_name'] = $response->first_name;
+			$result['last_name'] = $response->last_name;
+			$result['email'] = $response->email;
 		}
 
 		return $result;
@@ -163,6 +192,23 @@ class ProfilesModel extends DefaultModel
 		return $result;
 	}
 
+	public function updateuserprofiles($id,$key,$value){
+		$fields = array($this->db->qn('profile_value').' = "'.$value.'"');
+		$conditions = array($this->db->qn('user_id') .'='. $id,
+						$this->db->qn('profile_key').' = "'.$key.'"'
+					);
+		$this->addLog(json_encode($fields));
+		$result = $this->update('#__ddc_user_profiles',$fields,$conditions);
+		return $result;
+	}
+
+	public function adduserprofiles($id,$key,$value,$order = 0){
+		$values = array($id,$key,$value,$order);
+		$columns = array("user_id", "profile_key", "profile_value",'ordering');
+		$result = $this->insert("#__ddc_user_profiles", $columns, $values);
+		return $result;
+	}
+
 	public function getShipAddress($token)
 	{
 		$result = array("success" => false);
@@ -171,7 +217,7 @@ class ProfilesModel extends DefaultModel
 		->select('u.id, u.first_name, u.username, u.email, ui.*')
 		->from('#__ddc_users as u')
 		->leftjoin('#__ddc_userinfos as ui on ui.user_id = u.id')
-		->leftjoin('#__user_keys as uk on (uk.user_id = u.id)')
+		->leftjoin('#__ddc_user_keys as uk on (uk.user_id = u.id)')
 		->where('uk.token = ' . $this->db->quote($token));
 		$this->db->setQuery($query);
 		$response = $this->db->loadObject();
@@ -182,30 +228,27 @@ class ProfilesModel extends DefaultModel
 		return $result;
 	}
 	
-	public function getStripeCustomer($token)
+	public function getStripeCustomer($user_id)
 	{
 		//get customer stripe account number
 
 		$query = $this->db->getQuery(TRUE)
 			->select('up.profile_value')
-			->from('#__user_profiles as up')
-			->leftjoin('#__user_keys as uk on (uk.user_id = up.user_id)')
-			->where('(up.profile_key = "stripe.customer") AND (uk.token = ' . $this->db->quote($token).')');
+			->from('#__ddc_user_profiles as up')
+			->where('(up.profile_key = "stripe.customer") AND (up.user_id = ' . $this->db->quote($user_id).')');
 		$this->db->setQuery($query);
 		$dbCustomer = $this->db->loadObject();
 		return $dbCustomer;
 	
 	}
 	
-	public function isStripeCustomer($token)
+	public function isStripeCustomer($user_id)
 	{
-	
 		//check if customer exists
 		$query = $this->db->getQuery(TRUE);
 		$query->select('up.profile_value')
-			->from('#__user_profiles as up')
-			->leftjoin('#__user_keys as uk on (uk.user_id = up.user_id)')
-			->where('(up.profile_key = "stripe.customer") AND (uk.token = ' . $this->db->quote($token).')');
+			->from('#__ddc_user_profiles as up')
+			->where('(up.profile_key = "stripe.customer") AND (up.user_id = ' . $this->db->quote($user_id).')');
 		$this->db->setQuery($query);
 		$result = $this->db->loadObject();
 		if($result==null)
@@ -218,22 +261,22 @@ class ProfilesModel extends DefaultModel
 		}
 	}
 	
-	public function createStripeCustomer($token)
+	public function createStripeCustomer($token,$user_id, $secretKey)
 	{
 		$return = array("success"=>false);
 		//check if customer exists
-		if(!$this->isStripeCustomer($token))
+		if(!$this->isStripeCustomer($user_id))
 		{
-			$user = $this->getShipAddress($token);
+			$user = $this->getUser($user_id);
 			$stripe = new Stripe();
-			$stripe->setApiKey($this->_secretKey);
+			$stripe->setApiKey($secretKey);
 			$sCustomer = new Customer();
 			try
 			{
 				$response = $sCustomer->create(array(
-						"description" => "Customer for ".$user['info']->email,
-						"email" => $user['info']->email,
-						"source" => $this->input->get('stripeToken',null,'string') // obtained with Stripe.js
+						"description" => "Customer for ".$user->email,
+						"email" => $user->email,
+						"source" => $token
 				));
 			}
 			catch(Exception $e)
@@ -255,10 +298,10 @@ class ProfilesModel extends DefaultModel
 				// Insert columns.
 				$columns = array('user_id', 'profile_key', 'profile_value', 'ordering');
 				// Insert values.
-				$values = array($user['info']->id, $this->db->quote('stripe.customer'), $this->db->quote(json_encode($data)), 1);
+				$values = array($user_id, $this->db->quote('stripe.customer'), $this->db->quote(json_encode($data)), 1);
 				// Prepare the insert query.
 				$query
-				->insert($this->db->quoteName('#__user_profiles'))
+				->insert($this->db->quoteName('#__ddc_user_profiles'))
 				->columns($this->db->quoteName($columns))
 				->values(implode(',', $values));
 				// Set the query using our newly populated query object and execute it.
@@ -277,45 +320,45 @@ class ProfilesModel extends DefaultModel
 		}
 	}
 	
-	public function updateStripeCustomer($token)
+	public function updateStripeCustomer($token,$user_id,$secretKey)
 	{
-		$dbCustomer = $this->getStripeCustomer($token);
+		$dbCustomer = $this->getStripeCustomer($user_id);
 		$stripeCustomerToken = json_decode($dbCustomer->profile_value);
 		$stripeCustomerToken = $stripeCustomerToken->stripeCustomerToken;
 		//load Stripe model
 		$stripe = new Stripe();
-		$user = $this->getShipAddress($token);
 		//get secret #shh don't tell
-		$stripe->setApiKey($this->_secretKey);
+		$stripe->setApiKey($secretKey);
 		//Initialise the Stripe customer class
 		$customer = new Customer();
 		try
 		{
 			$response = $customer->retrieve($stripeCustomerToken);
-			$response->delete();
+			if($response->delete==false){
+				$response->delete();
+			}
 		}
-		catch(Exception $e)
-		{
+		catch(Exception $e){
 			$return['msg'] = $e->getMessage();
 		}
 		// Create a new query object.
 		$query = $this->db->getQuery(true);
 		// delete all custom keys for the user.
 		$conditions = array(
-				$this->db->quoteName('user_id') . ' = '.(int)$user['info']->id,
+				$this->db->quoteName('user_id') . ' = '.(int)$user_id,
 				$this->db->quoteName('profile_key') . ' = ' . $this->db->quote('stripe.customer')
 		);
-		$query->delete($this->db->quoteName('#__user_profiles'));
+		$query->delete($this->db->quoteName('#__ddc_user_profiles'));
 		$query->where($conditions);
 		// Set the query using our newly populated query object and execute it.
 		$this->db->setQuery($query);
 		$result = $this->db->execute();
 	
-		$result = $this->createStripeCustomer($token);
+		$result = $this->createStripeCustomer($token,$user_id,$secretKey);
 		return $result;
 	}
 	
-	public function chargeStripeCustomer($token)
+	public function chargeStripeCustomer($token,$user_id,$secretKey)
 	{
 		//Get the shopping cart details
 		$shopcart = new DdcshopboxModelsShopcart();

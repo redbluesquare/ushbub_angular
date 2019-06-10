@@ -1,0 +1,121 @@
+<div>
+  <button class="btn btn-default" [routerLink]="['/dashboard']" routerLinkActive="router-link-active" ><i class="icon-chevron-left"></i> Back</button>
+  <button class="btn btn-default pull-right" (click)="updateAccount(account)"><i class="icon-pencil"></i></button>
+  <button (click)="editBalance('')" class="btn btn-success pull-right"><i class="icon-plus icon-white"></i> Balance</button>
+</div>
+<div class="row"  *ngIf="viewState == 0">
+  <div class="col-md-4">
+    <table class="table">
+      <tbody>
+        <tr>
+          <th style="text-align:left;">Account Name</th><td>{{account?.account_name}}</td>
+        </tr>
+        <tr>
+          <th style="text-align:left;">Account Type</th><td>{{account?.accounttype}}</td>
+        </tr>
+        <tr>
+          <th style="text-align:left;">Interest Rate (%)</th><td>{{account?.interest_rate | number}}</td>
+        </tr>
+        <tr>
+          <th style="text-align:left;">Notes</th><td>{{account?.notes}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div>
+      <h2>Recent Balances</h2>
+      <div class="row" *ngFor="let balance of balances" (click)="editBalance(balance)">
+        <div class="col-md-6">{{getDate(balance.record_date) | date:'dd MMM yyyy'}}</div>
+        <div class="col-md-6" style="text-align:right;">{{balance.balance | currency:account?.currency_symbol}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <canvas height="300" #balanceCanvas width="inherit" ></canvas>
+  </div>
+  <div class="clearfix"></div>
+</div>
+  <!-- Subscribe Modal -->
+  <div [(ngClass)]="modalClass">
+    <div class="modal-dialog" role="document">
+      <div class="modal-header">
+        <button class="close" (click)="closeModal()"><span aria-hidden="true">&times;</span></button>
+        <div class="clearfix"></div>
+      </div>
+      <div class="modal-content">
+        <div class="row">
+          <div class="col-md-4"><label>Balance ID</label></div>
+          <div class="col-md-7"><input type="text" style="text-align:right;" class="form-control" [(ngModel)]="balance_id" readonly="true" /></div>
+        </div>
+        <div class="row">
+            <div class="col-md-4"><label>Record Date</label></div>
+            <div class="col-md-7">
+                <input class="input" [matDatepicker]="recorddate" date="true" [(ngModel)]="record_date">
+                <mat-datepicker-toggle [for]="recorddate"></mat-datepicker-toggle>
+                <mat-datepicker #recorddate [(ngModel)]="record_date"></mat-datepicker>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4"><label>Balance</label></div>
+          <div class="col-md-4"><input type="text" style="text-align:right;" class="form-control" [(ngModel)]="balance_value" placeholder="0.00" /></div>
+          <div class="col-md-2">
+            <select class="form-control" [(ngModel)]="dr_cr">
+              <option value="dr">Dr</option>
+              <option value="cr">Cr</option>
+            </select></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-md-2"><button type="button" class="btn btn-success" (click)="saveBalance()">Save</button></div>
+        </div>
+      </div> 
+    </div>
+  </div>
+  
+<div class="row" *ngIf="viewState == 1">
+  <div class="row">
+    <div class="col-md-5"><label>Account Name</label></div>
+    <div class="col-md-7"><input type="text" class="form-control" [(ngModel)]="account_name" placeholder="Account Name" /></div>
+  </div>
+  <div class="row">
+    <div class="col-md-5"><label>Alias</label></div>
+    <div class="col-md-7"><input type="text" class="form-control" [(ngModel)]="alias" placeholder="Alias" /></div>
+  </div>
+  <div class="row">
+    <div class="col-md-5"><label>Account Type</label></div>
+    <div class="col-md-7"><select class="form-control" [(ngModel)]="account_type">
+      <option value=""> - Select a Type - </option>
+      <option *ngFor="let accounttype of account_types" value="{{accounttype.ddc_account_type_id}}">{{accounttype.account_type}}</option>
+    </select></div>
+  </div>
+  <div class="row">
+    <div class="col-md-5"><label>Account Number</label></div>
+    <div class="col-md-7"><input type="text" class="form-control" [(ngModel)]="account_number" placeholder="Account Number" /></div>
+  </div>
+  <div class="row">
+    <div class="col-md-5"><label>Sort Code</label></div>
+    <div class="col-md-7"><input type="text" class="form-control" [(ngModel)]="sort_code" placeholder="Sort Code" /></div>
+  </div>
+  <div class="row">
+    <div class="col-md-5"><label>Interest Rate (%)</label></div>
+    <div class="col-md-7"><input type="text" class="form-control" [(ngModel)]="interest_rate" placeholder="Interest Rate (%)" /></div>
+  </div>
+  <div class="row">
+    <div class="col-md-5"><label>Currency</label></div>
+    <div class="col-md-7"><select class="form-control" [(ngModel)]="currency">
+      <option value=""> - Select a Currency - </option>
+      <option *ngFor="let curr of currencies" value="{{curr.ddc_currency_id}}">{{curr.currency_code_3 + ' - ' + curr.currency_name}}</option>
+    </select></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <textarea [(ngModel)]="notes" class="form-control">{{notes}}</textarea>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12"><button type="button" class="btn btn-default" (click)="cancelEdit()">Cancel</button>
+    <button type="button" class="btn btn-success pull-right" (click)="saveAccount()">Save</button></div>
+  </div>
+  <div class="clearfix"></div>
+</div>
+  

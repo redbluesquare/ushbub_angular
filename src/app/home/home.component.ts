@@ -34,6 +34,17 @@ export class HomeComponent implements OnInit {
     this.apiDataService.getTown(this.searchtown)
     .subscribe(location => this.storeTown(location));
   }
+
+  getTowns(){
+    console.log(this.searchtown);
+    if(this.searchtown.length < 4){
+      //Dont calculate this
+    }
+    else{
+      console.log('where');
+    }
+  }
+
   storeTown(location){
     if(location!=undefined){
       this.location = location;

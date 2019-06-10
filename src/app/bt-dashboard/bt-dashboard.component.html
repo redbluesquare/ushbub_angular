@@ -1,0 +1,116 @@
+<div>
+  <button class="btn btn-default" [routerLink]="['/transactions']" routerLinkActive="router-link-active" >Transactions</button>
+  <button class="btn btn-default pull-right"><i class="icon-cog"></i></button>
+  <button (click)="closeModal()" class="btn btn-success pull-right"><i class="icon-plus icon-white"></i> Account</button>
+</div>
+<div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Account Name</th><th>Account Type</th><th>Int. Rate (%)</th><th>Balance</th><th>Target Balance</th><th>Target Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let account of accounts">
+        <td [routerLink]="['/accounts/'+account.ddc_account_id]">{{account.account_name}}</td><td>{{account.accounttype}}</td><td style="text-align:center;">{{account.interest_rate | number}}</td><td style="text-align:right;">{{account.balance | currency:account.currency_symbol}}</td><td style="text-align:right;">{{account.target_balance | currency:'GBP'}}</td><td>{{account.target_date}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="clearfix"></div>
+<div class="col-md-6">
+  <h2>Expenses for {{current_month_name+" "+current_year}} <span class="pull-right"><button class="btn" (click)="updateDate(-1)"> <i class="icon-chevron-left"></i> </button> <button class="btn" (click)="updateDate(1)"> <i class="icon-chevron-right"></i> </button></span></h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Account Name</th><th>Budget</th><th>Expense Totals</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let expense of expenses">
+          <td [routerLink]="['/accounts/'+expense.account_to]">{{expense.account_to_name}}</td><td style="text-align:right;" (click)="closeTargetModal(expense.account_to,expense.account_to_name)">{{expense.target_value | currency:'GBP'}}</td><td style="text-align:right;">{{expense.transaction_total | currency:'GBP'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="clearfix"></div>
+<!-- Add Account Modal -->
+<div [(ngClass)]="modalClass">
+  <div class="modal-dialog" role="document">
+    <div class="modal-header">
+      <button class="close" (click)="closeModal()"><span aria-hidden="true">&times;</span></button>
+      <div class="clearfix"></div>
+    </div>
+    <div class="modal-content">
+      <div class="row">
+          <div class="col-md-5"><label>Account Name</label></div>
+          <div class="col-md-7"><input type="text" class="form-control" [(ngModel)]="account_name" placeholder="Account Name" /></div>
+      </div>
+      <div class="row">
+        <div class="col-md-5"><label>Alias</label></div>
+        <div class="col-md-7"><input type="text" class="form-control" [(ngModel)]="alias" placeholder="Alias" /></div>
+      </div>
+      <div class="row">
+        <div class="col-md-5"><label>Account Type</label></div>
+        <div class="col-md-7"><select class="form-control" [(ngModel)]="account_type">
+          <option value=""> - Select a Type - </option>
+          <option *ngFor="let accounttype of account_types" value="{{accounttype.ddc_account_type_id}}">{{accounttype.account_type}}</option>
+        </select></div>
+      </div>
+      <div class="row">
+        <div class="col-md-5"><label>Account Number</label></div>
+        <div class="col-md-7"><input type="text" class="form-control" [(ngModel)]="account_number" placeholder="Account Number" /></div>
+      </div>
+      <div class="row">
+        <div class="col-md-5"><label>Sort Code</label></div>
+        <div class="col-md-7"><input type="text" class="form-control" [(ngModel)]="sort_code" placeholder="Sort Code" /></div>
+      </div>
+      <div class="row">
+        <div class="col-md-5"><label>Interest Rate (%)</label></div>
+        <div class="col-md-7"><input type="text" class="form-control" [(ngModel)]="interest_rate" placeholder="Interest Rate (%)" /></div>
+      </div>
+      <div class="row">
+        <div class="col-md-5"><label>Currency</label></div>
+        <div class="col-md-7"><select class="form-control" [(ngModel)]="currency">
+          <option value=""> - Select a Currency - </option>
+          <option *ngFor="let curr of currencies" value="{{curr.ddc_currency_id}}">{{curr.currency_code_3 + ' - ' + curr.currency_name}}</option>
+        </select></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <div class="col-md-2"><button type="button" class="btn btn-success" (click)="saveAccount()">Save</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Budget Modal -->
+<div [(ngClass)]="targetmodalClass">
+    <div class="modal-dialog" role="document">
+      <div class="modal-header">
+        <button class="close" (click)="closeTargetModal()"><span aria-hidden="true">&times;</span></button>
+        <div class="clearfix"></div>
+      </div>
+      <div class="modal-content">
+        <div class="row">
+            <div class="col-md-5">Account Name</div><div class="col-md-7">{{account_name}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-5"><label>Target Month</label></div>
+          <div class="col-md-7"><select class="form-control" [(ngModel)]="current_month" (change)="updateDate(undefined)">
+            <option *ngFor="let num of [0,1,2,3,4,5,6,7,8,9,10,11]" value="{{num}}">{{monthNames[num]}}</option>
+          </select></div>
+        </div>
+        <div class="row">
+          <div class="col-md-5"><label>Target Budget</label></div>
+          <div class="col-md-7"><input type="text" class="form-control" [(ngModel)]="target_balance" placeholder="Budget Value" /></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-md-2"><button type="button" class="btn btn-success" (click)="saveTarget()">Save</button></div>
+        </div>
+      </div>
+    </div>
+  </div>

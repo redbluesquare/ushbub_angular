@@ -2,6 +2,8 @@
 namespace App\Controllers;
 use App\Controllers\DefaultController;
 use App\Models\ProductsModel;
+use App\Models\VendorsModel;
+use App\Models\VendorproductsModel;
 use Joomla\Session\Session;
 use Joomla\Event\Dispatcher;
 
@@ -10,9 +12,9 @@ class ProductsController extends DefaultController
 	
 	public function index()
 	{
-		$pc = $this->getInput()->getString('pc',null);
-		$model = new ProductsModel($this->getInput(), $this->getContainer()->get('db'));
-		if($pc != null)
+		$id = $this->getInput()->getString('id',null);
+		$model = new VendorproductsModel($this->getInput(), $this->getContainer()->get('db'));
+		if($id != null)
 		{
 			$items = $model->listItems($pc);
 			for($i=0;$i<count($items);$i++)
@@ -47,7 +49,7 @@ class ProductsController extends DefaultController
 		$item = null;
 		if($val!=null)
 		{
-			$model = new ProductsModel($this->getInput(), $this->getContainer()->get('db'));
+			$model = new VendorproductsModel($this->getInput(), $this->getContainer()->get('db'));
 			if($val > 0)
 			{
 				$item = $model->getItemById($val);
@@ -70,6 +72,48 @@ class ProductsController extends DefaultController
 			}
 		}
 		
+		return $item;
+	}
+
+	public function shop(){
+		$date = date('Y-m-d H:i:s');
+		$h = getallheaders();
+		$usertoken = '';
+		foreach($h as $name => $value){
+			if(ucfirst($name) == 'Bearer'){
+				$usertoken = $value;
+			}
+		}
+		$item = new \StdClass();
+		$item->success = false;
+		$vendormodel = new VendorsModel($this->getInput(), $this->getContainer()->get('db'));
+		$model = new VendorproductsModel($this->getInput(), $this->getContainer()->get('db'));
+		if($usertoken!=''){
+			$user = $promodel->authenticate_token($usertoken);
+			$this->getInput()->set('user_id',$user['user_id']);
+		}
+		$id = $this->getInput()->getString('id',null,'string');
+		$token = $this->getInput()->json->get('apptoken',null);
+		if(($this->getInput()->getMethod()==='POST') && ($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")){
+
+			
+		}
+		if($input = $this->getInput()->getMethod()==='PUT'){
+			//get function
+			
+		}
+		if($input = $this->getInput()->getMethod()==='GET'){
+			//List all vendors
+			$item = $model->listItems(null,$id);
+			for($i=0;$i<count($item);$i++)
+			{
+				if($item[$i]->image_link==null)
+				{
+					$item[$i]->image_link = 'images/ddcshopbox/picna_ushbub.png';
+				}
+			}
+		}
+
 		return $item;
 	}
 

@@ -53,7 +53,6 @@ class SubscriptionsController extends DefaultController
 		$table = "#__contact_details";
 		$item = null;
 		$item = $model->getItemById($id, $email);
-		//var_dump($item);
 		$result = array("success"=>false);
 		$result['success'] = false;
 		if(count($item)==0)

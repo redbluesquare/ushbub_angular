@@ -1,7 +1,7 @@
-<div class="container" *ngIf="state==0">
+<div *ngIf="state==0">
   <div class="row">
     <div class="col-md-8">
-      <h1 style="display:block;">The Professional Car Valet Service <br> <span class="pull-right">@ your place of work</span></h1>
+      <h1 style="display:block;">The Professional Car Valet Service <br> <span>@ your place of work</span></h1>
       <div class="clearfix"></div>
       <h2>How it works</h2>
       <ul>
@@ -20,100 +20,268 @@
     </div>
     <div class="clearfix"></div>
     <div class="col-md-12">
-      <a class="btn btn-default" routerLink="/login">Login</a>
+      <p style="text-align:center;"><a class="btn btn-primary btn-lg link" routerLink="/login">Login</a></p>
     </div>
     <div class="clearfix"></div>
   </div>
-</div>
-<div class="container" *ngIf="state==1">
   <div class="row">
-    <div class="col-md-12 link" (click)="updateState(1)">
-      <div class="sub-box sub-box-blue">
-        <h2>+ Book a clean</h2>
-      </div>
-    </div>
-    <div class="col-md-6 link" (click)="updateState(2)">
-      <div class="sub-box">
+    <div class="col-md-6 link" (click)="updateState(3)">
+      <div class="sub-box btn btn-success" style="text-align:center">
         <h3>Register your company</h3>
       </div>
     </div>
-    <div class="col-md-6 link" (click)="updateState(3)">
-      <div class="sub-box">
+    <div class="col-md-6 link" (click)="updateState(4)">
+      <div class="sub-box btn btn-primary" style="text-align:center">
         <h3>Become an Auto Valet Attendant</h3>
         <p>Recruiting now</p>
       </div>
     </div>
     <div class="clearfix"></div>
   </div>
+</div>
+<div class="container" *ngIf="state==1">
   <div class="row">
+    <div class="col-md-12">
+      <p class="pull-left">Location: {{vendor_locations?.site_location}}, {{vendor_locations?.city}}, {{vendor_locations?.post_code}}</p>
+      </div>
+      <div class="col-md-12 info small" *ngIf="!vehicles">
+        <p>To get started, you need to register a vehicle and set your location.</p>
+        <p>Go to your <a class="link" (click)="updateState(5)">settings</a> on the top right.</p>
+      </div>
+      <div class="clearfix"></div>
+    <div class="col-md-12 link" (click)="updateState(2)">
+      <div class="sub-box sub-box-blue">
+        <h2>+ Book a clean</h2>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="row">
+    <div class="col-md-12" style="min-height:450px;">
+      <h3>Upcoming Bookings</h3>
+      <div class="col-md-12" *ngFor="let v_service of v_services">
+        <p>{{v_service.book_date.split(' ')[0] | date:'d MMMM y'}}</p>
+        <p>Registration: {{v_service.params.car.registration_number}}</p>
+        <p>Cost: &pound; {{v_service.product_price | number:'1.2-2'}}</p>
+        <p>Status: {{v_service.header_status}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</div>
+<div class="container" *ngIf="state==2">
+  <div class="row">
+    <div class="col-md-12">
+      <a class="pull-right link" (click)="updateState(1)"><i class="icon icon-chevron-left icon-blue"></i> Go back</a>
+    </div>
     <div class="col-md-12">
         <h1>Book a Car Wash</h1>
     </div>
     <div class="clearfix"></div>
-    <div class="col-md-12">
-      <h3>Location: <b>Bosch - UB9</b></h3>
-      <div class="col-md-12" style="margin-bottom:5px;">
-        <input class="form-control" [(ngModel)]="car_reg" type="text"placeholder="Car Registration" />
+    <div class="col-md-6">
+      <h3>Location: <b>Robert Bosch Limited - UB9 5HJ</b></h3>
+      <p>Slots available: {{20-6}} / 20</p>
+      <div class="hide">
+        <label>Vehicle to be cleaned:</label>
+          <select class="form-control" [(ngModel)]="car_id">
+            <option value="{{vehicle.id}}" *ngFor="let vehicle of vehicles">{{vehicle.registration_number}}</option>
+          </select>
       </div>
-      <div class="col-md-3" style="margin-bottom:5px;">
+      <div class="form-group">
+        <label>First Name:</label>
         <input class="form-control" [(ngModel)]="first_name" type="text" placeholder="First Name" />
       </div>
-      <div class="col-md-3" style="margin-bottom:5px;">
-          <input class="form-control" [(ngModel)]="last_name" type="text" placeholder="Last Name" />
+      <div class="form-group">
+        <label>Last Name:</label>
+        <input class="form-control" [(ngModel)]="last_name" type="text" placeholder="Last Name" />
+      </div>
+      <div class="form-group">
+        <label>Vehicle Registration:</label>
+        <input class="form-control" [(ngModel)]="car_reg" type="text" placeholder="Vehicle Registration" />
+      </div>
+      <div class="form-group">
+        <label>Vehicle Make:</label>
+        <input class="form-control" [(ngModel)]="car_make" type="text" placeholder="Make" />
+      </div>
+      <div class="form-group">
+        <label>Vehicle Model:</label>
+        <input class="form-control" [(ngModel)]="car_model" type="text" placeholder="Model" />
+      </div>
+      <div class="form-group">
+        <label>Date of Service:</label>
+        <select class="form-control" [(ngModel)]="requestDate">
+          <option value="2018-08-07"> 7 August 2018, Tuesday </option>
+          <option value="2018-08-14"> 14 August 2018, Tuesday </option>
+          <option value="2018-08-21"> 21 August 2018, Tuesday </option>
+          <option value="2018-08-28"> 28 August 2018, Tuesday </option>
+          <option value="2018-09-04"> 4 September 2018, Tuesday </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Contact Number:</label>
+        <input class="form-control" [(ngModel)]="mobile_no" type="text" placeholder="Mobile Number" />
+      </div>
+      <div class="form-group">
+        <label><b>Payment method:</b></label>
+        <select class="form-control" [(ngModel)]="payment_method" (change)="getCarddetails()">
+          <option value="0"> Cash </option>
+          <option value="1"> Card </option>
+        </select>
+        <form *ngIf="payment_method==1" [formGroup]="cardForm">
+          <span *ngIf="(cardinfo!=null || cardinfo!='')">
+            <input type="radio" value="0" [checked]="card_info1" name="card_value" (click)="selectCard(1)"><label for="r_card_curr">Pay with: {{cardinfo.stripeCustomerBrand}} ending in: {{cardinfo.stripeCustomerlast4}} | Expiry: {{cardinfo.stripeCustomerExp_month |number:'2.0-0'}}/{{cardinfo.stripeCustomerExp_year}}</label>
+          </span><br>
+            <input type="radio" value="1" [checked]="card_info2" name="card_value" (click)="selectCard(2)"><label for="r_card_new">New card</label><br>
+        </form>
+      </div>
+      <p>Cost: <span *ngIf="service_price==10.00" class="special"><i>special offer</i></span><span class="pull-right">&pound; {{service_price | number:'1.2-2' }}</span></p>
+      
+      <div class="col-md-12">
+        <button class="btn btn-success pull-right" (click)="showStripeForm()"> Book</button>
+      </div>
+    </div>
+    <div class="col-md-6" style="margin-bottom:5px;">
+      <h4>Pricing:</h4>
+      <div class="col-md-4">
+        <div class="sub-box">
+          <p>Small cars</p>
+          <p>&pound; 12.00</p>
         </div>
-      <div class="col-md-6" style="margin-bottom:5px;">
-        <input class="form-control" [(ngModel)]="email" type="email" placeholder="E-mail" />
       </div>
-      <p><b>July</b></p>
-      <div class="col-md-2 bookDate" style="margin-bottom:5px;" [ngClass]="modalClass" (click)="selectDate('2018-07-17')">
-        <p>17th<br>
-        Tuesday<br>
-        (8 spots)</p>
+      <div class="col-md-4">
+        <div class="sub-box">
+          <p>Medium cars</p>
+          <p>&pound; 15.00</p>
+        </div>
       </div>
-      <div class="col-md-2 bookDate" style="margin-bottom:5px;">
-        <p>19th<br>
-        Thursday<br>
-        (10 spots)</p>
+      <div class="col-md-4">
+        <div class="sub-box">
+          <p>Large cars</p>
+          <p>&pound; 22.00</p>
+        </div>
       </div>
-      <div class="col-md-2 bookDate" style="margin-bottom:5px;">
-        <p>24th<br>
-        Tuesday<br>
-        (9 spots)</p>
-      </div>
-      <div class="col-md-2 bookDate" style="margin-bottom:5px;">
-        <p>26th<br>
-        Thursday<br>
-        (10 spots)</p>
-      </div>
-
+      <h3>On the day:</h3>
+      <p>Getting your car cleaned follows these simple steps:</p>
+      <ul>
+        <li>Park your car in one of the designated parking bays located in the rear car park.</li>
+        <li>Either hand your keys to the cleaning attendant or to reception.</li>
+        <li>Ensure your keys have been tagged with the registration and your name.</li>
+        <li>Once your car has been cleaned, you free to collect your keys from the attendant or from reception at the end of the working day.</li>
+        <li>Payment is only taken on the day of the service.</li>
+      </ul>
     </div>
     <div class="clearfix"></div>
   </div>
+</div>
 <div class="container" *ngIf="state==3">
   <div class="row">
     <div class="col-md-12">
-        <h1>How to become a valet attendant</h1>
-    </div>
-    <div class="clearfix"></div>
-    <div class="col-md-6">
-      <h3>Requirements:</h3>
-      <ul>
-        <li>A driver's licence</li>
-        <li>Public Liability Insurance</li>
-        <li>Cleaning detergents &amp; safety datasheets</li>
-        <li>Pressure washer and vacuum cleaner provided</li>
-        <li>All other items to be supplied by the attendant</li>
-      </ul>
-    </div>
-    <div class="col-md-6">
-      <h3>Payment structure</h3>
-      <ul>
-        <li>The valet contrator will earn 50% of the revenue for every vehicle cleaned</li>
-        <li>A bonus of 25% will be paid on a monthly basis if targets are met</li>
-      </ul>
+        <h1>Register your company</h1>
     </div>
   </div>
-  <div class="clearfix"></div>
-  <h3>Current Openings:</h3>
-  <p>A contractor valet attendant is required for a location close to Uxbridge.</p>
+  <div class="clearfix"></div>    
+</div>
+<div class="container" *ngIf="state==4">
+    <div class="row">
+      <div class="col-md-12">
+          <h1>How can I become a valet attendant?</h1>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-md-6">
+        <h3>Requirements:</h3>
+        <ul>
+          <li>A driver's licence</li>
+          <li>Public Liability Insurance</li>
+          <li>Cleaning detergents &amp; safety datasheets</li>
+          <li>Pressure washer and vacuum cleaner are provided</li>
+          <li>All other items to be supplied by the attendant</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h3>Payment structure</h3>
+        <ul>
+          <li>The valet contrator will earn 50% of the revenue for every vehicle cleaned</li>
+          <li>A bonus of 25% will be paid on a monthly basis if targets are met</li>
+        </ul>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <h3>Current Openings:</h3>
+    <p>A contractor valet attendant is required for a location close to Uxbridge.</p>
+  </div>
+<div class="container" *ngIf="state==5"  style="min-height:550px;">
+    <div class="row">
+      <div class="col-md-12">
+        <a class="pull-right link" (click)="updateState(1)"><i class="icon icon-chevron-left icon-blue"></i> Go back</a>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row">
+        <h1>Manage Car Wash settings</h1>
+        <div class="col-md-6">
+          <div class="col-md-12">
+            <h3>My Vehicles</h3>
+            <p *ngIf="!vehicles">You don't have any vehicles registered.</p>
+            <p *ngFor="let vehicle of vehicles">{{vehicle.registration_number}} 
+              <a class="pull-right btn btn-error btn-sm link" (click)="removeVehicle(vehicle.id)"><i class="icon icon-trash icon-white"></i></a>
+              <a class="pull-right btn btn-warning btn-sm link" (click)="editVehicle(vehicle.id)"><i class="icon icon-pencil icon-white"></i></a>
+            </p>
+          </div>
+          <div class="col-md-12">
+            <h3>My car-wash locations</h3>
+            <p *ngIf="location.carwash_location==''">You don't have a location set.</p>
+            <p *ngIf="location.carwash_location!=''">{{location.carwash_location.site_location}}, {{location.carwash_location.city}}, {{location.carwash_location.post_code}}</p>
+          </div>
+          <div class="col-md-12">
+            
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="col-md-9">
+              <input class="form-control" [(ngModel)]="car_reg" type="text"placeholder="Car Registration" />
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-primary link" (click)="saveVehicle()"><i class="icon icon-plus icon-white"></i></button>
+          </div>
+          <div class="col-md-9">
+            <select class="form-control" [(ngModel)]="vendor_location">
+              <option value="0"> - set a default car wash location - </option>
+              <option value="{{location.id}}" *ngFor="let location of vendor_locations">{{location.site_location}} - {{location.post_code}}</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-primary link" (click)="saveLocation(vendor_location)"><i class="icon icon-ok icon-white"></i></button>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>    
+  </div>
+
+<!-- The Modal -->
+<div [ngClass]="modalClass">
+  <div class="modal-payheader">
+    <span (click)="closeModal()" class="close">&times;</span>
+    <h3>Pay with Stripe</h3> 
+  </div>
+  <form novalidate (ngSubmit)="buy($event)" [formGroup]="stripeTest">
+    <!-- Modal content -->
+    <div class="modal-paycontent">
+      <div class="col-md-12">
+        <label style="color:#bbb;">Name on card</label>
+      </div>
+      <input [(ngModel)]="fullname" class="form-userpay" type="text" formControlName="name" placeholder="Full Name" />
+      <div id="card-element" class="field"></div>    
+    </div>
+    <div class="modal-payfooter">
+      <button type="submit" class="btn btn-success pull-right click">Submit Booking</button>
+      <div class="clearfix"></div>
+      <div class="col-md-12">
+        <p><i>Payment is only taken the day of the cleaning service.</i></p>
+        <p><i>You will be notified when the payment is taken from your account.</i></p>
+      </div>
+    </div>
+  </form>
+  
 </div>

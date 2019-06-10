@@ -14,12 +14,17 @@
      "list_limit": "20",
      "gzip": "0",
      "offset": "UTC",
-     "display_errors":"true"
+     "display_errors":"false"
    },
    "google": {
    	 "client_secret":"Ni_tdSNE6de3oe8UKht7rm6c",
    	 "client_id":"821423007087-g9lbsn375ctt62eg30nt6kj4asjv5pi0.apps.googleusercontent.com"
    },
+   "stripe": {
+    "status":"test",
+    "secret_key_test":"sk_test_ppvqn3HGSA161XOzzeO9yiTO",
+    "secret_key_live":"sk_live_hKPisWEeNYVJkQTX3rvaMvPL"
+ },
    "ushbub": {
       "sports_comp":"4",
       "sports_comp_default":"5"

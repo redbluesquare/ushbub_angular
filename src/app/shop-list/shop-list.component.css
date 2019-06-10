@@ -1,4 +1,7 @@
 .addshop{margin-top:15px;}
-.shopadvert{position:relative;height:340px;border:1px solid #eee;border-radius: 10px;overflow: hidden;background:#fff url('../../assets/images/advert_web_api.png');}
-.shopadvert::after{position:absolute;bottom:5px;right:20px;color:#666;font-size:0.8em;font-style: italic;content: "Advertisement";z-index: 800;}
-.shopadvert p{position: absolute;bottom: 0px;left:40px;font-size:2em;}
+.shopadvert{position:relative;height:340px;border:1px solid #eee;border-radius: 10px;overflow: hidden;background:#fff url('../../assets/images/ddcshopbox/IMG_20170520_084422.jpg');background-position: 50% 50%;background-size: 100%;}
+.shopadvert >div{background:rgba(0,0,0,0.4);color:#eee;padding:10px 10px 10px 20px;height:inherit;}
+.shopadvert>div>p{font-size: 1.3em;margin-left: 40px;}
+.shop-image{border-radius:50%;}
+.shop-listing{padding-left:10px;}
+.shop-listing>h2,.shop-listing>p{margin-top:5px;margin-bottom:5px;}

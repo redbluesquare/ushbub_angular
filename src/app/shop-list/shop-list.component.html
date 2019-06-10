@@ -1,46 +1,76 @@
-<div class="container">
-  <div class="row">
-    <a href="https://www.youtube.com/watch?v=cubwduHbam0&list=PLWbIvgEXhyFK7mAtmcFsXkB2-55dN6taD" target="_BLANK">
-      <div class="col-md-12 shopadvert">
-        <p>Create a REST API with the <b>Joomla! Framework</b></p>
-      </div>
-    </a>
-    <div class="clearfix"></div>
-  </div>
-  <div class="clearfix"></div>
-  <div class="row">
-      <div class="col-md-12" *ngIf="addshop!=1">
-        <button class="btn btn-primary pull-right" (click)="showShopForm()"><i class="icon icon-white icon-plus"></i> Add a listing</button>
-      </div>
-  </div>
-  <div class="clearfix"></div>
-  <div class="row">
-      <div class="col-md-12" *ngIf="addshop==1">
-        <div class="col-md-12" style="margin-bottom:5px;">
-          <input class="form-control" [(ngModel)]="title" type="text"placeholder="Shop Name" />
-        </div>
-        <div class="col-md-12" style="margin-bottom:5px;">
-          <input class="form-control" [(ngModel)]="shop_type" type="text" placeholder="Type of Shop" />
-        </div>
-        <div class="col-md-12" style="margin-bottom:5px;">
-          <textarea class="form-control" [(ngModel)]="description" placeholder="Describe the shop in your words. Please tell customers what they can find by visiting."></textarea>
-        </div>
-        <div class="col-md-3" style="margin-bottom:5px;">
-          <input class="form-control" [(ngModel)]="first_name" type="text" placeholder="First Name" />
-        </div>
-        <div class="col-md-3" style="margin-bottom:5px;">
-            <input class="form-control" [(ngModel)]="last_name" type="text" placeholder="Last Name" />
-          </div>
-        <div class="col-md-6" style="margin-bottom:5px;">
-          <input class="form-control" [(ngModel)]="email" type="email" placeholder="E-mail" />
-        </div>
-        <button class="btn btn-primary pull-right" (click)="saveShopForm()"><i class="icon icon-white icon-ok-sign"></i> Save</button>
-      </div>
-    <div class="clearfix"></div>
-  </div>
-  <div class="clearfix"></div>
-  <div class="row" *ngFor="let vendor of vendors">
-    <p>{{vendor.ddc_vendor_id}}</p>
+<div class="row">
+  <div class="shopadvert">
+    <div class="col-md-12">
+        <h1>Love your local shops?</h1>
+        <p>A free click and collect service for shops near you!</p>
+        <h2>How it works:</h2>
+        <ul>
+          <li>Order from one or more shops local to you</li>
+          <li>Select a date and time you going to collect your order</li>
+          <li>Orders are sent to the shops</li>
+          <li>Orders are prepared ready for collection</li>
+          <li>Pay for your order when you collect</li>
+        </ul>
+    </div>
   </div>
   <div class="clearfix"></div>
 </div>
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12" *ngIf="addshop!=1">
+      <button class="btn btn-primary pull-right hide" (click)="showShopForm()"><i class="icon icon-white icon-plus"></i> Add a listing</button>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="row" *ngFor="let vendor of vendors">
+  <div class="col-md-12" style="height:150px;margin-bottom:10px;">
+    <div class="col-sm-2">
+      <img *ngIf="vendor.image!=null" class="shop-image" src="{{vendor.image}}" style="max-height:100%;">
+      <img *ngIf="vendor.image==null" class="shop-image" src="../../assets/images/logo_ushbub.png" style="max-height:100%;">
+    </div>
+    <div class="col-md-7">
+      <div class="shop-listing">
+        <h2><a routerLink="/shop/{{vendor.alias}}">{{vendor.title}}</a></h2>
+        <p>{{vendor.description}}</p>
+      </div>
+    </div>
+    <div class="col-md-3" style="text-align:right;">
+      <p>{{vendor.address1}}<br>
+        {{vendor.address2}}<br>
+        {{vendor.city}}<br>
+        {{vendor.post_code}}</p>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="clearfix"></div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+  <h3>Can't find a shop?</h3>
+  <p>We passionate about helping local shops and we need you to tell us the shops you support.</p>
+  <a (click)="showShopForm()">Submit a new shop</a>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-md-12" *ngIf="addshop==1">
+      <div class="col-md-12" style="margin-bottom:5px;">
+        <input class="form-control" [(ngModel)]="title" type="text"placeholder="Shop Name" />
+      </div>
+      <div class="col-md-12" style="margin-bottom:5px;">
+        <input class="form-control" [(ngModel)]="shop_type" type="text" placeholder="Type of Shop" />
+      </div>
+      <div class="col-md-12" style="margin-bottom:5px;">
+        <textarea class="form-control" [(ngModel)]="description" placeholder="Describe the shop in your words. Please tell customers what they can find by visiting."></textarea>
+      </div>
+      <div class="col-md-6" style="margin-bottom:5px;">
+        <input class="form-control" [(ngModel)]="full_name" type="text" placeholder="Your name (optional)" />
+      </div>
+      <div class="col-md-6" style="margin-bottom:5px;">
+        <input class="form-control" [(ngModel)]="email" type="email" placeholder="Your e-mail (optional)" />
+      </div>
+      <button class="btn btn-primary pull-right" (click)="saveShopForm()"><i class="icon icon-white icon-ok-sign"></i> Save</button>
+    </div>
+  <div class="clearfix"></div>
+</div>
+<div class="clearfix"></div>
+

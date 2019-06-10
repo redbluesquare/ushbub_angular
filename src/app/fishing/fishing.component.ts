@@ -43,7 +43,8 @@ export class FishingComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('alias');
     this.page = this.route.snapshot.paramMap.get('category');
     this.pics = {
-      'april18':'../../assets/images/201804_phil_cotm_fb.jpg'
+      'april18':'../../assets/images/201804_phil_cotm_fb.jpg',
+      'aug18':'../../assets/images/201808_andy_cotm_fb.jpg'
     }
   }
 }

@@ -5,6 +5,8 @@ use App\Models\ProfilesModel;
 use App\Models\UsergroupsModel;
 use App\Models\EmailmessagesModel;
 use App\Models\SportscompsModel;
+use App\Models\ImagesModel;
+use App\Models\VendorlocationsModel;
 use Joomla\Session\Session;
 use Joomla\Event\Dispatcher;
 use App\Models\App\Models;
@@ -24,21 +26,115 @@ class ProfilesController extends DefaultController
 		}
 		$item = new \StdClass();
 		$item->success = false;
+		$input = $this->getInput()->json;
 		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
+		$imgModel = new ImagesModel($this->getInput(), $this->getContainer()->get('db'));
 		$user = $model->authenticate_token($usertoken);
-		if($user['success']==true)
-		{
-			$user = $model->getItemById($user['user_id']);
-			$item->success = true;
-			$item->user_id = $user->id;
-			$item->first_name = $user->first_name;
-			$item->last_name = $user->last_name;
-			$item->username = $user->username;
-			$item->email = $user->email;
-			$item->msg = '';
-			$item->profiles = '';
+		$method = $this->getInput()->getMethod();
+		if($method=='GET'){
+			if($user['success']==true)
+			{
+				$user = $model->getItemById($user['user_id']);
+				$user_image = $imgModel->getItemById(null,$user->id,'ddc+profile');
+				$item->success = true;
+				$item->user_id = $user->id;
+				$item->first_name = $user->first_name;
+				$item->last_name = $user->last_name;
+				$item->username = $user->username;
+				$item->email = $user->email;
+				$item->aboutme = $model->getUserProfile($user->id,'aboutme');
+				$item->company = $model->getUserProfile($user->id,'company');
+				$item->profession = $model->getUserProfile($user->id,'profession');
+				if($user_image->image_link){
+					$item->image = $user_image->image_link;
+				}
+				$item->msg = '';
+				$item->profiles = '';
+				if($cw = $model->getCarwashLocation($user->id)){
+					$cw->carwash_location = json_decode($cw->carwash_location);
+					$item->carwash_options = $cw;
+				}
+				else{
+					$item->carwash_options = array('carwash_location'=>'');
+				}
+			}
+		}
+		if($method=='POST'){
+			$fname = $input->get('first_name',null,'string');
+			$lname = $input->get('last_name',null,'string');
+			$table = '#__ddc_users';
+			$fields = array($this->getContainer()->get('db')->qn('first_name'). " = '". $fname."'",$this->getContainer()->get('db')->qn('last_name'). " = '". $lname ."'");
+			$conditions = array($this->getContainer()->get('db')->qn('id'). ' = '. $this->getContainer()->get('db')->q($user['user_id']) );
+			if($model->update($table, $fields, $conditions)){
+				$item->success = true;
+			}
+			if($model->getUserProfile($user['user_id'],'aboutme')){
+				$model->updateuserprofiles($user['user_id'],'aboutme',$input->get("aboutme", null,'string'));
+			}else{
+				$model->adduserprofiles($user['user_id'],'aboutme',$input->get("aboutme", null,'string'));
+			}
+			if($model->getUserProfile($user['user_id'],'company')){
+				$model->updateuserprofiles($user['user_id'],'company',$input->get("company", null,'string'));
+			}else{
+				$model->adduserprofiles($user['user_id'],'company',$input->get("company", null,'string'));
+			}
+			if($model->getUserProfile($user['user_id'],'profession')){
+				$model->updateuserprofiles($user['user_id'],'profession',$input->get("profession", null,'string'));
+			}else{
+				$model->adduserprofiles($user['user_id'],'profession',$input->get("profession", null,'string'));
+			}
+		}
+		if($method=='DELETE'){
+
+			return $item;
+		}
+		if($method=='UPDATE'){
+
+			return $item;
 		}
 		return $item;
+	}
+
+	function images()
+	{
+		$token = $this->getInput()->getString('apptoken',null);
+		$h = getallheaders();
+		$usertoken = null;
+		foreach($h as $name => $value){
+			if(ucfirst($name) == 'Bearer'){
+				$usertoken = $value;
+			}
+		}
+		$item = new \StdClass();
+		$item->success = false;
+		if($token != "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")
+		{
+			return $item;
+		}
+		$profModel = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
+		$model = new ImagesModel($this->getInput(), $this->getContainer()->get('db'));
+		$method = $this->getInput()->getMethod();
+		if($method=='GET'){
+
+			return $method;
+		}
+		if($method=='POST'){
+			if($user = $profModel->authenticate_token($usertoken)){
+				$model->removeImage(null, $user['user_id'],'ddc_profile');
+				if($model->addImage($user['user_id'],'ddc_profile',$user['user_id'])){
+					$item->success = true;
+				}
+			}
+			return $item;
+		}
+		if($method=='DELETE'){
+
+			return $method;
+		}
+		if($method=='UPDATE'){
+
+			return $method;
+		}
 	}
 
 	public function authenticate()
@@ -125,6 +221,55 @@ EOT;
 		return $item;
 	}
 
+	public function cwlocation()
+	{
+		$token = $this->getInput()->json->get('apptoken',null);
+		$item = array();
+		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
+		$vlmodel = new VendorlocationsModel($this->getInput(), $this->getContainer()->get('db'));
+		$usertoken = '';
+		$h = getallheaders();
+		foreach($h as $name => $value){
+			if(ucfirst($name) == 'Bearer'){
+				$usertoken = $value;
+			}
+		}
+		$user = $model->authenticate_token($usertoken);
+		$vl = $vlmodel->getItemById($this->getInput()->json->get('id',null));
+		$state = 9;
+		//add a new usergroup_map
+		if(($input = $this->getInput()->getMethod()==='POST') && ($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")){
+			if(!$cw = $model->getCarwashLocation($user['user_id'])){
+				$data = array(
+					$user['user_id'],
+					'carwash.location',
+					json_encode($vl),
+					$state
+				);
+				$columns = array("user_id", "profile_key", "profile_value", "ordering");
+				$model->insert('#__ddc_user_profiles',$columns, $data);
+			}
+			else{
+				$table = '#__ddc_user_profiles';
+				$fields = array($this->getContainer()->get('db')->qn('profile_value'). " = '". json_encode($vl)."'");
+				$conditions = array($this->getContainer()->get('db')->qn('user_id'). ' = '. $this->getContainer()->get('db')->q($user['user_id']),$this->getContainer()->get('db')->qn('profile_key'). ' = '. $this->getContainer()->get('db')->q('carwash.location') );
+				$model->update($table, $fields, $conditions);
+			}
+			$item = $model->getCarwashLocation($user['user_id']);
+			$item->carwash_location = json_decode($item->carwash_location);
+		}
+		if($input = $this->getInput()->getMethod()==='PUT'){
+			//get function
+			$items->method = 'PUT';
+			return $item;
+		}
+		if($input = $this->getInput()->getMethod()==='GET'){
+			//get user group map
+			$id = $this->getInput()->getString('id',null);
+		}
+		return $item;
+	}
+
 	public function login()
 	{
 		$token = $this->getInput()->json->get('apptoken',null);
@@ -149,6 +294,9 @@ EOT;
 					$item->last_name = $user['last_name'];
 					$item->usertoken = $user['token'];
 				}
+			}
+			else{
+				$item->msg = "Login failed";
 			}
 		}
 		return $item;
@@ -242,7 +390,7 @@ EOT;
 				$columns = array("user_id", "token", "created_on", "created_by");
 				if($model->insert('#__ddc_access_tokens',$columns, $data)){
 					$item['success'] = true;
-					//TODO send reset e-mail
+					//send reset e-mail
 					$ref_token = $model->randStrGen(25);
 					$emodel = new EmailmessagesModel($this->getInput(), $this->getContainer()->get('db'));
 					$body = $emodel->getItemById(4);
@@ -250,6 +398,8 @@ EOT;
 					$values = array($user->first_name,$reset_token,$ref_token);
 					$b = $model->emailTemplate($names, $values, $body->message);
 					$model->sendEmail($email, $user->first_name, $body->subject, $b);
+					//log e-mail
+					$emodel->email_logger(4,$ref_token, $user->id, null);
 				}
 			}
 			else{
@@ -349,42 +499,43 @@ EOT;
 
 	public function saveaddress()
 	{
-		$token = $this->getInput()->getString('apptoken',null);
+		$token = $this->getInput()->json->get('apptoken',null);
+		$input = $this->getInput()->json;
 		$item = new \StdClass();
 		$item->success = false;
 		if($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")
 		{
 			$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
-			$usertoken = $this->getInput()->getString("usertoken", null);
-			$ddc_userinfo_id = $this->getInput()->getInt("ddc_userinfo_id", 0);
-			$user_id = $this->getInput()->getString("user_id", null);
-			$company = $this->getInput()->getString("company", null);
-			$title = $this->getInput()->getString("title", null);
-			$first_name = $this->getInput()->getString("first_name", null);
-			$middle_name = $this->getInput()->getString("middle_name", null);
-			$last_name = $this->getInput()->getString("last_name", null);
-			$address_type = $this->getInput()->getString("address_type", null);
-			$address_type_name = $this->getInput()->getString("address_type_name", null);
-			$address_1 = $this->getInput()->getString("address_1", null);
-			$address_2 = $this->getInput()->getString("address_2", null);
-			$city = $this->getInput()->getString("city", null);
-			$county = $this->getInput()->getString("county", null);
-			$zip = $this->getInput()->getString("zip", null);
-			$country_id = $this->getInput()->getString("country_id", null);
-			$phone_1 = $this->getInput()->getString("phone_1", null);
-			$phone_2 = $this->getInput()->getString("phone_2", null);
-			$customer_note = $this->getInput()->getString("customer_note", null);
+			$usertoken = $input->get("usertoken", null);
+			$ddc_userinfo_id = $input->get("ddc_userinfo_id", null);
+			$user_id = $input->get("user_id", 0);
+			$company = $input->get("company", 0);
+			$title = $input->get("title", null);
+			$first_name = $input->get("first_name", null,'string');
+			$last_name = $input->get("last_name", null,'string');
+			$email = $input->get("email", null,'string');
+			$address_type = $input->get("address_type", 'sh');
+			$address_type_name = $input->get("address_type_name", 0);
+			$address_1 = $input->get("address_1", null,'string');
+			$address_2 = $input->get("address_2", null,'string');
+			$city = $input->get("city", null,'string');
+			$county = $input->get("county", null,'string');
+			$zip = $input->get("zip", null,'string');
+			$country_id = $input->get("country_id", null,'string');
+			$phone_1 = $input->get("phone_1", null,'string');
+			$phone_2 = $input->get("phone_2", null,'string');
+			$customer_note = $input->get("customer_note", null,'string');
 			$table = '#__ddc_userinfos';
 			if($ddc_userinfo_id!=0){
-				$fields = array($this->getContainer()->get('db')->qn('company'). " = '". ($company)."'",$this->getContainer()->get('db')->qn('title'). " = '". $title ."'",$this->getContainer()->get('db')->qn('first_name'). " = '". $first_name ."'",$this->getContainer()->get('db')->qn('last_name'). " = '". $last_name ."'",$this->getContainer()->get('db')->qn('middle_name'). " = '". $middle_name ."'",$this->getContainer()->get('db')->qn('address_type'). " = '". $address_type ."'",$this->getContainer()->get('db')->qn('address_type_name'). " = '". $address_type_name ."'",$this->getContainer()->get('db')->qn('address_1'). " = '". $address_1 ."'",$this->getContainer()->get('db')->qn('address_2'). " = '". $address_2 ."'",$this->getContainer()->get('db')->qn('city'). " = '". $city ."'",$this->getContainer()->get('db')->qn('county'). " = '". $county ."'",$this->getContainer()->get('db')->qn('country_id'). " = '". $country_id ."'",$this->getContainer()->get('db')->qn('zip'). " = '". $zip ."'",$this->getContainer()->get('db')->qn('phone_1'). " = '". $phone_1 ."'",$this->getContainer()->get('db')->qn('phone_2'). " = '". $phone_2 ."'",$this->getContainer()->get('db')->qn('customer_note'). " = '". $customer_note ."'");
+				$fields = array($this->getContainer()->get('db')->qn('company'). " = '". ($company)."'",$this->getContainer()->get('db')->qn('title'). " = '". $title ."'",$this->getContainer()->get('db')->qn('first_name'). " = '". $first_name ."'",$this->getContainer()->get('db')->qn('last_name'). " = '". $last_name ."'",$this->getContainer()->get('db')->qn('email'). " = '". $email ."'",$this->getContainer()->get('db')->qn('address_type'). " = '". $address_type ."'",$this->getContainer()->get('db')->qn('address_type_name'). " = '". $address_type_name ."'",$this->getContainer()->get('db')->qn('address_1'). " = '". $address_1 ."'",$this->getContainer()->get('db')->qn('address_2'). " = '". $address_2 ."'",$this->getContainer()->get('db')->qn('city'). " = '". $city ."'",$this->getContainer()->get('db')->qn('county'). " = '". $county ."'",$this->getContainer()->get('db')->qn('country_id'). " = '". $country_id ."'",$this->getContainer()->get('db')->qn('zip'). " = '". $zip ."'",$this->getContainer()->get('db')->qn('phone_1'). " = '". $phone_1 ."'",$this->getContainer()->get('db')->qn('phone_2'). " = '". $phone_2 ."'",$this->getContainer()->get('db')->qn('customer_note'). " = '". $customer_note ."'");
 				$conditions = array($this->getContainer()->get('db')->qn('ddc_userinfo_id'). ' = '. $this->getContainer()->get('db')->q($ddc_userinfo_id) );
 				$result = $model->update($table, $fields, $conditions);
 				$item->success = true;
 				$item->info = $result;
-				return array("user"=>$item);
+				return $item;
 			}
-			$columns = array("ddc_userinfo_id", "user_id", "company", "title", "first_name", "middle_name", "last_name", "address_type", "address_type_name", "address_1", "address_2", "city", "county", "zip", "country_id", "phone_1", "phone_2", "customer_note");
-			$data = array($ddc_userinfo_id, $user_id, $company, $title, $first_name, $middle_name, $last_name, $address_type, $address_type_name, $address_1, $address_2, $city, $county, $zip, $country_id, $phone_1, $phone_2, $customer_note);
+			$columns = array("ddc_userinfo_id", "user_id", "company", "title", "first_name", "last_name", "email", "address_type", "address_type_name", "address_1", "address_2", "city", "county", "zip", "country_id", "phone_1", "phone_2", "customer_note");
+			$data = array($ddc_userinfo_id, $user_id, $company, $title, $first_name, $last_name, $email, $address_type, $address_type_name, $address_1, $address_2, $city, $county, $zip, $country_id, $phone_1, $phone_2, $customer_note);
 			if($result = $model->insert($table, $columns, $data))
 			{
 				$item->success = true;
@@ -392,8 +543,7 @@ EOT;
 			}
 		}
 		
-		
-		return array("user"=>$item);
+		return $item;
 	}
 	
 	public function getaddress()
@@ -404,44 +554,62 @@ EOT;
 		
 		return array("address"=>$item);
 	}
-	public function getstripecustomer()
+
+	public function stripecustomer()
 	{
+		$token = $this->getInput()->json->get('apptoken',null);
 		$return = new \StdClass();
 		$return->success = false;
-		$usertoken = $this->getInput()->getString("usertoken", null);
 		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
-		$customer = $model->getStripeCustomer($usertoken);
-		if(count($customer)==1)
-		{
-			$return->cardinfo = json_decode($customer->profile_value);
+		$usertoken = '';
+		$h = getallheaders();
+		foreach($h as $name => $value){
+			if(ucfirst($name) == 'Bearer'){
+				$usertoken = $value;
+			}
+		}
+		if($usertoken==''){
+			return $return;
+		}
+		$config = json_decode($this->container->get('config'));
+		if($config->stripe->status == 'live'){
+			$secret_key = $config->stripe->secret_key_live;
+		}else{
+			$secret_key = $config->stripe->secret_key_test;
+		}
+		$user = $model->authenticate_token($usertoken);
+		$stripeToken = $this->getInput()->json->get('token',null,'string');
+		//add a new usergroup_map
+		if(($input = $this->getInput()->getMethod()==='POST') && ($token == "ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t")){
+			if($model->isStripeCustomer($user['user_id'])){
+				$result = $model->updateStripeCustomer($stripeToken,$user['user_id'],$secret_key);
+			}
+			else
+			{
+				//convert token to customer token and save
+				$result = $model->createStripeCustomer($stripeToken,$user['user_id'],$secret_key);
+			}
+			$return->cardinfo = '';
+			$result = $model->getstripecustomer($user['user_id']);
 			$return->success = true;
-		}
-		return array("payment"=>$return);
-	}
-	
-	public function addstripecustomer()
-	{
-		$return = new \StdClass();
-		$return->success = false;
-		$usertoken = $this->getInput()->getString("usertoken", null);
-		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
-		if($model->isStripeCustomer($usertoken)){
-			if($result = $model->updateStripeCustomer($usertoken))
-			{
-				$return->success = true;
+			if($result!=null){
+				$return->cardinfo = json_decode($result->profile_value);
 			}
-			return array("payment"=>$return);
+			return $return;
 		}
-		else
-		{
-			//convert token to customer token and save
-			if($result = $model->createStripeCustomer($usertoken))
-			{
-				$return->success = true;
+		if($input = $this->getInput()->getMethod()==='PUT'){
+			
+		}
+		if($input = $this->getInput()->getMethod()==='GET'){
+			$return->cardinfo = '';
+			$result = $model->getstripecustomer($user['user_id']);
+			$return->success = true;
+			if($result!=null){
+				$return->cardinfo = json_decode($result->profile_value);
 			}
-			return array("payment"=>$return);
 		}
-	}
+		return $return;
+	}	
 
 	public function email(){
 		$model = new ProfilesModel($this->getInput(), $this->getContainer()->get('db'));
@@ -449,30 +617,7 @@ EOT;
 		$result = array();
 		$names = array("{{name}}");
 		$values = array(
-			array('Chris','chris.hickman@uk.bosch.com'),
-			array('Darryl','usher_darryl@hotmail.com'),
-			array('Nigel','nigelpstapleton@gmail.com'),
-			array('Sean Mcsweeney','mcsweense@aol.com'),
-			array('Joe','external.joseph.raftery@uk.bosch.com'),
-			array('AidanKehoe','Aidan.Kehoe@uk.bosch.com'),
-			array('James Gamble','james.gamble@uk.bosch.com'),
-			array('Harry','coxboys21@gmail.com'),
-			array('Toms a pedo','ollie@brownbolwell.co.uk'),
-			array('Keith','keith.winfield@icloud.com'),
-			array('Dan Lilley','daniel.lilley@challoners.org'),
-			array('If I win this I will shave Dan Lilley hair','tchamberlain674@gmail.com'),
-			array('Mike B','michael6@live.co.uk'),
-			array('Cremo','james_cremin@hotmail.com'),
-			array('Lazarus ','lazarus.usher@gmail.com'),
-			array('Jayden','seanyblfc@aol.com'),
-			array('Lynn Smart','lynn.smart@uk.bosch.com'),
-			array('Graham','graham.slade@uk.bosch.com'),
-			array('RT','robin.tahiri@uk.bosch.com'),
-			array('Gaz','gaz_70@hotmail.com'),
-			array('Roberto Bastow','fixed-term.robert.bastow@uk.bosch.com'),
-			array('Panama ftw','hungryjuggler@gmail.com'),
-			array('Vik','vikesh.navsaria@hotmail.co.uk'),
-			array('Blondie','leannehenke@hotmail.co.uk')
+			array('Darryl','usher_darryl@hotmail.com')
 		);
 		$body = $emodel->getItemById(3);
 		for($i=0;$i<count($values);$i++){

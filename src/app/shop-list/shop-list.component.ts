@@ -13,37 +13,51 @@ export class ShopListComponent implements OnInit {
   constructor(private authService: AuthService,private apiDataService: ApiDataService) { }
 
   vendors:Vendor[];
+  vendor_id:number = 0;
   addshop:number;
-  title:string;
+  alias:string;
+  address1:string;
+  address2:string;
+  city:string;
+  county:string;
+  country:number;
+  countries:any[];
+  data:any;
   description:string;
-  first_name:string;
-  last_name:string;
   email:string;
+  full_name:string;
+  introduction:string;
+  post_code:string;
   shop_type:string;
-  data:{};
+  title:string;
 
   showShopForm(){
     this.addshop = 1;
     this.title = '';
     this.shop_type = '';
     this.description = '';
-    this.first_name = '';
-    this.last_name = '';
+    this.full_name = '';
     this.email = '';
   }
 
   saveShopForm(){
     this.data = {
+      vendor_id:this.vendor_id,
       title:this.title,
-      shop_type:this.shop_type,
+      introduction:this.introduction,
       description:this.description,
-      first_name:this.first_name,
-      last_name:this.last_name,
+      address1:this.address1,
+      address2:this.address2,
+      city:this.city,
+      county:this.county,
+      country:this.country,
+      post_code:this.post_code,
+      shop_type:this.shop_type,
+      full_name:this.full_name,
       email:this.email
     }
     this.apiDataService.saveShop(this.data)
     .subscribe(vendors => this.closeShopForm());
-    
   }
   closeShopForm(){
     this.addshop = 0;
@@ -52,7 +66,6 @@ export class ShopListComponent implements OnInit {
   ngOnInit() {
     if (localStorage.getItem('isLoggedIn') == '1'){
       this.authService.isLoggedIn = true;
-      return true;
     }
     this.addshop = 0;
     this.apiDataService.getVendors()

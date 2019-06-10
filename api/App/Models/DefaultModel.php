@@ -20,7 +20,7 @@ class DefaultModel extends AbstractDatabaseModel
 	protected $session;
 	protected $user;
 	protected $limitstart   = 0;
-	protected $limit        = 100;
+	protected $limit        = 1000;
 	public function __construct(Input $input, DatabaseDriver $db)
 	{
 		parent::__construct($db);
@@ -68,6 +68,16 @@ class DefaultModel extends AbstractDatabaseModel
 		}else{
 			return false;
 		}
+	}
+
+	public function delete($table, $conditions)
+	{
+		$query = $this->db->getQuery(true)
+		->delete($this->db->qn($table))
+		->where($conditions);
+		$this->db->setQuery($query);
+		$result = $this->db->execute();
+		return $result;
 	}
 	
 	public function validate_user_email($user_email)
@@ -198,72 +208,20 @@ class DefaultModel extends AbstractDatabaseModel
   		}
   		return $result;
   	}
-  	
-  	public function getDelDates($sh_id = null)
-  	{
-  		$model = new ShoppingcartdetailsModel($this->input, $this->db);
-  		$date = date('w');
-  		$stdprice = "3.99";
-  		$nxdprice = "7.49";
-  		$tmdprice = "8.99";
-  		$today = strtotime('today');
-  		if($date == 6)
-  		{
-  			$day1 = 60*60*24*2;
-  			$day2 = 60*60*24*3;
-  			$day3 = 60*60*24*4;
-  			$day4 = 60*60*24*5;
-  			$day5 = 60*60*24*6;
-  		}
-  		elseif($date == 5)
-  		{
-  			$day1 = 60*60*24*1;
-  			$day2 = 60*60*24*3;
-  			$day3 = 60*60*24*4;
-  			$day4 = 60*60*24*5;
-  			$day5 = 60*60*24*6;
-  		}
-  		elseif($date == 4)
-  		{
-  			$day1 = 60*60*24*1;
-  			$day2 = 60*60*24*2;
-  			$day3 = 60*60*24*4;
-  			$day4 = 60*60*24*5;
-  			$day5 = 60*60*24*6;
-  		}
-  		elseif($date == 3)
-  		{
-  			$day1 = 60*60*24*1;
-  			$day2 = 60*60*24*2;
-  			$day3 = 60*60*24*3;
-  			$day4 = 60*60*24*5;
-  			$day5 = 60*60*24*6;
-  		}
-  		elseif($date == 2)
-  		{
-  			$day1 = 60*60*24*1;
-  			$day2 = 60*60*24*2;
-  			$day3 = 60*60*24*3;
-  			$day4 = 60*60*24*4;
-  			$day5 = 60*60*24*6;
-  		}
-  		else
-  		{
-  			$day1 = 60*60*24*1;
-  			$day2 = 60*60*24*2;
-  			$day3 = 60*60*24*3;
-  			$day4 = 60*60*24*4;
-  			$day5 = 60*60*24*5;
-  		}
-  		$del_date = Date('D. d M. Y',$day3+$today);
-  		$day1_date = Date('Y-m-d',$day1+$today);
-  		$day2_date = Date('Y-m-d',$day2+$today);
-  		$day3_date = Date('Y-m-d',$day3+$today);
-  		$day4_date = Date('Y-m-d',$day4+$today);
-  		$day5_date = Date('Y-m-d',$day5+$today);
-  		$deldates = array("day"=>$date,"standard"=>$day3_date,"stdprice"=>$stdprice,"nextday"=>$day1_date,"nxdprice"=>$nxdprice,"timed"=>array("days"=>array($day1_date,$day2_date,$day3_date,$day4_date,$day5_date),"times"=>array("08:00 - 10:00","10:00 - 12:00","12:00 - 14:00","14:00 - 16:00","16:00 - 18:00","18:00 - 20:00")),"tmdprice"=>$tmdprice);
-  		
-  		return $deldates;
+	  
+	public function addLog($data){
+		$date = Date('Y-m-d H:i:s');
+		$ip = $_SERVER['REMOTE_ADDR'];
+		$table = "#__ddc_loggers";
+		$columns = array("query","ip_address","created_on","modified_on");
+		$values = array($data,$ip,$date,$date);
+		if($row = $this->insert($table, $columns, $values)){
+			return true;
+		}
+		else{
+			return false;
+		}
+		
 	}
 	
 	public function setLocation($postcode)

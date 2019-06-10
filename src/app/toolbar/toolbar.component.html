@@ -1,23 +1,12 @@
 <div class="navbar">
   <div class="container">
       <a routerLink="/"><img class="img-circle" src="{{image_logo}}" style="float:left;width:50px;"></a>
-    <nav *ngIf="authService.isLoggedIn">
-      <a routerLink="/shops">Local Shops</a>
-    </nav>
-    <nav>
-      <a routerLink="/carwash">Car Wash</a>
-    </nav>
-    <nav>
-      <a routerLink="/resources">Resources</a>
-    </nav>
-    <nav class="pull-right" *ngIf="!authService.isLoggedIn">
-      <a routerLink="/login">Login</a>
-    </nav>
-    <nav class="pull-right" *ngIf="authService.isLoggedIn">
-      <span class="link" (click)="logout()"><i class="icon icon-white icon-eject"></i></span>
-    </nav>
-    <nav class="pull-right" *ngIf="authService.isLoggedIn">
-      <a class="link" routerLink="/profile"><i class="icon icon-white icon-user"></i></a>
-    </nav>
+    <a class="nav" *ngIf="authService.isLoggedIn" routerLink="/shops">Local Shops</a>
+    <a class="nav" routerLink="/services">Local Services</a>
+    <a class="nav" routerLink="/blogs">Blogs</a>
+    <a class="nav" routerLink="/resources">Resources</a>
+    <a class="nav pull-right" *ngIf="!authService.isLoggedIn" routerLink="/login">Login</a>
+    <a class="nav pull-right" *ngIf="authService.isLoggedIn" (click)="logout()"><i class="icon icon-white icon-eject"></i></a>
+    <a class="nav pull-right" *ngIf="authService.isLoggedIn" routerLink="/profile"><i class="icon icon-white icon-user"></i></a>
   </div>
 </div>

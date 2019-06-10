@@ -7,6 +7,7 @@
  */
 
 // Application constants
+define ( 'JPATH_BASE', dirname ( __DIR__ ) );
 define ( 'JPATH_ROOT', dirname ( __DIR__ ).'/api' );
 define ( 'JPATH_CONFIGURATION', JPATH_ROOT.'/App/Config');
 // Ensure we've initialized Composer

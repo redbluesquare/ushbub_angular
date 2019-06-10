@@ -5,4 +5,5 @@ export class Vendor {
   'image_link':string;
   'alias':string;
   'cat_image':string;
+  'admin':boolean;
 }

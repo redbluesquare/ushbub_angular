@@ -1,116 +1,93 @@
-<div class="container">
-  <div class="row">
-      <button class="pull-right btn btn-sm" id="plusImg" data-ng-click="editimage()" data-toggle="modal" data-target="#imgModal"><i class="icon icon-pencil"></i></button>
-      <div class="col-md-10 profDetails">
-        <h3>{{user?.first_name}} {{user?.last_name}}</h3>
-      </div>
-      <div class="clearfix"></div>
-  </div>
-  <div class="clearfix"></div>
-  <div class="row">
-    <div class="col-md=12" style="padding-bottom:300px;">
-      <h2>{{user?.first_name}}'s wall</h2>
-      <p>Coming soon...</p>
-      <p>You will be able to post messages on your wall.</p>
+<div class="profileBox">
+    <div class="main" *ngIf="showProfile">
+        <button class="pull-right btn btn-sm plusProfile" (click)="editProfile()"><i class="icon icon-pencil"></i></button>
+        <div class="clearfix"></div>
+        <div class="profImg">
+            <button class="pull-right btn btn-sm plusImg" (click)="editimage()"><i class="icon icon-pencil"></i></button>
+            <img class="profileImg" src="/{{user?.image}}">
+        </div>
+        <div class="profDetails">
+            <h3>{{user?.first_name}} {{user?.last_name}}</h3>
+            <p>{{user?.profession.value | titlecase }} <span *ngIf="user?.company.value">at {{user?.company.value | titlecase }}</span></p>
+            <p class="aboutme">{{user?.aboutme.value}}</p>
+        </div>
+        <div class="wall">
+            <h2>{{user?.first_name}}'s wall</h2>
+            <p>Coming soon...</p>
+            <p>You will be able to post messages on your wall.</p>
+        </div>
     </div>
     <div class="clearfix"></div>
-  </div>
-</div>
-<!-- Image Modal -->
-<div class="modal fade" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel">
-  <div class="modal-dialog" role="document">
-      <div class="modal-content">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="imgModalLabel">Update an image for</h4>
-          </div>
-          <div class="modal-body">
-              <form id="upload_form" enctype="multipart/form-data" method="post">
-                  <input type="file" id="upload_photo" name="upload_photo" accept="image/*" />
-                  <progress id="progressBar" class="progress active" value="0" max="100" style="width:300px;"></progress>
-                  <h5 id="status"></h5>
-                </form>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-ng-click="uploadPhoto('ddc_profile',id)">Save changes</button>
-          </div>
-      </div>
-  </div>
-</div>
-<!-- Image Modal -->
-<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel">
-  <div class="modal-dialog" role="document">
-      <div class="modal-content">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h3 class="modal-title" id="profileModalLabel">Profile details for</h3>
-          </div>
-          <div class="modal-body">
-              <h4>Personal Details</h4>
-              <hr>
-              <div class="control-group">
-                  <div class="control-label">
-                      <label class="" for="first_name">First Name</label>
-                  </div>
-                  <div class="controls">
-                      <input class="form-control" type="text" id="first_name" data-ng-model="first_name" placeholder="First Name" />
-                  </div>
-              </div>
-              <div class="control-group">
-                  <div class="control-label">
-                      <label class="" for="last_name">Last Name</label>
-                  </div>
-                  <div class="controls">
-                      <input class="form-control" type="text" id="last_name" data-ng-model="last_name" placeholder="Last Name" />
-                  </div>
-              </div>
-              <div class="control-group">
-                  <div class="control-label">
-                      <label class="" for="profession">What do you do?</label>
-                  </div>
-                  <div class="controls">
-                      <input class="form-control" type="text" id="profession" data-ng-model="profession" placeholder="Profession" />
-                  </div>
-              </div>
-              <div class="control-group">
-                  <div class="control-label">
-                      <label class="" for="company">Company or organisation</label>
-                  </div>
-                  <div class="controls">
-                      <input class="form-control" type="text" id="company" data-ng-model="company" placeholder="Company" />
-                  </div>
-              </div>
-              <hr>
-              <div class="control-group">
-                  <div class="control-label">
-                      <label class="" for="aboutme">Introduce yourself in a few words...</label>
-                  </div>
-                  <div class="controls">
-                      <textarea class="form-control" rows="5" id="aboutme" data-ng-model="aboutme" placeholder="About me :-)"></textarea>
-                  </div>
-              </div>
-              <hr/>
-              <h4>Skills, interests and passions</h4>
-              <hr>
-              <div class="control-group">
-                  <div class="control-label">
-                      <label class="" for="interests">Help us show you relevant matches! Add your interests, skills or passions</label>
-                  </div>
-                  <div class="controls">
-                      <input class="form-control" type="text" id="interests" data-ng-model="interests" placeholder="Enter a single keyword" />
-                  </div>
-              </div>
-              <div class="col-ms-12">
-                  <div data-ng-repeat="interest in $ctrl.user.interests">
-                      <button class="btn">a</button>
-                  </div>
-              </div>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-ng-click="$ctrl.edituser('ddc_profile',$ctrl.user.id)">Save changes</button>
-          </div>
-      </div>
-  </div>
+    <div class="main" *ngIf="showImageForm">
+        <div>
+            <h2>Upload a new profile image</h2>
+            <form id="upload_form" enctype="multipart/form-data" method="post">
+                <input type="file" name="upload_photo" accept="image/*" (change)="onFileSelected($event)" />
+                <progress id="progressBar" class="progress active" value="0" max="100" style="width:300px;"></progress>
+                <h5 id="status"></h5>
+            </form>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary" (click)="uploadPhoto('ddc_profile',id)">Save changes</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="main" *ngIf="showProfileForm">
+        <div class="col-md-12">
+            <h4>Personal Details</h4>
+            <hr>
+            <div class="control-group">
+                <div class="control-label">
+                    <label class="" for="first_name">First Name</label>
+                </div>
+                <div class="controls">
+                    <input class="form-control" type="text" id="first_name" [(ngModel)]="first_name" placeholder="First Name" />
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+                    <label class="" for="last_name">Last Name</label>
+                </div>
+                <div class="controls">
+                    <input class="form-control" type="text" id="last_name" [(ngModel)]="last_name" placeholder="Last Name" />
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+                    <label class="" for="profession">What do you do?</label>
+                </div>
+                <div class="controls">
+                    <input class="form-control" type="text" id="profession" [(ngModel)]="profession" placeholder="Profession" />
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="control-label">
+                    <label class="" for="company">Company or organisation</label>
+                </div>
+                <div class="controls">
+                    <input class="form-control" type="text" id="company" [(ngModel)]="company" placeholder="Company" />
+                </div>
+            </div>
+            <hr>
+            <div class="control-group">
+                <div class="control-label">
+                    <label class="" for="aboutme">Introduce yourself in a few words...</label>
+                </div>
+                <div class="controls">
+                    <textarea class="form-control" rows="5" id="aboutme" [(ngModel)]="aboutme" placeholder="About me :-)"></textarea>
+                </div>
+            </div>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" (click)="saveUser()">Save changes</button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="sidebar">
+        <div class="item link" *ngFor="let shop of myshops" [routerLink]="['/shop/'+shop.alias]" routerLinkActive="router-link-active">{{shop.title}}</div>
+        <div class="item link">+ Create a new shop</div>
+        <div class="item link" [routerLink]="['/dashboard']" routerLinkActive="router-link-active">Balance Tracker</div>
+    <div class="clearfix"></div>
+    </div>
 </div>

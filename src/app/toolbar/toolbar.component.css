@@ -1,5 +1,5 @@
 .navbar{position:fixed;top:0px;left:0px;width:inherit;background:rgb(26, 120, 163);border:none;height:50px;display:block;z-index: 1001;}
-nav{padding:12px 7px 12px 7px;color:#fff;font-size: 1.1em;display:inline-block;}
-nav:hover{background:rgb(27, 100, 134);}
-nav a{color:#fff;text-decoration:none;}
-nav a:hover{color: azure;}
+.nav{padding:12px 7px 12px 7px;color:#fff;font-size: 1.1em;display:inline-block;}
+.nav:hover{background:rgb(27, 100, 134);}
+a.nav{color:#fff;text-decoration:none;}
+a.nav:hover{color: azure;}

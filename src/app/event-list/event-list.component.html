@@ -1,3 +1,26 @@
-<p>
-  event-list works!
-</p>
+<div>
+    <p><img src="../../assets/images/under-construction.jpg" width="600px" class="pull-right"></p>
+    <h2>Local events coming soon...</h2>
+    <p>Yes, I know, it's not highly desirable to see this page. We working on getting fresh content soon that helps you discover what events are local to you.</p>
+    <p>Please <a class="link" (click)="closeModal()">subscribe to Ushbub</a> to ensure you don't miss out when this service is ready!</p>
+  </div>
+  <div class="clearfix"></div>
+  <!-- Subscribe Modal -->
+  <div [(ngClass)]="modalClass" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button class="close" (click)="closeModal()"><span aria-hidden="true">&times;</span></button>
+            <div class="subcribeBox">
+                <p style="padding-left:10%;width:70%;text-align:center;font-size:1.3em;">We thrilled you interested in finding out more about Ushbub. Leave your name and e-mail below and we will add you to our VIP list to get the latest updates.</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <div class="row">
+            <div class="col-md-4"><input type="text" class="form-control" [(ngModel)]="first_name" placeholder="First Name" /></div>
+            <div class="col-md-6"><input type="email" class="form-control" id="email" [(ngModel)]="email" placeholder="E-mail address" /></div>
+            <div class="col-md-2"><button type="button" class="btn btn-warning" (click)="subscribe()">Subscribe</button></div>
+          </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
