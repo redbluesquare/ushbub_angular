@@ -16,6 +16,10 @@ class ProfilesModel extends DefaultModel
 	protected $_published 	= 1;
 	protected $_location	= null;
 	protected $_token = 'ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t';
+<<<<<<< HEAD
+=======
+	protected $_secretKey = '###';
+>>>>>>> e6ca0454d94c84247df4f9dabdcef0a4077dafca
 	
 	
 	protected function _buildQuery()
@@ -438,9 +442,13 @@ class ProfilesModel extends DefaultModel
 		    				return true;
 		}
 	}
+<<<<<<< HEAD
 
 	public function emailTemplate($names = array(), $values=array(), $body = ''){
 		$body = str_replace($names, $values, $body);
 		return $body;
 	}
 }
+=======
+}
+>>>>>>> e6ca0454d94c84247df4f9dabdcef0a4077dafca
