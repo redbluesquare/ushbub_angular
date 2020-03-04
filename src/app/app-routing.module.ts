@@ -21,8 +21,6 @@ import { ResourcesComponent } from './resources/resources.component';
 import { ServiceListComponent } from './service-list/service-list.component';
 import { ShopListComponent } from './shop-list/shop-list.component';
 import { ShopComponent } from './shop/shop.component';
-import { ScoreBoardComponent } from './score-board/score-board.component';
-import { WorldCupComponent } from './world-cup/world-cup.component';
 
 
 const routes: Routes = [
@@ -47,13 +45,11 @@ const routes: Routes = [
   { path: 'powertools/:alias', component: PowertoolsComponent },
   { path: 'powertool-accessories', component: PtAccessoriesComponent },
   { path: 'resources', component: ResourcesComponent },
-  { path: 'score-board', component: ScoreBoardComponent,canActivate: [AuthGuardService]  },
   { path: 'services', component: ServiceListComponent },
   { path: 'shop', component: ShopComponent,canActivate: [AuthGuardService] },
   { path: 'shop/:alias', component: ShopComponent,canActivate: [AuthGuardService] },
   { path: 'shops', component: ShopListComponent },
-  { path: 'transactions', component: BtTransactionsComponent,canActivate: [AuthGuardService] },
-  { path: 'world-cup', component: WorldCupComponent }
+  { path: 'transactions', component: BtTransactionsComponent,canActivate: [AuthGuardService] }
 ];
 @NgModule({
   imports: [ RouterModule.forRoot(routes) ],

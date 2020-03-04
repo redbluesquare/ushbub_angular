@@ -48,7 +48,7 @@ class VendorsController extends DefaultController
 			$post_code = $this->getInput()->json->get('post_code',null,'string');
 			if($email==null)
 			{
-				return array("success"=>false);
+				return $item;
 			}
 			if($ddc_vendor_id==0){
 				$columns = array('title','alias','introduction','description','owner','vendor_details','state','created_on','created_by','address1','address2','city','county','country','post_code',);
@@ -84,6 +84,7 @@ class VendorsController extends DefaultController
 				);
 				$conditions = array($this->getContainer()->get('db')->qn('ddc_vendor_id'). ' = '. $ddc_vendor_id);
 				$model->update($table,$fields,$conditions);
+				$item->success = true;
 			}
 			
 		}
@@ -96,13 +97,13 @@ class VendorsController extends DefaultController
 			$item = $model->listItems($id);
 			$admin = $this->getInput()->getString('admin','');
 			for($i=0;$i<count($item);$i++){
-				$item[$i]->vendor_details = json_decode($item[$i]->vendor_details);
 				if($vumodel->getItemById($item[$i]->ddc_vendor_id,$this->getInput()->getString('user_id'))){
 					$item[$i]->admin=true;
 				}else{
 					$item[$i]->admin=false;	
 				}
 			}
+			$item[0]->vendor_details = json_decode($item[0]->vendor_details);
 		}
 
 		return $item;

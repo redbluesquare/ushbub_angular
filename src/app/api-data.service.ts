@@ -34,7 +34,6 @@ export class ApiDataService {
   private messagesUrl = environment.messagesUrl;
   private productsUrl = environment.productsUrl;
   private profilesUrl = environment.profilesUrl;
-  private sportsCompUrl = environment.sportscompUrl;
   private targetsUrl = environment.targetsUrl;
   private transactionsUrl = environment.transactionsUrl;
   private vehiclesUrl = environment.vehiclesUrl;
@@ -70,25 +69,11 @@ export class ApiDataService {
     return this.httpClient.get<AccountType[]>(this.accountsUrl+'/types/'+id,httpOptions);
   }
 
-  getAllGames(id=''): Observable<Game[]> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
-    };
-    return this.httpClient.get<Game[]>(this.sportsCompUrl+'/games/'+id,httpOptions);
-  }
-
   getBalances(id='',acc:any=0): Observable<any[]> {
     const httpOptions = {
       headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
     };
     return this.httpClient.get<any[]>(this.accountsUrl+'/balances/'+id+'?account_id='+acc,httpOptions);
-  }
-
-  getBonusQuestions(): Observable<Bonusquestions[]> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
-    };
-    return this.httpClient.get<Bonusquestions[]>(this.sportsCompUrl+'/bonusquestions',httpOptions);
   }
 
   getCategories(category): Observable<Category[]> {
@@ -105,20 +90,6 @@ export class ApiDataService {
 
   getCurrencies(id=0): Observable<any[]> {
     return this.httpClient.get<any[]>(this.currenciesUrl+'/'+id);
-  }
-
-  getGames(game=null): Observable<Game[]> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
-    };
-    return this.httpClient.get<Game[]>(this.sportsCompUrl+'/'+game,httpOptions);
-  }
-
-  getParticipants(id): Observable<Participant[]> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
-    };
-    return this.httpClient.get<Participant[]>(this.profilesUrl+'/participants/'+id,httpOptions);
   }
 
   getProducts(category=null,type=0): Observable<Product[]> {
@@ -144,20 +115,6 @@ export class ApiDataService {
       headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
     };
     return this.httpClient.get<User>(this.profilesUrl,httpOptions);
-  }
-
-  getTeams(): Observable<Team[]> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
-    };
-    return this.httpClient.get<Team[]>(this.sportsCompUrl+'/teams',httpOptions);
-  }
-
-  getPlayers(): Observable<Player[]> {
-    const httpOptions = {
-      headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
-    };
-    return this.httpClient.get<Player[]>(this.sportsCompUrl+'/players',httpOptions);
   }
 
   getServices(): Observable<Vendorservice[]>{
@@ -273,20 +230,6 @@ export class ApiDataService {
     return this.httpClient.post<Account[]>(this.accountsUrl+'/balances',this.userData,httpOptions);
   }
 
-  saveBonusGuess(q_id,ug_id,user_guess): Observable<Bonusquestions[]>{
-    const httpOptions = {
-      headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
-    };
-    if(ug_id==undefined){
-      ug_id='';
-    }
-    this.userData = {
-      question_id:q_id,
-      guess_id:ug_id,
-      user_guess:user_guess,
-      apptoken:'ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t'};
-    return this.httpClient.post<Bonusquestions[]>(this.sportsCompUrl+'/bonusquestions/'+ug_id,this.userData,httpOptions);
-  }
 
   saveCarwashLocation(id): Observable<Location>{
     const httpOptions = {
@@ -304,19 +247,6 @@ export class ApiDataService {
     };
     Object.assign(this.userData,data,{apptoken:'ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t'});
     return this.httpClient.post<Product[]>(this.vendorproductsUrl,this.userData,httpOptions);
-  }
-
-  saveScore(game_id,score1,score2,secret): Observable<Game[]>{
-    const httpOptions = {
-      headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
-    };
-    this.userData = {
-      game_id:game_id,
-      score1:score1,
-      score2:score2,
-      secret:secret,
-      apptoken:'ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t'};
-    return this.httpClient.post<Game[]>(this.sportsCompUrl+'/matchday/'+game_id,this.userData,httpOptions);
   }
 
   saveService(data): Observable<Vendorservice[]>{
@@ -405,24 +335,6 @@ export class ApiDataService {
       subject:data.subject,
       apptoken:'ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t'};
     return this.httpClient.post<Bonusquestions[]>(this.messagesUrl,this.userData,httpOptions);
-  }
-
-  saveUserguess(guess_id,game_id,ugTeam1,ugTeam2,ugScore1,ugScore2): Observable<Game[]>{
-    const httpOptions = {
-      headers: new HttpHeaders({ 'bearer': localStorage.getItem('usertoken') })
-    };
-    if(guess_id==undefined){
-      guess_id='';
-    }
-    this.userData = {
-      guess_id:guess_id,
-      game_id:game_id,
-      teamA:ugTeam1,
-      teamB:ugTeam2,
-      scoreA:ugScore1,
-      scoreB:ugScore2,
-      apptoken:'ksdbvskob0vwfb8BKBKS8VSFLFFPANVVOFd1nspvpwru8r8rB72r8r928t'};
-    return this.httpClient.post<Game[]>(this.sportsCompUrl+'/userguesses/'+guess_id,this.userData,httpOptions);
   }
 
   saveUserImage(l,id,sf): Observable<User> {

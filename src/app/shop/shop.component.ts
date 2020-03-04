@@ -220,7 +220,11 @@ export class ShopComponent implements OnInit {
       email:this.email
     }
     this.apiDataService.saveShop(this.data)
-    .subscribe(vendors => this.edit(false));
+      .subscribe(vendors => {
+        this.edit(false);
+        this.apiDataService.getVendors(this.alias)
+        .subscribe(vendors => this.getVendors(vendors));
+      });
   }
 
   ngOnInit() {

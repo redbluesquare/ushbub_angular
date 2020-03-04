@@ -28,9 +28,7 @@ import { FishingComponent } from './fishing/fishing.component';
 import { ShopListComponent } from './shop-list/shop-list.component';
 import { EventListComponent } from './event-list/event-list.component';
 import { ActivityListComponent } from './activity-list/activity-list.component';
-import { WorldCupComponent } from './world-cup/world-cup.component';
 import { ProfileComponent } from './profile/profile.component';
-import { ScoreBoardComponent } from './score-board/score-board.component';
 import { CarwashComponent } from './carwash/carwash.component';
 import { BlogListComponent } from './blog-list/blog-list.component';
 import { BlogComponent } from './blog/blog.component';
@@ -57,9 +55,7 @@ import { BtAccountsComponent } from './bt-accounts/bt-accounts.component';
     ShopListComponent,
     EventListComponent,
     ActivityListComponent,
-    WorldCupComponent,
     ProfileComponent,
-    ScoreBoardComponent,
     CarwashComponent,
     BlogListComponent,
     BlogComponent,

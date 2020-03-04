@@ -1,12 +1,12 @@
 <div *ngIf="!shopEdit">
 <div class="shopDetail">
   <div>
-    <img *ngIf="vendors[0].image!=null" class="shop-image" src="{{vendors[0].image}}" style="max-height:100%;width:100%;">
-    <img *ngIf="vendors[0].image==null" class="shop-image" src="../../assets/images/logo_ushbub.png" style="max-height:100%;width:100%;">
+    <img *ngIf="vendors[0]?.image!=null" class="shop-image" src="{{vendors[0]?.image}}" style="max-height:100%;width:100%;">
+    <img *ngIf="vendors[0]?.image==null" class="shop-image" src="../../assets/images/logo_ushbub.png" style="max-height:100%;width:100%;">
   </div>
   <div>
-    <h1>{{vendors[0].title}}</h1>
-    <p class="shopContent">{{vendors[0].introduction}}</p>
+    <h1>{{vendors[0]?.title}}</h1>
+    <p class="shopContent">{{vendors[0]?.introduction}}</p>
     <div class="shopDays">
       <div class="vendor-available pull-left">Mon</div>
       <div class="vendor-available pull-left">Tue</div>
@@ -16,11 +16,11 @@
       <div class="vendor-available pull-left">Sat</div>
       <div class="vendor-unavailable pull-left">Sun</div>
     </div>
-    <p class="address"><span *ngIf="vendors[0].address1!=''">{{vendors[0].address1}}, </span> <span *ngIf="vendors[0].address2!=''">{{vendors[0].address2}}, </span> <span *ngIf="vendors[0].city!=''">{{vendors[0].city}}, </span> <span *ngIf="vendors[0].post_code!=''">{{vendors[0].post_code}}</span></p>
+    <p class="address"><span *ngIf="vendors[0]?.address1!=''">{{vendors[0].address1}}, </span> <span *ngIf="vendors[0]?.address2!=''">{{vendors[0].address2}}, </span> <span *ngIf="vendors[0]?.city!=''">{{vendors[0]?.city}}, </span> <span *ngIf="vendors[0]?.post_code!=''">{{vendors[0]?.post_code}}</span></p>
   </div>
   <div>
     <p>
-      <button class="btn btn-default link pull-right" *ngIf="vendors[0].admin==true" (click)="edit(true)"><i class="icon icon-pencil"></i></button>
+      <button class="btn btn-default link pull-right" *ngIf="vendors[0]?.admin==true" (click)="edit(true)"><i class="icon icon-pencil"></i></button>
       
     </p>
   </div>
@@ -135,57 +135,67 @@
 </div>
 <div class="clearfix"></div>
 </div>
-<div *ngIf="shopEdit">
-  <div class="col-md-8">
-      <div class="control-group">
-        <div class="control-label">
-          <label for="title">Shop Title</label>
-        </div>
-        <div class="controls">
-          <input class="form-control" type="text" [(ngModel)]="title" placeholder="Name of the Shop">
-        </div>
+<div *ngIf="shopEdit" class="row">
+  <div class="col-md-6">
+    <div class="control-group">
+      <div class="control-label">
+        <label for="title">Shop Title</label>
       </div>
-      <div class="control-group">
-        <div class="control-label">
-          <label for="introduction">Introduction</label>
-        </div>
-        <div class="controls">
-          <input class="form-control" type="text" [(ngModel)]="introduction" placeholder="Introduction">
-        </div>
+      <div class="controls">
+        <input class="form-control" type="text" [(ngModel)]="title" placeholder="Name of the Shop">
       </div>
-      <div class="control-group">
-        <div class="control-label">
-          <label for="description">Shop Description</label>
-        </div>
-        <div class="controls">
-          <textarea class="form-control" type="text" [(ngModel)]="description" placeholder="Shop description"></textarea>
-        </div>
+    </div>
+    <div class="control-group">
+      <div class="control-label">
+        <label for="introduction">Introduction</label>
       </div>
-      <div class="control-group">
-        <div class="control-label">
-          <label for="address1">Address</label>
-        </div>
-        <div class="controls">
-          <input class="form-control" type="text" [(ngModel)]="address1" placeholder="Address Line 1">
-        </div>
-        <div class="controls">
-          <input class="form-control" type="text" [(ngModel)]="address2" placeholder="Address Line 2">
-        </div>
-        <div class="controls">
-          <input class="form-control" type="text" [(ngModel)]="city" placeholder="City">
-        </div>
-        <div class="controls">
-          <input class="form-control" type="text" [(ngModel)]="post_code" placeholder="Post Code">
-        </div>
-        <div class="controls">
-          <select [(ngModel)]="country">
-            <option *ngFor="let c of countries" value="{{c.ddc_country_id}}">{{c.country_name}}</option>
-          </select>
-        </div>
+      <div class="controls">
+        <input class="form-control" type="text" [(ngModel)]="introduction" placeholder="Introduction">
       </div>
-      <div>
-        <button class="btn btn-success pull-right" (click)="saveShop()">Save</button>
+    </div>
+    <div class="control-group">
+      <div class="control-label">
+        <label for="description">Shop Description</label>
       </div>
+      <div class="controls">
+        <textarea class="form-control" type="text" [(ngModel)]="description" placeholder="Shop description"></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="control-label">
+        <label for="address1">Address</label>
+      </div>
+      <div class="controls">
+        <input class="form-control" type="text" [(ngModel)]="address1" placeholder="Address Line 1">
+      </div>
+      <div class="controls">
+        <input class="form-control" type="text" [(ngModel)]="address2" placeholder="Address Line 2">
+      </div>
+      <div class="controls">
+        <input class="form-control" type="text" [(ngModel)]="city" placeholder="City">
+      </div>
+      <div class="controls">
+        <input class="form-control" type="text" [(ngModel)]="post_code" placeholder="Post Code">
+      </div>
+      <div class="controls">
+        <select [(ngModel)]="country">
+          <option *ngFor="let c of countries" value="{{c.ddc_country_id}}">{{c.country_name}}</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button class="btn btn-success pull-right" (click)="saveShop()">Save</button>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="control-group">
+      <div class="control-label">
+        <label for="title">Contact Details</label>
+      </div>
+      <div class="controls">
+        <input class="form-control" type="text" [(ngModel)]="email" placeholder="E-mail Address">
+      </div>
+    </div>
   </div>
   <div class="clearfix"></div>
 </div>
