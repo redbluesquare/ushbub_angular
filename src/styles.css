@@ -2,6 +2,7 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 body,app-root,app-toolbar{width:100%;margin-top:60px;font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   line-height: 1.42857143;}
+body > app-root > .container{margin-top: 80px;}
 .hide{display: none;}
 .clearfix{clear: both;}
 .footer{position:relative;left:-20px;background:rgb(116, 150, 138);padding:30px;margin-top:10px;width:110%;min-height: 100px;}
@@ -796,3 +797,5 @@ a{color: #337ab7;text-decoration: none;}
 }
 .pull-right{float:right;}
 .pull-left{float:left;}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

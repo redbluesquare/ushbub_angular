@@ -1,6 +1,7 @@
 .idea
 .DS_Store
 /vendor/
+/App/Config/config*.json
 /current_SHA
 /last_build.json
 
@@ -19,3 +20,4 @@
 /app-coverage
 /phpunit.xml
 /testconfigs
+

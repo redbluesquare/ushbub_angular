@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiDataService } from '../api-data.service';
-import { HttpClientModule } from '@angular/common/http/src/module';
+import { HttpClientModule } from '@angular/common/http';
 import { Product } from '../product';
 import { User } from '../user';
 

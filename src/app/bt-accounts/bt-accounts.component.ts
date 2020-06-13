@@ -1,17 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { ApiDataService } from '../api-data.service';
 import { ActivatedRoute } from '@angular/router';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 @Component({
   selector: 'app-bt-accounts',
   templateUrl: './bt-accounts.component.html',
-  providers: [{provide: MAT_DATE_LOCALE, useValue: 'en-GB'},],
   styleUrls: ['./bt-accounts.component.css']
 })
 export class BtAccountsComponent implements OnInit {
 
-  constructor(private apiDataService: ApiDataService,private route: ActivatedRoute,private adapter: DateAdapter<any>) { }
+  constructor(private apiDataService: ApiDataService,private route: ActivatedRoute) { }
   account:any;
   account_name:string;
   account_number:string;
@@ -233,7 +231,6 @@ export class BtAccountsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.adapter.setLocale('en-GB');
     this.ddc_account_id = this.route.snapshot.paramMap.get('id');
     this.getAccounts(this.ddc_account_id);
     this.getBalances('',parseInt(this.ddc_account_id));
@@ -242,12 +239,6 @@ export class BtAccountsComponent implements OnInit {
       .subscribe(currencies => {this.currencies = currencies['currencies'];});
     this.apiDataService.getAccountTypes()
       .subscribe(account_types => this.account_types = account_types);
-  }
-
-  ngAfterViewInit(): void {
-    
-
-    
   }
 
 }
